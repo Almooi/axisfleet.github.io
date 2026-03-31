@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AxisFleet — Monthly Fleet Report | Unitrans ROM Fleet | March 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+
+  /* ── TOP NAV ── */
+  .topnav {
+    height:52px;
+    background:#0D1B2A;
+    border-bottom:1px solid rgba(30,144,255,0.15);
+    display:flex;
+    align-items:center;
+    padding:0 32px;
+    gap:20px;
+    position:relative;
+    z-index:9999;
+    flex-shrink:0;
+  }
+  .nav-logo-link { display:flex; align-items:center; text-decoration:none; }
+  .nav-logo { height:28px; width:auto; display:block; }
+  .nav-divider { width:1px; height:28px; background:rgba(255,255,255,0.1); }
+  .nav-links { display:flex; gap:4px; }
+  .nav-link {
+    padding:6px 14px;
+    font-size:0.82rem;
+    font-weight:600;
+    color:rgba(255,255,255,0.5);
+    text-decoration:none;
+    letter-spacing:0.03em;
+    border-bottom:2px solid transparent;
+    transition:all 0.15s;
+    font-family:"Barlow",sans-serif;
+  }
+  .nav-link:hover { color:white; }
+  .nav-link.active { color:white; border-bottom-color:#1E90FF; }
+  .nav-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+  .nav-cta {
+    background:#FF6B35;
+    color:white;
+    padding:7px 18px;
+    font-size:0.78rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    text-decoration:none;
+    font-family:"Barlow",sans-serif;
+    transition:background 0.15s;
+  }
+  .nav-cta:hover { background:#e85c28; color:white; }
+
+
+  :root {
+    --navy: #0D1B2A; --blue: #1E90FF; --orange: #FF6B35;
+    --white: #FFFFFF; --light: #F4F7FB; --muted: #6B7C93;
+    --green: #22C55E; --red: #EF4444; --amber: #F59E0B;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Barlow',sans-serif; background:#EAEEF4; color:var(--navy); }
+
+  /* HEADER */
+  .header { background:var(--navy); padding:24px 40px; display:flex; justify-content:space-between; align-items:center; }
+    .header-right { text-align:right; }
+  .header-title { font-family:'Barlow Condensed',sans-serif; font-size:1.6rem; font-weight:800; color:white; }
+  .header-sub { font-size:0.8rem; color:#AAAAAA; margin-top:2px; }
+  .report-period { background:var(--orange); color:white; padding:4px 14px; font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-top:6px; display:inline-block; }
+
+  /* CONFIG BANNER */
+  .config-banner { background:#1A2F44; padding:12px 40px; display:flex; gap:32px; flex-wrap:wrap; border-bottom:2px solid var(--blue); }
+  .config-item { display:flex; flex-direction:column; }
+  .config-label { font-size:0.65rem; color:#888888; text-transform:uppercase; letter-spacing:0.1em; }
+  .config-value { font-size:0.85rem; color:white; font-weight:600; }
+  .config-note { font-size:0.65rem; color:var(--blue); }
+
+  /* MAIN */
+  .main { max-width:1200px; margin:0 auto; padding:32px 24px; }
+
+  /* SECTION TITLES */
+  .section-title { font-family:'Barlow Condensed',sans-serif; font-size:1.3rem; font-weight:800; color:var(--navy); margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+  .section-title::before { content:''; width:4px; height:22px; background:var(--orange); display:inline-block; border-radius:2px; }
+
+  /* STAT CARDS ROW */
+  .stat-row { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:28px; }
+  .stat-card { background:white; padding:18px 16px; border-top:3px solid var(--blue); }
+  .stat-card.alert { border-top-color:var(--orange); }
+  .stat-card.good { border-top-color:var(--green); }
+  .stat-val { font-family:'Barlow Condensed',sans-serif; font-size:2.2rem; font-weight:800; color:var(--navy); line-height:1; }
+  .stat-val.orange { color:var(--orange); }
+  .stat-val.green { color:var(--green); }
+  .stat-val.red { color:var(--red); }
+  .stat-label { font-size:0.72rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; }
+  .stat-sub { font-size:0.7rem; color:var(--muted); margin-top:2px; font-weight:300; }
+
+  /* CHARTS GRID */
+  .charts-grid { display:grid; grid-template-columns:2fr 1fr; gap:20px; margin-bottom:28px; }
+  .chart-card { background:white; padding:20px; }
+  .chart-title { font-size:0.8rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px; }
+  .charts-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-bottom:28px; }
+
+  /* TABLE */
+  .table-card { background:white; padding:20px; margin-bottom:28px; }
+  table { width:100%; border-collapse:collapse; }
+  thead tr { background:var(--navy); }
+  thead th { padding:10px 12px; text-align:left; font-size:0.75rem; font-weight:700; color:white; letter-spacing:0.05em; text-transform:uppercase; }
+  tbody tr:nth-child(even) { background:var(--light); }
+  tbody tr:hover { background:#E8EDF5; }
+  tbody td { padding:9px 12px; font-size:0.85rem; color:var(--navy); border-bottom:1px solid #E8EDF5; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:2px; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; }
+  .badge-green { background:#DCFCE7; color:#15803D; }
+  .badge-red { background:#FEE2E2; color:#DC2626; }
+  .badge-amber { background:#FEF3C7; color:#D97706; }
+  .rank-1 { color:var(--orange); font-weight:700; }
+
+  /* ZONE ANALYSIS */
+  .zone-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:28px; }
+
+  /* DRIVER TABLE */
+  .driver-rank { font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:800; color:var(--muted); }
+  .driver-rank.top { color:var(--orange); }
+
+  /* CONFIG PAGE */
+  .config-page { background:white; padding:24px; margin-bottom:28px; border-left:4px solid var(--blue); }
+  .config-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:16px; }
+  .config-box { background:var(--light); padding:14px; }
+  .config-box-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; font-weight:700; }
+  .config-box-value { font-size:1.1rem; color:var(--navy); font-weight:700; margin-top:4px; }
+  .config-box-unit { font-size:0.72rem; color:var(--muted); font-weight:300; }
+  .config-note-box { background:#FFF5F0; border:1px solid #FFD5C0; padding:10px 14px; margin-top:14px; font-size:0.82rem; color:var(--orange); }
+
+  /* FOOTER */
+  .footer { background:var(--navy); padding:20px 40px; display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+  .footer-left { font-size:0.75rem; color:#888888; }
+  .footer-scripture { font-size:0.72rem; color:#444444; font-style:italic; }
+
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="index.html" class="nav-logo-link">
+    <img src="logo1.svg" class="nav-logo" alt="AxisFleet">
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Overview</a>
+    <a href="axisfleet_live_tracking.html" class="nav-link">Live Tracking</a>
+    <a href="AxisFleet_Monthly_Report_Sample.html" class="nav-link active">Reports</a>
+    <a href="axisfleet_presentations.html" class="nav-link">Presentations</a>
+  </div>
+  <div class="nav-right">
+    <a href="mailto:axisfleetsa@gmail.com" class="nav-cta">Contact Us</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-right">
+    <div class="header-title">Monthly Fleet Intelligence Report</div>
+    <div class="header-sub">Unitrans ROM Fleet  |  Mpumalanga Coal Operations</div>
+    <div class="report-period">March 2026  |  20 Trucks  |  Generated: 31 March 2026 06:00</div>
+  </div>
+</div>
+
+<!-- CONFIG BANNER -->
+<div class="config-banner">
+  <div class="config-item"><span class="config-label">Legal GCM (Road)</span><span class="config-value">56,000 kg</span></div>
+  <div class="config-item"><span class="config-label">Mine Permit GCM</span><span class="config-value">168,000 kg</span><span class="config-note">Overload threshold</span></div>
+  <div class="config-item"><span class="config-label">Underload Threshold</span><span class="config-value">140,000 kg</span></div>
+  <div class="config-item"><span class="config-label">Hard Braking</span><span class="config-value">0.265 g</span></div>
+  <div class="config-item"><span class="config-label">Speed Limit (Road)</span><span class="config-value">80 km/h</span></div>
+  <div class="config-item"><span class="config-label">Speed Limit (Mine)</span><span class="config-value">30 km/h</span></div>
+  <div class="config-item"><span class="config-label">Reporting Period</span><span class="config-value">01–31 Mar 2026</span></div>
+</div>
+
+<div class="main">
+
+  <!-- FLEET SUMMARY STATS -->
+  <div class="section-title">Fleet Summary — March 2026</div>
+  <div class="stat-row">
+    <div class="stat-card good">
+      <div class="stat-val green">412</div>
+      <div class="stat-label">Total Loads</div>
+      <div class="stat-sub">Completed this month</div>
+    </div>
+    <div class="stat-card good">
+      <div class="stat-val green">78%</div>
+      <div class="stat-label">Perfect Loads</div>
+      <div class="stat-sub">321 of 412 loads</div>
+    </div>
+    <div class="stat-card alert">
+      <div class="stat-val orange">11%</div>
+      <div class="stat-label">Overloads</div>
+      <div class="stat-sub">45 events flagged</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">11%</div>
+      <div class="stat-label">Underloads</div>
+      <div class="stat-sub">46 below threshold</div>
+    </div>
+    <div class="stat-card alert">
+      <div class="stat-val red">38</div>
+      <div class="stat-label">Hard Braking Events</div>
+      <div class="stat-sub">Across 12 drivers</div>
+    </div>
+  </div>
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-val">34,680t</div>
+      <div class="stat-label">Total Tonnage</div>
+      <div class="stat-sub">Net payload delivered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">4.2 hrs</div>
+      <div class="stat-label">Avg Turnaround</div>
+      <div class="stat-sub">Mine to mill per cycle</div>
+    </div>
+    <div class="stat-card good">
+      <div class="stat-val green">97.2%</div>
+      <div class="stat-label">Uptime</div>
+      <div class="stat-sub">Module availability</div>
+    </div>
+    <div class="stat-card alert">
+      <div class="stat-val orange">AF-07</div>
+      <div class="stat-label">Most Overloads</div>
+      <div class="stat-sub">8 events this month</div>
+    </div>
+    <div class="stat-card good">
+      <div class="stat-val green">AF-14</div>
+      <div class="stat-label">Best Performer</div>
+      <div class="stat-sub">100% perfect loads</div>
+    </div>
+  </div>
+
+  <!-- LOAD PERFORMANCE CHART -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Weekly Load Performance — Perfect vs Overload vs Underload</div>
+      <canvas id="weeklyLoads" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Load Category Distribution — March 2026</div>
+      <canvas id="loadPie" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- TREND + BRAKING CHARTS -->
+  <div class="charts-grid-3">
+    <div class="chart-card">
+      <div class="chart-title">Overload Trend — Last 6 Months</div>
+      <canvas id="overloadTrend" height="180"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Hard Braking Events Per Week</div>
+      <canvas id="brakingChart" height="180"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Avg Turnaround Time (hrs) — By Week</div>
+      <canvas id="turnaroundChart" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- PER-TRUCK TABLE -->
+  <div class="section-title">Per-Truck Performance — March 2026</div>
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Truck ID</th>
+          <th>Driver</th>
+          <th>Total Loads</th>
+          <th>Perfect</th>
+          <th>Overloads</th>
+          <th>Underloads</th>
+          <th>Avg Gross (kg)</th>
+          <th>Hard Braking</th>
+          <th>Avg Speed (km/h)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>AF-14</strong></td><td>S. Mahlangu</td><td>22</td><td class="rank-1">22</td><td>0</td><td>0</td><td>161,200</td><td>0</td><td>68</td><td><span class="badge badge-green">Excellent</span></td></tr>
+        <tr><td><strong>AF-03</strong></td><td>P. Dlamini</td><td>21</td><td>20</td><td>0</td><td>1</td><td>159,800</td><td>1</td><td>71</td><td><span class="badge badge-green">Good</span></td></tr>
+        <tr><td><strong>AF-09</strong></td><td>T. Nkosi</td><td>23</td><td>20</td><td>1</td><td>2</td><td>158,400</td><td>2</td><td>69</td><td><span class="badge badge-green">Good</span></td></tr>
+        <tr><td><strong>AF-18</strong></td><td>R. Sithole</td><td>20</td><td>18</td><td>1</td><td>1</td><td>160,100</td><td>1</td><td>72</td><td><span class="badge badge-green">Good</span></td></tr>
+        <tr><td><strong>AF-11</strong></td><td>M. Zwane</td><td>21</td><td>17</td><td>2</td><td>2</td><td>157,600</td><td>3</td><td>74</td><td><span class="badge badge-amber">Monitor</span></td></tr>
+        <tr><td><strong>AF-05</strong></td><td>B. Khumalo</td><td>22</td><td>17</td><td>3</td><td>2</td><td>163,400</td><td>2</td><td>70</td><td><span class="badge badge-amber">Monitor</span></td></tr>
+        <tr><td><strong>AF-16</strong></td><td>J. Mthembu</td><td>19</td><td>15</td><td>3</td><td>1</td><td>164,200</td><td>4</td><td>76</td><td><span class="badge badge-amber">Monitor</span></td></tr>
+        <tr><td><strong>AF-02</strong></td><td>A. Mokoena</td><td>20</td><td>15</td><td>4</td><td>1</td><td>165,800</td><td>3</td><td>73</td><td><span class="badge badge-amber">Monitor</span></td></tr>
+        <tr><td><strong>AF-07</strong></td><td>D. Shabalala</td><td>21</td><td>12</td><td>8</td><td>1</td><td>169,400</td><td>6</td><td>79</td><td><span class="badge badge-red">Action Required</span></td></tr>
+        <tr><td><strong>AF-12</strong></td><td>F. Ngcobo</td><td>18</td><td>12</td><td>4</td><td>2</td><td>166,100</td><td>5</td><td>77</td><td><span class="badge badge-red">Action Required</span></td></tr>
+      </tbody>
+    </table>
+    <div style="padding:10px 0 0; font-size:0.75rem; color:var(--muted);">Showing top 10 of 20 trucks. Full fleet report available on dashboard. Sorted by performance score.</div>
+  </div>
+
+  <!-- ZONE ANALYSIS -->
+  <div class="section-title">Zone Time Analysis — Average Per Load Cycle</div>
+  <div class="zone-grid">
+    <div class="chart-card">
+      <div class="chart-title">Average Time Breakdown Per Cycle (minutes)</div>
+      <canvas id="zoneChart" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Zone Time Trend — Waiting at Mine (minutes avg)</div>
+      <canvas id="waitingTrend" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- DRIVER ACCOUNTABILITY -->
+  <div class="section-title">Driver Accountability — Hard Braking Events</div>
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Driver</th>
+          <th>Truck</th>
+          <th>Hard Braking Events</th>
+          <th>Speeding Events</th>
+          <th>Overloads Caused</th>
+          <th>Total Loads</th>
+          <th>Driver Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="driver-rank top">1</span></td><td>S. Mahlangu</td><td>AF-14</td><td>0</td><td>0</td><td>0</td><td>22</td><td><span class="badge badge-green">98/100</span></td></tr>
+        <tr><td><span class="driver-rank top">2</span></td><td>P. Dlamini</td><td>AF-03</td><td>1</td><td>0</td><td>0</td><td>21</td><td><span class="badge badge-green">95/100</span></td></tr>
+        <tr><td><span class="driver-rank top">3</span></td><td>R. Sithole</td><td>AF-18</td><td>1</td><td>1</td><td>1</td><td>20</td><td><span class="badge badge-green">91/100</span></td></tr>
+        <tr><td><span class="driver-rank">7</span></td><td>J. Mthembu</td><td>AF-16</td><td>4</td><td>3</td><td>3</td><td>19</td><td><span class="badge badge-amber">72/100</span></td></tr>
+        <tr><td><span class="driver-rank">9</span></td><td>F. Ngcobo</td><td>AF-12</td><td>5</td><td>4</td><td>4</td><td>18</td><td><span class="badge badge-red">61/100</span></td></tr>
+        <tr><td><span class="driver-rank">10</span></td><td>D. Shabalala</td><td>AF-07</td><td>6</td><td>5</td><td>8</td><td>21</td><td><span class="badge badge-red">48/100</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CONFIGURABLE LIMITS PAGE -->
+  <div class="section-title">Report Configuration — Active Settings</div>
+  <div class="config-page">
+    <p style="font-size:0.85rem; color:var(--muted);">These thresholds are configured by the fleet manager and applied to all automated reports and live alerts. Changes take effect immediately on the dashboard.</p>
+    <div class="config-grid">
+      <div class="config-box">
+        <div class="config-box-label">Legal GCM — Public Road</div>
+        <div class="config-box-value">56,000 <span style="font-size:0.85rem; font-weight:400;">kg</span></div>
+        <div class="config-box-unit">National Road Traffic Act limit</div>
+      </div>
+      <div class="config-box">
+        <div class="config-box-label">Mine Permit GCM — Overload Threshold</div>
+        <div class="config-box-value">168,000 <span style="font-size:0.85rem; font-weight:400;">kg</span></div>
+        <div class="config-box-unit">Triggers overload flag and alert</div>
+      </div>
+      <div class="config-box">
+        <div class="config-box-label">Underload Threshold</div>
+        <div class="config-box-value">140,000 <span style="font-size:0.85rem; font-weight:400;">kg</span></div>
+        <div class="config-box-unit">Below this = underload flag</div>
+      </div>
+      <div class="config-box">
+        <div class="config-box-label">Hard Braking Threshold</div>
+        <div class="config-box-value">0.265 <span style="font-size:0.85rem; font-weight:400;">g</span></div>
+        <div class="config-box-unit">Accelerometer trigger point</div>
+      </div>
+      <div class="config-box">
+        <div class="config-box-label">Speed Limit — Public Road</div>
+        <div class="config-box-value">80 <span style="font-size:0.85rem; font-weight:400;">km/h</span></div>
+        <div class="config-box-unit">Triggers speeding event</div>
+      </div>
+      <div class="config-box">
+        <div class="config-box-label">Speed Limit — Mine Area</div>
+        <div class="config-box-value">30 <span style="font-size:0.85rem; font-weight:400;">km/h</span></div>
+        <div class="config-box-unit">Detected via GPS zone boundary</div>
+      </div>
+      <div class="config-box">
+        <div class="config-box-label">Data Capture Interval</div>
+        <div class="config-box-value">2 <span style="font-size:0.85rem; font-weight:400;">minutes</span></div>
+        <div class="config-box-unit">Plus event-triggered captures</div>
+      </div>
+      <div class="config-box">
+        <div class="config-box-label">Report Auto-Generation</div>
+        <div class="config-box-value">Daily + Monthly</div>
+        <div class="config-box-unit">Plus on-demand pull anytime</div>
+      </div>
+      <div class="config-box">
+        <div class="config-box-label">Fleet Size — Active Modules</div>
+        <div class="config-box-value">20 <span style="font-size:0.85rem; font-weight:400;">trucks</span></div>
+        <div class="config-box-unit">Unitrans ROM Mpumalanga fleet</div>
+      </div>
+    </div>
+    <div class="config-note-box">
+      ⚠️ All thresholds on this page are fully editable by the fleet manager. Changes are applied immediately to live alerts and future automated reports. Historical data is not affected by threshold changes.
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-left">AxisFleet (Pty) Ltd  |  Reg: 2026/249788/07  |  axisfleetsa@gmail.com  |  axisfleetsa.co.za  |  Montana, Pretoria</div>
+  <div class="footer-scripture">"He will watch over your coming and going." — Psalm 121:8</div>
+</div>
+
+<script>
+const BLUE = '#1E90FF', ORANGE = '#FF6B35', GREEN = '#22C55E', AMBER = '#F59E0B', GREY = '#AAAAAA', NAVY = '#0D1B2A';
+const gridColor = '#E8EDF5';
+const tickColor = '#6B7C93';
+const defaults = { font: { family: 'Barlow, sans-serif' } };
+Chart.defaults.font.family = 'Barlow, sans-serif';
+
+// 1. Weekly loads bar chart
+new Chart(document.getElementById('weeklyLoads'), {
+  type: 'bar',
+  data: {
+    labels: ['Week 1','Week 2','Week 3','Week 4'],
+    datasets: [
+      { label:'Perfect Loads', data:[85,78,82,76], backgroundColor:BLUE },
+      { label:'Overloads',     data:[14,12,10,9],  backgroundColor:ORANGE },
+      { label:'Underloads',    data:[12,13,9,12],  backgroundColor:GREY },
+    ]
+  },
+  options: {
+    responsive:true, plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, padding:16 } } },
+    scales: {
+      x:{ grid:{color:gridColor}, ticks:{color:tickColor} },
+      y:{ grid:{color:gridColor}, ticks:{color:tickColor}, beginAtZero:true }
+    }
+  }
+});
+
+// 2. Pie chart
+new Chart(document.getElementById('loadPie'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Perfect (78%)', 'Overloads (11%)', 'Underloads (11%)'],
+    datasets: [{ data:[321,45,46], backgroundColor:[BLUE, ORANGE, GREY], borderWidth:2, borderColor:'#fff' }]
+  },
+  options: {
+    responsive:true, cutout:'60%',
+    plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, padding:12 } } }
+  }
+});
+
+// 3. Overload trend line
+new Chart(document.getElementById('overloadTrend'), {
+  type: 'line',
+  data: {
+    labels: ['Oct','Nov','Dec','Jan','Feb','Mar'],
+    datasets: [{ label:'Overload Events', data:[78,64,55,52,48,45], borderColor:ORANGE, backgroundColor:'rgba(255,107,53,0.08)', tension:0.4, fill:true, pointBackgroundColor:ORANGE, pointRadius:4 }]
+  },
+  options: {
+    responsive:true, plugins:{ legend:{ display:false } },
+    scales: { x:{grid:{color:gridColor},ticks:{color:tickColor}}, y:{grid:{color:gridColor},ticks:{color:tickColor},beginAtZero:true} }
+  }
+});
+
+// 4. Hard braking
+new Chart(document.getElementById('brakingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Week 1','Week 2','Week 3','Week 4'],
+    datasets: [{ label:'Hard Braking Events', data:[12,10,9,7], backgroundColor:'rgba(239,68,68,0.7)', borderColor:'#EF4444', borderWidth:1 }]
+  },
+  options: {
+    responsive:true, plugins:{ legend:{ display:false } },
+    scales: { x:{grid:{color:gridColor},ticks:{color:tickColor}}, y:{grid:{color:gridColor},ticks:{color:tickColor},beginAtZero:true} }
+  }
+});
+
+// 5. Turnaround
+new Chart(document.getElementById('turnaroundChart'), {
+  type: 'line',
+  data: {
+    labels: ['Week 1','Week 2','Week 3','Week 4'],
+    datasets: [{ label:'Avg Turnaround (hrs)', data:[4.6,4.4,4.1,3.9], borderColor:BLUE, backgroundColor:'rgba(30,144,255,0.08)', tension:0.4, fill:true, pointBackgroundColor:BLUE, pointRadius:4 }]
+  },
+  options: {
+    responsive:true, plugins:{ legend:{ display:false } },
+    scales: { x:{grid:{color:gridColor},ticks:{color:tickColor}}, y:{grid:{color:gridColor},ticks:{color:tickColor},min:3,max:5.5} }
+  }
+});
+
+// 6. Zone breakdown
+new Chart(document.getElementById('zoneChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Waiting at Mine','Loading','Strapping','Road (Loaded)','At Mill','Road (Empty)'],
+    datasets: [{ label:'Minutes', data:[38,22,12,65,18,55], backgroundColor:[AMBER, GREEN, GREY, BLUE, BLUE, GREY] }]
+  },
+  options: {
+    indexAxis:'y', responsive:true, plugins:{ legend:{ display:false } },
+    scales: { x:{grid:{color:gridColor},ticks:{color:tickColor},beginAtZero:true}, y:{grid:{display:false},ticks:{color:tickColor}} }
+  }
+});
+
+// 7. Waiting trend
+new Chart(document.getElementById('waitingTrend'), {
+  type: 'line',
+  data: {
+    labels: ['Week 1','Week 2','Week 3','Week 4'],
+    datasets: [{ label:'Avg Wait at Mine (min)', data:[45,41,38,36], borderColor:AMBER, backgroundColor:'rgba(245,158,11,0.08)', tension:0.4, fill:true, pointBackgroundColor:AMBER, pointRadius:4 }]
+  },
+  options: {
+    responsive:true, plugins:{ legend:{ display:false } },
+    scales: { x:{grid:{color:gridColor},ticks:{color:tickColor}}, y:{grid:{color:gridColor},ticks:{color:tickColor},min:30,max:50} }
+  }
+});
+</script>
+</body>
+</html>

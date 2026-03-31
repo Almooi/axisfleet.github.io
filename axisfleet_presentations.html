@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" type="image/x-icon" href="favicon.ico"/>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AxisFleet — Presentations</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+
+  /* ── TOP NAV ── */
+  .topnav {
+    height:52px;
+    background:#0D1B2A;
+    border-bottom:1px solid rgba(30,144,255,0.15);
+    display:flex;
+    align-items:center;
+    padding:0 32px;
+    gap:20px;
+    position:relative;
+    z-index:9999;
+    flex-shrink:0;
+  }
+  .nav-logo-link { display:flex; align-items:center; text-decoration:none; }
+  .nav-logo { height:28px; width:auto; display:block; }
+  .nav-divider { width:1px; height:28px; background:rgba(255,255,255,0.1); }
+  .nav-links { display:flex; gap:4px; }
+  .nav-link {
+    padding:6px 14px;
+    font-size:0.82rem;
+    font-weight:600;
+    color:rgba(255,255,255,0.5);
+    text-decoration:none;
+    letter-spacing:0.03em;
+    border-bottom:2px solid transparent;
+    transition:all 0.15s;
+    font-family:"Barlow",sans-serif;
+  }
+  .nav-link:hover { color:white; }
+  .nav-link.active { color:white; border-bottom-color:#1E90FF; }
+  .nav-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+  .nav-cta {
+    background:#FF6B35;
+    color:white;
+    padding:7px 18px;
+    font-size:0.78rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    text-decoration:none;
+    font-family:"Barlow",sans-serif;
+    transition:background 0.15s;
+  }
+  .nav-cta:hover { background:#e85c28; color:white; }
+
+
+
+</style>
+<style>
+  :root {
+    --navy:#0D1B2A; --blue:#1E90FF; --orange:#FF6B35;
+    --white:#FFFFFF; --light:#F4F7FB; --muted:#6B7C93; --dark:#060E17;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Barlow",sans-serif; background:var(--light); color:var(--navy); }
+
+  .page-header {
+    background:var(--navy);
+    padding:64px 10% 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  .page-header::before {
+    content:'';
+    position:absolute;
+    top:-100px; right:-100px;
+    width:400px; height:400px;
+    border-radius:50%;
+    border:1px solid rgba(30,144,255,0.1);
+  }
+  .page-label { font-size:0.72rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--orange); margin-bottom:10px; }
+  .page-title { font-family:"Barlow Condensed",sans-serif; font-size:clamp(2rem,4vw,2.8rem); font-weight:800; color:white; margin-bottom:12px; }
+  .page-sub { font-size:1rem; font-weight:300; color:rgba(255,255,255,0.55); max-width:580px; line-height:1.7; }
+
+  .content { max-width:1100px; margin:0 auto; padding:56px 5%; }
+
+  .section-title {
+    font-family:"Barlow Condensed",sans-serif;
+    font-size:1.4rem; font-weight:800; color:var(--navy);
+    margin-bottom:24px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-title::before { content:''; width:4px; height:22px; background:var(--orange); display:inline-block; }
+
+  .deck-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:52px; }
+
+  .deck-card {
+    background:white;
+    border:1px solid rgba(13,27,42,0.07);
+    overflow:hidden;
+    transition:box-shadow 0.2s, transform 0.2s;
+  }
+  .deck-card:hover { box-shadow:0 8px 32px rgba(13,27,42,0.12); transform:translateY(-2px); }
+
+  .deck-preview {
+    height:180px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .deck-preview.main { background:var(--navy); }
+  .deck-preview.hardware { background:#0A1929; }
+  .deck-preview.report { background:white; border-bottom:1px solid #E8EDF5; }
+  .deck-preview.tracking { background:#060E17; }
+
+  .deck-preview-inner {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:20px;
+  }
+  .deck-icon { font-size:2.8rem; }
+  .deck-preview-title {
+    font-family:"Barlow Condensed",sans-serif;
+    font-size:1.1rem; font-weight:800;
+    text-align:center;
+  }
+  .deck-preview-sub { font-size:0.75rem; text-align:center; opacity:0.6; }
+
+  .deck-slides-preview {
+    display:flex; gap:4px; padding:0 16px 12px;
+    position:absolute; bottom:0; left:0; right:0;
+  }
+  .slide-thumb {
+    height:28px; flex:1; border-radius:1px;
+    opacity:0.5;
+  }
+
+  .deck-body { padding:20px 24px 24px; }
+  .deck-name { font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:4px; }
+  .deck-meta { font-size:0.78rem; color:var(--muted); margin-bottom:10px; }
+  .deck-desc { font-size:0.88rem; color:var(--muted); line-height:1.65; font-weight:300; margin-bottom:16px; }
+  .deck-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
+  .deck-tag { background:var(--light); color:var(--muted); font-size:0.7rem; font-weight:700; padding:3px 10px; letter-spacing:0.05em; text-transform:uppercase; }
+  .deck-tag.blue { background:rgba(30,144,255,0.1); color:var(--blue); }
+  .deck-tag.orange { background:rgba(255,107,53,0.1); color:var(--orange); }
+
+  .deck-actions { display:flex; gap:10px; }
+  .btn-dl { background:var(--navy); color:white; padding:10px 20px; font-size:0.8rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; text-decoration:none; font-family:"Barlow",sans-serif; transition:background 0.15s; display:inline-block; }
+  .btn-dl:hover { background:#1A3048; }
+  .btn-dl.orange { background:var(--orange); }
+  .btn-dl.orange:hover { background:#e85c28; }
+  .btn-view { background:transparent; border:1px solid rgba(13,27,42,0.15); color:var(--navy); padding:10px 20px; font-size:0.8rem; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; text-decoration:none; font-family:"Barlow",sans-serif; transition:all 0.15s; display:inline-block; }
+  .btn-view:hover { border-color:var(--blue); color:var(--blue); }
+
+  .info-box {
+    background:white;
+    border-left:4px solid var(--blue);
+    padding:20px 24px;
+    margin-bottom:52px;
+    font-size:0.9rem;
+    color:var(--muted);
+    line-height:1.7;
+  }
+  .info-box strong { color:var(--navy); }
+
+  footer { background:var(--dark); padding:22px 10%; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  .footer-copy { font-size:0.78rem; color:rgba(255,255,255,0.28); font-weight:300; }
+  .footer-scripture { font-size:0.76rem; color:rgba(255,255,255,0.18); font-style:italic; }
+
+  @media(max-width:768px) { .deck-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="index.html" class="nav-logo-link">
+    <img src="logo1.svg" class="nav-logo" alt="AxisFleet">
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Overview</a>
+    <a href="axisfleet_live_tracking.html" class="nav-link">Live Tracking</a>
+    <a href="AxisFleet_Monthly_Report_Sample.html" class="nav-link">Reports</a>
+    <a href="axisfleet_presentations.html" class="nav-link active">Presentations</a>
+  </div>
+  <div class="nav-right">
+    <a href="mailto:axisfleetsa@gmail.com" class="nav-cta">Contact Us</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-label">Resources</div>
+  <h1 class="page-title">AxisFleet Presentations</h1>
+  <p class="page-sub">Download or view the full AxisFleet presentation suite — built for fleet operators, transport managers and technical decision makers.</p>
+</div>
+
+<div class="content">
+
+  <div class="info-box">
+    <strong>How to use these resources:</strong> Start with the Main Presentation for a complete overview of the AxisFleet platform. Follow with the Hardware deck for technical questions. Use the Report and Live Tracking demos to show stakeholders exactly what the system delivers in practice.
+  </div>
+
+  <div class="section-title">Presentation Decks</div>
+  <div class="deck-grid">
+
+    <!-- MAIN DECK -->
+    <div class="deck-card">
+      <div class="deck-preview main">
+        <div class="deck-preview-inner">
+          <div class="deck-icon">📊</div>
+          <div class="deck-preview-title" style="color:white;">Fleet Intelligence</div>
+          <div class="deck-preview-sub" style="color:rgba(255,255,255,0.5);">Main Presentation — 11 Slides</div>
+        </div>
+        <div class="deck-slides-preview">
+          <div class="slide-thumb" style="background:#1E90FF;"></div>
+          <div class="slide-thumb" style="background:white;"></div>
+          <div class="slide-thumb" style="background:#0D1B2A;border:1px solid #1A3048;"></div>
+          <div class="slide-thumb" style="background:white;"></div>
+          <div class="slide-thumb" style="background:#0D1B2A;border:1px solid #1A3048;"></div>
+          <div class="slide-thumb" style="background:white;"></div>
+          <div class="slide-thumb" style="background:#0D1B2A;border:1px solid #1A3048;"></div>
+          <div class="slide-thumb" style="background:white;"></div>
+          <div class="slide-thumb" style="background:#F4F7FB;"></div>
+          <div class="slide-thumb" style="background:#0D1B2A;border:1px solid #1A3048;"></div>
+          <div class="slide-thumb" style="background:#060E17;"></div>
+        </div>
+      </div>
+      <div class="deck-body">
+        <div class="deck-name">AxisFleet — Main Presentation</div>
+        <div class="deck-meta">11 slides  ·  PowerPoint (.pptx)  ·  Updated March 2026</div>
+        <div class="deck-desc">The complete AxisFleet story — from opportunity to platform, how we deliver, what you see, pricing and next steps. Designed for fleet operators and transport managers.</div>
+        <div class="deck-tags">
+          <span class="deck-tag blue">Fleet Intelligence</span>
+          <span class="deck-tag orange">Heavy Haul</span>
+          <span class="deck-tag">Mining</span>
+          <span class="deck-tag">Bulk Commodity</span>
+        </div>
+        <div class="deck-actions">
+          <a href="AxisFleet_Main_Presentation.pptx" download class="btn-dl orange">Download</a>
+          <a href="mailto:axisfleetsa@gmail.com?subject=AxisFleet Presentation Request" class="btn-view">Request Walkthrough</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HARDWARE DECK -->
+    <div class="deck-card">
+      <div class="deck-preview hardware">
+        <div class="deck-preview-inner">
+          <div class="deck-icon">⚙️</div>
+          <div class="deck-preview-title" style="color:white;">The Hardware</div>
+          <div class="deck-preview-sub" style="color:rgba(255,255,255,0.5);">Hardware System — 8 Slides</div>
+        </div>
+        <div class="deck-slides-preview">
+          <div class="slide-thumb" style="background:#0D1B2A;border:1px solid #1A3048;"></div>
+          <div class="slide-thumb" style="background:white;"></div>
+          <div class="slide-thumb" style="background:#0D1B2A;border:1px solid #1A3048;"></div>
+          <div class="slide-thumb" style="background:white;"></div>
+          <div class="slide-thumb" style="background:#0D1B2A;border:1px solid #1A3048;"></div>
+          <div class="slide-thumb" style="background:white;"></div>
+          <div class="slide-thumb" style="background:#0D1B2A;border:1px solid #1A3048;"></div>
+          <div class="slide-thumb" style="background:#060E17;"></div>
+        </div>
+      </div>
+      <div class="deck-body">
+        <div class="deck-name">AxisFleet — Hardware System</div>
+        <div class="deck-meta">8 slides  ·  PowerPoint (.pptx)  ·  Updated March 2026</div>
+        <div class="deck-desc">A complete walkthrough of the AxisFleet hardware — sender modules, control unit, onboard console with fingerprint login, pressure transducers and system architecture diagram.</div>
+        <div class="deck-tags">
+          <span class="deck-tag blue">Load Cells</span>
+          <span class="deck-tag orange">Air Suspension</span>
+          <span class="deck-tag">IP67 Rated</span>
+          <span class="deck-tag">Wireless</span>
+        </div>
+        <div class="deck-actions">
+          <a href="AxisFleet_Hardware_System.pptx" download class="btn-dl">Download</a>
+          <a href="mailto:axisfleetsa@gmail.com?subject=AxisFleet Hardware Query" class="btn-view">Technical Query</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">Live Demos</div>
+  <div class="deck-grid">
+
+    <!-- REPORT DEMO -->
+    <div class="deck-card">
+      <div class="deck-preview report">
+        <div class="deck-preview-inner">
+          <div class="deck-icon">📈</div>
+          <div class="deck-preview-title" style="color:var(--navy);">Monthly Report</div>
+          <div class="deck-preview-sub" style="color:var(--muted);">Interactive HTML Demo</div>
+        </div>
+      </div>
+      <div class="deck-body">
+        <div class="deck-name">Sample Monthly Fleet Report</div>
+        <div class="deck-meta">Interactive HTML  ·  Live charts  ·  Sample data</div>
+        <div class="deck-desc">A full sample monthly fleet intelligence report — fleet summary stats, weekly load performance charts, per-truck breakdown, driver accountability table and configurable limits page.</div>
+        <div class="deck-tags">
+          <span class="deck-tag blue">7 Live Charts</span>
+          <span class="deck-tag orange">Per-Truck Data</span>
+          <span class="deck-tag">Driver Scores</span>
+          <span class="deck-tag">Config Page</span>
+        </div>
+        <div class="deck-actions">
+          <a href="AxisFleet_Monthly_Report_Sample.html" class="btn-dl orange">View Report</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACKING DEMO -->
+    <div class="deck-card">
+      <div class="deck-preview tracking">
+        <div class="deck-preview-inner">
+          <div class="deck-icon">🗺️</div>
+          <div class="deck-preview-title" style="color:white;">Live Tracking</div>
+          <div class="deck-preview-sub" style="color:rgba(255,255,255,0.5);">Interactive Map Demo</div>
+        </div>
+      </div>
+      <div class="deck-body">
+        <div class="deck-name">Live Fleet Tracking Dashboard</div>
+        <div class="deck-meta">Interactive HTML  ·  Simulated live data  ·  20 trucks</div>
+        <div class="deck-desc">An interactive live tracking demo — real map with 20 trucks, alert flags, colour-coded status panel, click-through truck detail, stats bar and live position simulation every 4 seconds.</div>
+        <div class="deck-tags">
+          <span class="deck-tag blue">Live Map</span>
+          <span class="deck-tag orange">Alert Flags</span>
+          <span class="deck-tag">20 Trucks</span>
+          <span class="deck-tag">Simulated Live</span>
+        </div>
+        <div class="deck-actions">
+          <a href="axisfleet_live_tracking.html" class="btn-dl orange">Open Dashboard</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 AxisFleet (Pty) Ltd · Reg: 2026/249788/07 · axisfleetsa@gmail.com</span>
+  <span class="footer-scripture">"He will watch over your coming and going." — Psalm 121:8</span>
+</footer>
+
+</body>
+</html>
