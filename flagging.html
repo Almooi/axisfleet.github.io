@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AxisFleet — OPS | Flagging</title>
+<link rel="icon" href="favicon.ico"/>
+<link rel="stylesheet" href="af_style.css"/>
+<script src="af_data.js"></script>
+<style>
+html,body{height:100%;background:#EAEEF4;display:flex;flex-direction:column;overflow:hidden;}
+.page-body{flex:1;overflow-y:auto;padding:0 28px 28px;}
+.flag-topbar{background:white;border-bottom:1px solid #D1D9E3;padding:12px 28px;display:flex;align-items:center;gap:16px;flex-shrink:0;margin:0 -28px;flex-shrink:0;}
+.flag-topbar select{background:white;border:1px solid #D1D9E3;padding:8px 14px;font-size:0.85rem;font-family:'Barlow',sans-serif;color:var(--navy);outline:none;min-width:260px;cursor:pointer;}
+.flag-topbar select:focus{border-color:var(--blue);}
+.effective-date{font-size:0.75rem;color:var(--muted);margin-left:auto;}
+.effective-date span{color:var(--blue);font-weight:700;font-family:'Courier New',monospace;}
+.flag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px;}
+.flag-card{background:white;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-top:3px solid #E8EDF5;}
+.flag-card.active-flag{border-top-color:var(--blue);}
+.flag-card.active-flag.severity-high{border-top-color:var(--red);}
+.flag-card.active-flag.severity-med{border-top-color:var(--amber);}
+.flag-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.flag-title{font-size:0.9rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px;}
+.flag-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.flag-fields{display:flex;flex-direction:column;gap:10px;}
+.flag-field-row{display:flex;align-items:center;justify-content:space-between;}
+.flag-field-row label{font-size:0.75rem;color:var(--muted);}
+.flag-input{background:var(--light);border:1px solid #D1D9E3;padding:6px 10px;font-size:0.82rem;font-family:'Courier New',monospace;color:var(--navy);width:120px;text-align:right;outline:none;transition:border-color 0.12s;}
+.flag-input:focus{border-color:var(--blue);}
+.flag-notify{margin-top:12px;padding-top:10px;border-top:1px solid #E8EDF5;}
+.flag-notify-label{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.flag-notify select{width:100%;background:var(--light);border:1px solid #D1D9E3;padding:6px 10px;font-size:0.78rem;font-family:'Barlow',sans-serif;color:var(--navy);outline:none;}
+.flag-notify select:focus{border-color:var(--blue);}
+.flag-note{margin-top:16px;padding:12px 16px;background:white;border-left:3px solid var(--orange);font-size:0.78rem;color:var(--muted);line-height:1.6;}
+/* Apply modal */
+.apply-modal{display:none;position:fixed;inset:0;background:rgba(6,14,23,0.7);z-index:10000;align-items:center;justify-content:center;}
+.apply-modal.open{display:flex;}
+.apply-box{background:white;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.apply-header{background:var(--navy);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
+.apply-header-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:white;text-transform:uppercase;letter-spacing:0.04em;}
+.apply-body{padding:20px;}
+.apply-body p{font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.apply-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.apply-option{padding:16px;border:2px solid #E8EDF5;cursor:pointer;text-align:center;transition:all 0.15s;}
+.apply-option:hover{border-color:var(--blue);}
+.apply-option.selected{border-color:var(--blue);background:#DBEAFE;}
+.apply-option-title{font-size:0.85rem;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.apply-option-sub{font-size:0.72rem;color:var(--muted);}
+.apply-footer{padding:14px 20px;border-top:1px solid #E8EDF5;display:flex;gap:10px;justify-content:flex-end;}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="hub.html" class="nav-logo-link">
+    <img src="logo_mark.svg" class="nav-logo" alt="AxisFleet"/>
+    <span class="nav-logo-name">AxisFleet</span>
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-links">
+    <a href="hub.html" class="nav-link">Hub</a>
+    <a href="setup.html" class="nav-link">Setup</a>
+    <a href="rawdata.html" class="nav-link">Raw Data</a>
+    <a href="flagging.html" class="nav-link active">Flagging</a>
+    <a href="liveops.html" class="nav-link">Live Operations</a>
+    <a href="reporting.html" class="nav-link">Reporting</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="nav-user">Admin</span>
+    <button class="nav-logout" id="nav-logout">Logout</button>
+  </div>
+</nav>
+
+<div class="flag-topbar">
+  <span style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;">Configure rules for:</span>
+  <select id="truck-select"></select>
+  <div class="effective-date">Rules effective from: <span id="eff-date">2026-04-01</span></div>
+  <button class="btn btn-primary" id="save-btn" style="margin-left:16px;">Save Rules</button>
+</div>
+
+<div class="page-body">
+  <div class="section-header" style="padding:20px 0 14px;">
+    <div class="section-title">Flagging Setup</div>
+  </div>
+  <div class="flag-grid" id="flag-grid"></div>
+  <div class="flag-note">⚠ Historical data is always evaluated against the rule version that was active at the time of capture. Modifying thresholds only affects future events — past records remain accurate to their original rules. When you click Save, you will be asked whether to apply to this unit only or to the entire fleet.</div>
+</div>
+
+<!-- Apply Modal -->
+<div class="apply-modal" id="apply-modal">
+  <div class="apply-box">
+    <div class="apply-header">
+      <span class="apply-header-title">Apply Flag Rules</span>
+      <button style="background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:1.1rem;" onclick="document.getElementById('apply-modal').classList.remove('open')">✕</button>
+    </div>
+    <div class="apply-body">
+      <p>Choose how to apply these flag settings:</p>
+      <div class="apply-options">
+        <div class="apply-option selected" id="opt-unit" onclick="selectApply('unit')">
+          <div class="apply-option-title">This Unit Only</div>
+          <div class="apply-option-sub" id="opt-unit-label">Apply to selected unit</div>
+        </div>
+        <div class="apply-option" id="opt-fleet" onclick="selectApply('fleet')">
+          <div class="apply-option-title">Entire Fleet</div>
+          <div class="apply-option-sub">Apply to all registered units</div>
+        </div>
+      </div>
+    </div>
+    <div class="apply-footer">
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('apply-modal').classList.remove('open')">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="confirm-apply">Confirm &amp; Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+if(!sessionStorage.getItem('af_auth')) window.location.href='index.html';
+document.getElementById('nav-user').textContent=sessionStorage.getItem('af_user')||'Admin';
+document.getElementById('nav-logout').addEventListener('click',()=>{if(confirm('Log out?')){sessionStorage.clear();window.location.href='index.html';}});
+
+function load(key,def){try{return JSON.parse(localStorage.getItem('af_'+key))||def;}catch(e){return def;}}
+function save(key,val){localStorage.setItem('af_'+key,JSON.stringify(val));}
+
+const FLAGS_DEF = [
+  {id:'overload',label:'Overload',dot:'var(--red)',severity:'high',fields:[{id:'max_gross',label:'Max gross weight (kg)',default:168000},{id:'trigger_delay',label:'Trigger delay (s)',default:5}]},
+  {id:'underload',label:'Underload',dot:'var(--amber)',severity:'med',fields:[{id:'min_nett',label:'Min nett weight (kg)',default:140000}]},
+  {id:'speeding_road',label:'Speeding — Road',dot:'var(--orange)',severity:'med',fields:[{id:'max_speed_road',label:'Max speed road (km/h)',default:80}]},
+  {id:'speeding_mine',label:'Speeding — Mine Area',dot:'var(--red)',severity:'high',fields:[{id:'max_speed_mine',label:'Max speed mine (km/h)',default:30}]},
+  {id:'harsh_brake',label:'Harsh Braking',dot:'var(--red)',severity:'high',fields:[{id:'brake_g',label:'Deceleration threshold (G)',default:0.265}]},
+  {id:'harsh_accel',label:'Harsh Acceleration',dot:'var(--amber)',severity:'med',fields:[{id:'accel_g',label:'Acceleration threshold (G)',default:0.28}]},
+  {id:'idle',label:'Excessive Standing',dot:'var(--muted)',severity:'low',fields:[{id:'max_idle',label:'Max idle time (min)',default:30}]},
+  {id:'offroute',label:'Off-Route Movement',dot:'var(--blue)',severity:'med',fields:[{id:'deviation_km',label:'Deviation radius (km)',default:2.5}]},
+  {id:'module_fault',label:'Module Fault / Offline',dot:'var(--red)',severity:'high',fields:[{id:'offline_timeout',label:'Offline timeout (min)',default:3}]},
+  {id:'comms',label:'Signal / Comms Issue',dot:'var(--muted)',severity:'low',fields:[{id:'no_packet_timeout',label:'No-packet timeout (min)',default:5}]},
+];
+
+const TRUCKS = load('trucks', AF_DATA.trucks);
+const USERS = load('users', AF_DATA.users);
+
+// Build truck select
+const sel = document.getElementById('truck-select');
+TRUCKS.forEach(t=>{
+  const opt=document.createElement('option');
+  opt.value=t.id;opt.textContent=`${t.id} — ${t.make||''}`;
+  sel.appendChild(opt);
+});
+
+function getFlags(truckId){
+  const all=load('flag_rules',{});
+  return all[truckId]||{};
+}
+function saveFlagsForTruck(truckId,rules){
+  const all=load('flag_rules',{});
+  all[truckId]=rules;
+  save('flag_rules',all);
+}
+
+function buildGrid(truckId){
+  const saved=getFlags(truckId);
+  const userOptions=USERS.map(u=>`<option value="${u.id}">${u.name} — ${u.role}</option>`).join('');
+  const grid=document.getElementById('flag-grid');
+  grid.innerHTML=FLAGS_DEF.map(f=>{
+    const enabled=saved[f.id]?saved[f.id].enabled!==false:true;
+    const fieldsHtml=f.fields.map(fld=>{
+      const val=saved[f.id]?saved[f.id][fld.id]!==undefined?saved[f.id][fld.id]:fld.default:fld.default;
+      return `<div class="flag-field-row"><label>${fld.label}</label><input class="flag-input" data-flag="${f.id}" data-field="${fld.id}" value="${val}"/></div>`;
+    }).join('');
+    const notifyVal=saved[f.id]?saved[f.id].notify||'USR-0002':'USR-0002';
+    return `<div class="flag-card ${enabled?'active-flag':''} ${enabled?'severity-'+f.severity:''}" id="fcard-${f.id}">
+      <div class="flag-header">
+        <span class="flag-title"><span class="flag-dot" style="background:${f.dot}"></span>${f.label}</span>
+        <label class="toggle"><input type="checkbox" ${enabled?'checked':''} onchange="toggleFlag('${f.id}',this.checked)" /><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+      </div>
+      <div class="flag-fields">${fieldsHtml}</div>
+      <div class="flag-notify">
+        <div class="flag-notify-label">Notify</div>
+        <select data-flag="${f.id}" data-field="notify"><option value="">— Select manager —</option>${userOptions.replace(`value="${notifyVal}"`,`value="${notifyVal}" selected`)}</select>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFlag(flagId,checked){
+  const card=document.getElementById('fcard-'+flagId);
+  const def=FLAGS_DEF.find(f=>f.id===flagId);
+  if(checked){card.classList.add('active-flag','severity-'+def.severity);}
+  else{card.classList.remove('active-flag','severity-high','severity-med','severity-low');}
+}
+
+sel.addEventListener('change',()=>{
+  buildGrid(sel.value);
+  document.getElementById('opt-unit-label').textContent=`Apply to ${sel.value} only`;
+});
+buildGrid(sel.value||TRUCKS[0]?.id);
+
+let applyTarget='unit';
+function selectApply(t){
+  applyTarget=t;
+  document.getElementById('opt-unit').classList.toggle('selected',t==='unit');
+  document.getElementById('opt-fleet').classList.toggle('selected',t==='fleet');
+}
+
+document.getElementById('save-btn').addEventListener('click',()=>{
+  document.getElementById('opt-unit-label').textContent=`Apply to ${sel.value} only`;
+  document.getElementById('apply-modal').classList.add('open');
+});
+
+document.getElementById('confirm-apply').addEventListener('click',()=>{
+  // Collect current values
+  const rules={};
+  FLAGS_DEF.forEach(f=>{
+    const card=document.getElementById('fcard-'+f.id);
+    const enabled=card.querySelector('input[type=checkbox]').checked;
+    rules[f.id]={enabled};
+    f.fields.forEach(fld=>{
+      const inp=card.querySelector(`input[data-flag="${f.id}"][data-field="${fld.id}"]`);
+      if(inp)rules[f.id][fld.id]=parseFloat(inp.value)||inp.value;
+    });
+    const notifySel=card.querySelector(`select[data-flag="${f.id}"]`);
+    if(notifySel)rules[f.id].notify=notifySel.value;
+    rules[f.id].effective=new Date().toISOString().split('T')[0];
+  });
+
+  if(applyTarget==='fleet'){
+    TRUCKS.forEach(t=>saveFlagsForTruck(t.id,rules));
+    document.getElementById('apply-modal').classList.remove('open');
+    alert('Flag rules applied to entire fleet.');
+  } else {
+    saveFlagsForTruck(sel.value,rules);
+    document.getElementById('apply-modal').classList.remove('open');
+    alert(`Flag rules saved for ${sel.value}.`);
+  }
+  document.getElementById('eff-date').textContent=new Date().toISOString().split('T')[0];
+});
+</script>
+</body>
+</html>

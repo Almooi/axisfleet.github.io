@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>AxisFleet — OPS</title>
+<link rel="icon" href="favicon.ico"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--navy:#0D1B2A;--navy2:#0F2236;--blue:#1E90FF;--orange:#FF6B35;--red:#EF4444;--amber:#F59E0B;--green:#22C55E;--teal:#14B8A6;--muted:#6B7C93;--bg:#EAEEF4;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);overflow:hidden;}
+/* TOP BAR */
+.mob-top{height:52px;background:var(--navy);display:flex;align-items:center;padding:0 16px;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(30,144,255,0.15);}
+.mob-brand{display:flex;align-items:center;gap:9px;}
+.mob-logo{height:24px;}
+.mob-name{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:0.03em;}
+.mob-time{font-size:0.7rem;color:rgba(255,255,255,0.35);font-weight:600;}
+.refresh-btn{background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.1rem;cursor:pointer;padding:6px;}
+/* SCROLL AREA */
+.tab-content{display:none;flex:1;overflow-y:auto;padding:12px 12px 16px;}
+.tab-content.active{display:block;}
+/* BOTTOM NAV */
+.mob-nav{height:58px;background:var(--navy);border-top:1px solid rgba(30,144,255,0.12);display:flex;align-items:stretch;flex-shrink:0;}
+.mob-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.35);transition:color 0.12s;font-family:'Barlow',sans-serif;min-height:48px;}
+.mob-nav-btn.active{color:var(--blue);}
+.mob-nav-btn svg{width:22px;height:22px;}
+.mob-nav-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.mob-nav-divider{width:1px;background:rgba(255,255,255,0.05);}
+/* STAT CARDS */
+.stat-row-mobile{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.stat-card-mob{background:white;padding:14px 16px;border-radius:4px;border-left:4px solid var(--blue);box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.stat-card-mob.red{border-left-color:var(--red);}
+.stat-card-mob.amber{border-left-color:var(--amber);}
+.stat-card-mob.green{border-left-color:var(--green);}
+.stat-card-mob.orange{border-left-color:var(--orange);}
+.stat-card-mob.muted{border-left-color:var(--muted);}
+.stat-val-mob{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:800;line-height:1;color:var(--navy);}
+.stat-val-mob.red{color:var(--red);}
+.stat-val-mob.amber{color:var(--amber);}
+.stat-val-mob.green{color:var(--green);}
+.stat-label-mob{font-size:0.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
+/* FLAG CARD */
+.flag-card-mob{background:white;border-radius:4px;border-left:4px solid var(--red);box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:10px;overflow:hidden;}
+.flag-card-mob.warn{border-left-color:var(--amber);}
+.flag-card-header{display:flex;align-items:flex-start;justify-content:space-between;padding:14px 14px 10px;}
+.flag-truck-id{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:var(--navy);}
+.flag-driver-name{font-size:0.8rem;color:var(--muted);margin-top:1px;}
+.flag-badge{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:3px 8px;border-radius:2px;background:rgba(239,68,68,0.1);color:var(--red);}
+.flag-badge.warn{background:rgba(245,158,11,0.1);color:var(--amber);}
+.flag-details{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0 14px 12px;}
+.flag-det-item{font-size:0.8rem;color:var(--navy);padding:4px 0;}
+.flag-det-label{font-size:0.65rem;color:var(--muted);}
+.flag-actions{display:flex;border-top:1px solid #F4F7FB;}
+.flag-action-btn{flex:1;padding:12px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;font-family:'Barlow',sans-serif;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background 0.12s;background:white;color:var(--navy);min-height:48px;}
+.flag-action-btn:first-child{border-right:1px solid #F4F7FB;}
+.flag-action-btn.call{color:var(--orange);}
+.flag-action-btn.call:hover{background:#FFF7ED;}
+.flag-action-btn.clear-btn{color:var(--red);}
+.flag-action-btn.clear-btn:hover{background:#FEF2F2;}
+/* SECTION LABEL */
+.mob-section-label{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin:16px 0 8px;display:flex;align-items:center;justify-content:space-between;}
+/* FLEET LIST */
+.fleet-card{background:white;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:8px;overflow:hidden;}
+.fleet-card-header{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;min-height:48px;}
+.fleet-status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.fleet-card-info{flex:1;}
+.fleet-truck-id{font-size:0.9rem;font-weight:700;color:var(--navy);}
+.fleet-driver{font-size:0.73rem;color:var(--muted);}
+.fleet-card-right{text-align:right;flex-shrink:0;}
+.fleet-weight{font-size:0.8rem;color:var(--blue);font-weight:600;}
+.fleet-expand{font-size:1rem;color:var(--muted);transition:transform 0.2s;}
+.fleet-expand.open{transform:rotate(180deg);}
+.fleet-card-detail{display:none;padding:12px 14px;background:#F8FAFC;border-top:1px solid #E8EDF5;}
+.fleet-card-detail.show{display:block;}
+.fleet-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.fleet-det-item{}<br>.fleet-det-label{font-size:0.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.fleet-det-val{font-size:0.82rem;font-weight:600;color:var(--navy);margin-top:1px;}
+.fleet-det-val.red{color:var(--red);}
+.fleet-det-val.green{color:var(--green);}
+.fleet-det-val.amber{color:var(--amber);}
+.fleet-flags{margin-bottom:10px;}
+.fleet-flag-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);margin-bottom:4px;border-radius:2px;}
+.fleet-flag-txt{font-size:0.73rem;font-weight:700;color:var(--red);}
+.fleet-flag-clear{background:none;border:none;color:var(--red);cursor:pointer;font-size:1rem;padding:2px 6px;min-height:32px;min-width:32px;display:flex;align-items:center;justify-content:center;}
+.fleet-det-actions{display:flex;gap:8px;}
+.fleet-det-btn{flex:1;padding:10px;font-size:0.73rem;font-weight:700;font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:0.04em;cursor:pointer;border:none;border-radius:2px;min-height:44px;display:flex;align-items:center;justify-content:center;text-decoration:none;}
+.fleet-det-btn.call-btn{background:var(--orange);color:white;}
+.fleet-det-btn.map-btn{background:var(--navy);color:white;}
+/* SEARCH */
+.mob-search{padding:0 0 12px;}
+.mob-search input{width:100%;background:white;border:1px solid #D1D9E3;padding:11px 14px;font-size:0.9rem;font-family:'Barlow',sans-serif;color:var(--navy);outline:none;border-radius:4px;}
+.mob-search input:focus{border-color:var(--blue);}
+/* ALL CLEAR */
+.all-clear{text-align:center;padding:50px 20px;}
+.all-clear-icon{font-size:4rem;margin-bottom:16px;}
+.all-clear-txt{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:0.04em;}
+.all-clear-sub{font-size:0.82rem;color:var(--muted);margin-top:8px;}
+/* DESKTOP LINK */
+.desktop-link{text-align:center;margin-top:20px;}
+.desktop-link a{font-size:0.75rem;color:var(--blue);text-decoration:none;}
+</style>
+</head>
+<body>
+<div style="display:flex;flex-direction:column;height:100%;">
+  <!-- TOP BAR -->
+  <div class="mob-top">
+    <div class="mob-brand">
+      <img src="logo_mark.svg" class="mob-logo" alt="AxisFleet"/>
+      <span class="mob-name">AxisFleet</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="mob-time" id="mob-time">--:--</span>
+      <button class="refresh-btn" onclick="refreshAll()">↺</button>
+    </div>
+  </div>
+
+  <!-- OVERVIEW TAB -->
+  <div class="tab-content active" id="tab-overview">
+    <div class="stat-row-mobile">
+      <div class="stat-card-mob green"><div class="stat-val-mob green" id="m-active">—</div><div class="stat-label-mob">Active Trucks</div></div>
+      <div class="stat-card-mob red"><div class="stat-val-mob red" id="m-alerts">—</div><div class="stat-label-mob">Alerts</div></div>
+      <div class="stat-card-mob green"><div class="stat-val-mob green" id="m-loaded">—</div><div class="stat-label-mob">On Load</div></div>
+      <div class="stat-card-mob amber"><div class="stat-val-mob amber" id="m-under">—</div><div class="stat-label-mob">Underloads</div></div>
+      <div class="stat-card-mob muted"><div class="stat-val-mob" id="m-idle">—</div><div class="stat-label-mob">Idle / Parked</div></div>
+      <div class="stat-card-mob orange"><div class="stat-val-mob orange" id="m-loads">18</div><div class="stat-label-mob">Loads Today</div></div>
+    </div>
+    <div class="mob-section-label">Flagged Trucks <span id="flag-count"></span></div>
+    <div id="flagged-list"></div>
+    <div class="desktop-link"><a href="liveops.html">→ Open full dashboard</a></div>
+  </div>
+
+  <!-- FLEET TAB -->
+  <div class="tab-content" id="tab-fleet">
+    <div class="mob-search"><input type="text" id="fleet-search" placeholder="Search truck or driver..." oninput="renderFleet()"/></div>
+    <div id="fleet-list"></div>
+  </div>
+
+  <!-- ALERTS TAB -->
+  <div class="tab-content" id="tab-alerts">
+    <div id="alerts-list"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="mob-nav">
+    <button class="mob-nav-btn active" id="nav-overview" onclick="switchTab('overview')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span class="mob-nav-label">Overview</span>
+    </button>
+    <div class="mob-nav-divider"></div>
+    <button class="mob-nav-btn" id="nav-fleet" onclick="switchTab('fleet')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span class="mob-nav-label">Fleet</span>
+    </button>
+    <div class="mob-nav-divider"></div>
+    <button class="mob-nav-btn" id="nav-alerts" onclick="switchTab('alerts')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 22,21 2,21"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span class="mob-nav-label">Alerts</span>
+    </button>
+  </div>
+</div>
+
+<script>
+if(!sessionStorage.getItem('af_auth')) window.location.href='index.html';
+
+function load(key,def){try{return JSON.parse(localStorage.getItem('af_'+key))||def;}catch(e){return def;}}
+function save(key,val){localStorage.setItem('af_'+key,JSON.stringify(val));}
+
+const INIT_TRUCKS=[
+  {id:'AF-01',driver:'D. Shabalala',phone:'0821110001',status:'alert',flags:['OVERLOAD'],lat:-25.7562,lng:29.4421,speed:68,gross:171200,load:true,route:'Mine → Mill'},
+  {id:'AF-02',driver:'F. Ngcobo',phone:'0821110002',status:'warning',flags:['HARD BRAKE'],lat:-25.8891,lng:29.3812,speed:52,gross:158400,load:true,route:'Mine → Mill'},
+  {id:'AF-03',driver:'J. Mthembu',phone:'0821110003',status:'ok',flags:[],lat:-25.6234,lng:29.5102,speed:44,gross:162100,load:true,route:'Mine → Mill'},
+  {id:'AF-04',driver:'A. Mokoena',phone:'0821110004',status:'warning',flags:['SPEEDING'],lat:-25.7123,lng:29.4650,speed:87,gross:155800,load:true,route:'Road'},
+  {id:'AF-05',driver:'M. Zwane',phone:'0821110005',status:'ok',flags:[],lat:-25.9102,lng:29.4890,speed:38,gross:159800,load:true,route:'Mine → Mill'},
+  {id:'AF-06',driver:'P. Dlamini',phone:'0821110006',status:'ok',flags:[],lat:-25.7890,lng:29.5340,speed:41,gross:161200,load:true,route:'Mine → Mill'},
+  {id:'AF-07',driver:'B. Khumalo',phone:'0821110007',status:'idle',flags:[],lat:-25.0000,lng:29.0000,speed:0,gross:0,load:false,route:'Depot'},
+  {id:'AF-08',driver:'T. Nkosi',phone:'0821110008',status:'ok',flags:[],lat:-25.8456,lng:29.5678,speed:35,gross:158900,load:true,route:'Mill → Mine'},
+  {id:'AF-09',driver:'S. Mahlangu',phone:'0821110009',status:'ok',flags:[],lat:-25.7234,lng:29.3890,speed:29,gross:160400,load:true,route:'Mine → Mill'},
+  {id:'AF-10',driver:'R. Sithole',phone:'0821110010',status:'idle',flags:[],lat:-25.0200,lng:29.0200,speed:0,gross:0,load:false,route:'Depot'},
+  {id:'UT-R01',driver:'D. Shabalala',phone:'0821110001',status:'alert',flags:['OVERLOAD'],lat:-25.7800,lng:29.4300,speed:22,gross:172400,load:true,route:'Mine → Mill'},
+];
+
+let trucks=load('trucks_live',INIT_TRUCKS);
+
+function sortTrucks(list){const o={alert:0,warning:1,ok:2,idle:3};return[...list].sort((a,b)=>o[a.status]-o[b.status]);}
+
+function getFlagClass(t){return t.status==='alert'?'alert':'warn';}
+
+function updateTime(){document.getElementById('mob-time').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+setInterval(updateTime,1000);updateTime();
+
+function updateStats(){
+  document.getElementById('m-active').textContent=trucks.filter(t=>t.status!=='idle').length;
+  document.getElementById('m-alerts').textContent=trucks.filter(t=>t.status==='alert'||t.status==='warning').length;
+  document.getElementById('m-loaded').textContent=trucks.filter(t=>t.load).length;
+  document.getElementById('m-under').textContent=trucks.filter(t=>t.flags&&t.flags.includes('UNDERLOAD')).length;
+  document.getElementById('m-idle').textContent=trucks.filter(t=>t.status==='idle').length;
+}
+
+function renderFlagged(){
+  const flagged=sortTrucks(trucks).filter(t=>t.flags&&t.flags.length);
+  document.getElementById('flag-count').textContent=flagged.length?`${flagged.length} trucks`:'';
+  const list=document.getElementById('flagged-list');
+  if(!flagged.length){list.innerHTML=`<div class="all-clear"><div class="all-clear-icon">✅</div><div class="all-clear-txt">All Clear</div><div class="all-clear-sub">No active flags on any truck</div></div>`;return;}
+  list.innerHTML=flagged.map(t=>`
+    <div class="flag-card-mob ${t.status==='warning'?'warn':''}">
+      <div class="flag-card-header">
+        <div><div class="flag-truck-id">${t.id}</div><div class="flag-driver-name">${t.driver}</div></div>
+        <span class="flag-badge ${t.status==='warning'?'warn':''}">${t.flags[0]}</span>
+      </div>
+      <div class="flag-details">
+        <div class="flag-det-item"><div class="flag-det-label" style="font-size:0.65rem;color:var(--muted);">Gross</div><div style="font-size:0.82rem;font-weight:600;color:${t.gross>168000?'var(--red)':'var(--navy);'};">${t.gross>0?(t.gross/1000).toFixed(1)+'t':'-'}</div></div>
+        <div class="flag-det-item"><div class="flag-det-label" style="font-size:0.65rem;color:var(--muted);">Speed</div><div style="font-size:0.82rem;font-weight:600;color:${t.speed>80?'var(--red)':'var(--navy);'};">${t.speed>0?t.speed+' km/h':'Stopped'}</div></div>
+      </div>
+      <div class="flag-actions">
+        <button class="flag-action-btn call" onclick="window.location.href='tel:${t.phone}'">📞 Call Driver</button>
+        <button class="flag-action-btn clear-btn" onclick="clearFlag('${t.id}','${t.flags[0]}',true)">✕ Clear Flag</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderFleet(){
+  const search=document.getElementById('fleet-search').value.toLowerCase();
+  const list=document.getElementById('fleet-list');
+  const filtered=sortTrucks(trucks).filter(t=>!search||(t.id.toLowerCase().includes(search)||t.driver.toLowerCase().includes(search)));
+  list.innerHTML=filtered.map(t=>{
+    const dotColor=t.status==='alert'?'var(--red)':t.status==='warning'?'var(--amber)':t.status==='idle'?'var(--muted)':'var(--green)';
+    const grossTxt=t.gross>0?(t.gross/1000).toFixed(1)+'t':'Empty';
+    const flagsHtml=t.flags&&t.flags.length?`<div class="fleet-flags">${t.flags.map(f=>`<div class="fleet-flag-row"><span class="fleet-flag-txt">⚑ ${f}</span><button class="fleet-flag-clear" onclick="clearFlag('${t.id}','${f}',false)">✕</button></div>`).join('')}</div>`:'';
+    const navUrl=`https://www.google.com/maps/dir/?api=1&destination=${t.lat},${t.lng}`;
+    return `<div class="fleet-card">
+      <div class="fleet-card-header" onclick="toggleFleet('fc-${t.id}',this.querySelector('.fleet-expand'))">
+        <div class="fleet-status-dot" style="background:${dotColor}"></div>
+        <div class="fleet-card-info"><div class="fleet-truck-id">${t.id}</div><div class="fleet-driver">${t.driver}</div></div>
+        <div class="fleet-card-right"><div class="fleet-weight">${grossTxt}</div><div style="font-size:0.68rem;color:var(--muted);">${t.speed>0?t.speed+' km/h':'Stationary'}</div></div>
+        <span class="fleet-expand">▾</span>
+      </div>
+      <div class="fleet-card-detail" id="fc-${t.id}">
+        <div class="fleet-detail-grid">
+          <div><div class="fleet-det-label">Gross Weight</div><div class="fleet-det-val ${t.gross>168000?'red':t.gross>0?'green':''}">${grossTxt}</div></div>
+          <div><div class="fleet-det-label">Speed</div><div class="fleet-det-val ${t.speed>80?'amber':''}">${t.speed>0?t.speed+' km/h':'Stopped'}</div></div>
+          <div><div class="fleet-det-label">Route</div><div class="fleet-det-val">${t.route}</div></div>
+          <div><div class="fleet-det-label">Status</div><div class="fleet-det-val">${t.status.charAt(0).toUpperCase()+t.status.slice(1)}</div></div>
+        </div>
+        ${flagsHtml}
+        <div class="fleet-det-actions">
+          <a href="tel:${t.phone}" class="fleet-det-btn call-btn" onclick="return confirm('Call ${t.driver}?')">📞 Call</a>
+          <a href="${navUrl}" target="_blank" class="fleet-det-btn map-btn">📍 Map</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAlerts(){
+  const flagged=sortTrucks(trucks).filter(t=>t.flags&&t.flags.length);
+  const list=document.getElementById('alerts-list');
+  if(!flagged.length){list.innerHTML=`<div class="all-clear"><div class="all-clear-icon">✅</div><div class="all-clear-txt">All Clear</div><div class="all-clear-sub">No active alerts right now</div></div>`;return;}
+  list.innerHTML=`<div class="mob-section-label">${flagged.length} Active Alert${flagged.length!==1?'s':''}</div>`+flagged.map(t=>`
+    <div class="flag-card-mob ${t.status==='warning'?'warn':''}" style="margin-bottom:12px;">
+      <div class="flag-card-header">
+        <div>
+          <div class="flag-truck-id">${t.id} — ${t.driver}</div>
+          <div class="flag-driver-name" style="margin-top:3px;">${t.flags.map(f=>`<span style="color:${t.status==='warning'?'var(--amber)':'var(--red)'};font-weight:700;font-size:0.75rem;">⚑ ${f}</span>`).join(' ')}</div>
+        </div>
+        <span class="flag-badge ${t.status==='warning'?'warn':''}">${t.status.toUpperCase()}</span>
+      </div>
+      <div class="flag-details">
+        <div class="flag-det-item"><div class="flag-det-label" style="font-size:0.65rem;color:var(--muted);">Gross</div><div style="font-size:0.9rem;font-weight:700;color:${t.gross>168000?'var(--red)':'var(--navy);'};">${t.gross>0?(t.gross/1000).toFixed(1)+'t':'-'}</div></div>
+        <div class="flag-det-item"><div class="flag-det-label" style="font-size:0.65rem;color:var(--muted);">Speed</div><div style="font-size:0.9rem;font-weight:700;color:${t.speed>80?'var(--red)':'var(--navy);'};">${t.speed>0?t.speed+' km/h':'Stopped'}</div></div>
+        <div class="flag-det-item"><div class="flag-det-label" style="font-size:0.65rem;color:var(--muted);">Route</div><div style="font-size:0.8rem;color:var(--navy);">${t.route}</div></div>
+        <div class="flag-det-item"><div class="flag-det-label" style="font-size:0.65rem;color:var(--muted);">Location</div><div style="font-size:0.75rem;color:var(--blue);">${t.lat.toFixed(4)}, ${t.lng.toFixed(4)}</div></div>
+      </div>
+      <div class="flag-actions">
+        <button class="flag-action-btn call" onclick="window.location.href='tel:${t.phone}'">📞 Call Driver</button>
+        <button class="flag-action-btn clear-btn" onclick="clearFlag('${t.id}','${t.flags[0]}',true)">✕ Clear Alert</button>
+      </div>
+    </div>`).join('');
+}
+
+function clearFlag(truckId,flag,rerender){
+  const t=trucks.find(x=>x.id===truckId);
+  if(!t)return;
+  t.flags=t.flags.filter(f=>f!==flag);
+  if(t.flags.length===0)t.status=t.load?'ok':'idle';
+  const log=load('activity_log_'+truckId,[]);
+  const ts=new Date().toLocaleTimeString();
+  log.unshift({ts,txt:`${sessionStorage.getItem('af_user')||'Mobile User'}: Flag cleared — ${flag} [Mobile]`,sys:false});
+  save('activity_log_'+truckId,log);
+  save('trucks_live',trucks);
+  refreshAll();
+}
+
+function toggleFleet(id,arrow){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const open=el.classList.toggle('show');
+  if(arrow)arrow.classList.toggle('open',open);
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+}
+
+function refreshAll(){
+  trucks=load('trucks_live',INIT_TRUCKS);
+  updateStats();renderFlagged();renderFleet();renderAlerts();
+}
+
+// Auto-refresh every 10s
+setInterval(refreshAll,10000);
+refreshAll();
+</script>
+</body>
+</html>

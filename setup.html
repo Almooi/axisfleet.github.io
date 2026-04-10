@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AxisFleet — OPS | Setup</title>
+<link rel="icon" href="favicon.ico"/>
+<link rel="stylesheet" href="af_style.css"/>
+<style>
+html,body{height:100%;background:#EAEEF4;display:flex;flex-direction:column;overflow:hidden;}
+.page-body{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:0 28px 20px;}
+.tab-bar{display:flex;gap:0;border-bottom:2px solid #D1D9E3;margin-bottom:0;flex-shrink:0;}
+.tab-btn{padding:11px 22px;font-size:0.82rem;font-weight:700;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all 0.15s;font-family:'Barlow',sans-serif;letter-spacing:0.03em;text-transform:uppercase;}
+.tab-btn:hover{color:var(--navy);}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-content{display:none;flex:1;overflow-y:auto;padding-top:16px;}
+.tab-content.active{display:block;}
+.table-wrap{background:white;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+.data-table td.clickable-id{color:var(--blue);cursor:pointer;font-weight:700;text-decoration:underline;text-underline-offset:2px;}
+.data-table td.clickable-id:hover{color:#1a7de0;}
+/* Status dots */
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
+.dot-green{background:var(--green);}
+.dot-amber{background:var(--amber);}
+.dot-red{background:var(--red);}
+.dot-muted{background:var(--muted);}
+/* Section headers for users list */
+.list-section-header{padding:8px 14px;background:#F4F7FB;font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;border-bottom:1px solid #E8EDF5;}
+/* Modal specific */
+.modal-box{max-width:600px;}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.form-section-title{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid #E8EDF5;}
+.connect-badge{font-size:0.72rem;color:var(--blue);background:#DBEAFE;padding:2px 8px;border-radius:2px;cursor:pointer;margin-left:6px;font-weight:700;}
+.connect-badge:hover{background:#BFDBFE;}
+.move-badge{font-size:0.72rem;color:var(--orange);background:#FFF7ED;padding:2px 8px;border-radius:2px;cursor:pointer;margin-left:4px;font-weight:700;}
+.move-badge:hover{background:#FED7AA;}
+.add-contact-row{display:flex;gap:8px;margin-bottom:8px;}
+.remove-contact{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;line-height:1;padding:0 4px;}
+.remove-contact:hover{color:var(--red);}
+.type-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.type-option{padding:14px;border:2px solid #E8EDF5;cursor:pointer;text-align:center;transition:all 0.15s;}
+.type-option:hover{border-color:var(--blue);}
+.type-option.selected{border-color:var(--blue);background:#DBEAFE;}
+.type-option-icon{font-size:1.5rem;margin-bottom:6px;}
+.type-option-label{font-size:0.82rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.04em;}
+.dup-error{font-size:0.72rem;color:var(--red);margin-top:3px;display:none;}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="hub.html" class="nav-logo-link">
+    <img src="logo_mark.svg" class="nav-logo" alt="AxisFleet"/>
+    <span class="nav-logo-name">AxisFleet</span>
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-links">
+    <a href="hub.html" class="nav-link">Hub</a>
+    <a href="setup.html" class="nav-link active">Setup</a>
+    <a href="rawdata.html" class="nav-link">Raw Data</a>
+    <a href="flagging.html" class="nav-link">Flagging</a>
+    <a href="liveops.html" class="nav-link">Live Operations</a>
+    <a href="reporting.html" class="nav-link">Reporting</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="nav-user">Admin</span>
+    <button class="nav-logout" id="nav-logout">Logout</button>
+  </div>
+</nav>
+
+<div class="page-body">
+  <div class="section-header" style="padding:20px 0 14px;">
+    <div class="section-title">Hardware &amp; User Setup</div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-orange" id="add-btn">+ Add New</button>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="hardware">Hardware Units</button>
+    <button class="tab-btn" data-tab="trucks">Fleet Trucks</button>
+    <button class="tab-btn" data-tab="drivers">Drivers</button>
+    <button class="tab-btn" data-tab="users">Users &amp; Managers</button>
+  </div>
+
+  <!-- HARDWARE UNITS -->
+  <div class="tab-content active" id="tab-hardware">
+    <div class="table-wrap">
+      <table class="data-table" id="hw-table">
+        <thead><tr><th>Gateway ID</th><th>Sensor Type</th><th>Modules</th><th>SIM</th><th>Battery</th><th>Installed</th><th>Connected To</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="hw-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FLEET TRUCKS -->
+  <div class="tab-content" id="tab-trucks">
+    <div class="table-wrap">
+      <table class="data-table" id="truck-table">
+        <thead><tr><th>Fleet Code</th><th>Registration</th><th>Make / Model</th><th>Type</th><th>Trailer Config</th><th>Legal GCM</th><th>Permit GCM</th><th>Assigned Unit</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="truck-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- DRIVERS -->
+  <div class="tab-content" id="tab-drivers">
+    <div class="table-wrap">
+      <table class="data-table" id="driver-table">
+        <thead><tr><th>Driver ID</th><th>Name</th><th>Login Method</th><th>Licence</th><th>Expiry</th><th>Contact</th><th>Manager</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="driver-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- USERS -->
+  <div class="tab-content" id="tab-users">
+    <div class="table-wrap">
+      <table class="data-table" id="user-table">
+        <thead><tr><th>User ID</th><th>Name</th><th>Role</th><th>Email</th><th>Contact</th><th>Access</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="user-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="main-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Add New</span>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" id="modal-cancel">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="modal-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONNECT/MOVE MODAL -->
+<div class="modal-overlay" id="connect-modal">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-header">
+      <span class="modal-title" id="connect-title">Connect Unit to Truck</span>
+      <button class="modal-close" onclick="closeModal('connect-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="connect-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('connect-modal')">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="connect-save">Connect</button>
+    </div>
+  </div>
+</div>
+
+<script>
+if(!sessionStorage.getItem('af_auth')) window.location.href='index.html';
+document.getElementById('nav-user').textContent = sessionStorage.getItem('af_user')||'Admin';
+document.getElementById('nav-logout').addEventListener('click',()=>{if(confirm('Log out?')){sessionStorage.clear();window.location.href='index.html';}});
+
+// ── STORAGE ──
+function load(key,def){try{return JSON.parse(localStorage.getItem('af_'+key))||def;}catch(e){return def;}}
+function save(key,val){localStorage.setItem('af_'+key,JSON.stringify(val));}
+
+// ── INITIAL DATA ──
+function initData(){
+  if(!localStorage.getItem('af_units')){
+    save('units',[
+      {id:'GW-201',sensor:'Air Suspension Transducer',modules:8,sim:'0821990001',battery:4.1,installed:'2026-01-15',truck:'AF-01',status:'Connected'},
+      {id:'GW-334',sensor:'Air Suspension Transducer',modules:8,sim:'0821990002',battery:3.98,installed:'2026-01-15',truck:'AF-02',status:'Connected'},
+      {id:'GW-478',sensor:'Load Cell',modules:6,sim:'0821990003',battery:2.91,installed:'2026-02-01',truck:'AF-04',status:'Low Battery'},
+      {id:'GW-512',sensor:'Air Suspension Transducer',modules:8,sim:'0821990004',battery:4.2,installed:'2026-01-20',truck:'AF-05',status:'Connected'},
+      {id:'GW-623',sensor:'Air Suspension Transducer',modules:8,sim:'0821990005',battery:4.0,installed:'2026-01-20',truck:'AF-06',status:'Connected'},
+      {id:'GW-701',sensor:'Load Cell',modules:10,sim:'0821990006',battery:3.85,installed:'2026-01-25',truck:'AF-07',status:'Connected'},
+      {id:'GW-812',sensor:'Load Cell',modules:12,sim:'0821990007',battery:3.72,installed:'2026-01-10',truck:'AF-08',status:'Connected'},
+      {id:'GW-885',sensor:'Load Cell',modules:12,sim:'0821990008',battery:3.32,installed:'2026-01-10',truck:'AF-09',status:'Connected'},
+      {id:'GW-944',sensor:'Air Suspension Transducer',modules:8,sim:'0821990009',battery:4.05,installed:'2026-02-05',truck:'AF-10',status:'Connected'},
+      {id:'GW-885L',sensor:'Air Suspension Transducer',modules:16,sim:'0821990010',battery:3.9,installed:'2026-02-10',truck:'UT-R01',status:'Connected'},
+    ]);
+  }
+  if(!localStorage.getItem('af_trucks')){
+    save('trucks',[
+      {id:'AF-01',reg:'NWN 456 GP',make:'Volvo FH16',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-201',status:'Active'},
+      {id:'AF-02',reg:'HHN 123 GP',make:'Mercedes Actros 4044',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-334',status:'Active'},
+      {id:'AF-03',reg:'KKN 789 GP',make:'Scania R730',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:null,status:'No Unit'},
+      {id:'AF-04',reg:'LLN 321 GP',make:'Volvo FH16',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-478',status:'Active'},
+      {id:'AF-05',reg:'MMN 654 GP',make:'Mercedes Actros 4044',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-512',status:'Active'},
+      {id:'AF-06',reg:'NNN 987 GP',make:'Volvo FH16',type:'ROM Haul',trailer:'Single Trailer',gcm:56000,permit:168000,unit:'GW-623',status:'Active'},
+      {id:'AF-07',reg:'OON 147 GP',make:'Scania R560',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-701',status:'Active'},
+      {id:'AF-08',reg:'PPN 258 GP',make:'Volvo FH16',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-812',status:'Active'},
+      {id:'AF-09',reg:'QQN 369 GP',make:'Mercedes Actros 4044',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-885',status:'Active'},
+      {id:'AF-10',reg:'RRN 741 GP',make:'Scania R730',type:'ROM Haul',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-944',status:'Active'},
+      {id:'UT-R01',reg:'SSN 852 GP',make:'Volvo FH16 750',type:'Mine Haul — Permit',trailer:'4-Trailer Interlink',gcm:56000,permit:168000,unit:'GW-885L',status:'Active'},
+    ]);
+  }
+  if(!localStorage.getItem('af_drivers')){
+    save('drivers',[
+      {id:'DRV-1001',name:'D. Shabalala',method:'Fingerprint',licence:'EC',expiry:'2027-06-30',phone:'0821110001',manager:'USR-0002',status:'Active'},
+      {id:'DRV-1002',name:'F. Ngcobo',method:'Manual Select',licence:'EC',expiry:'2026-12-31',phone:'0821110002',manager:'USR-0002',status:'Active'},
+      {id:'DRV-1003',name:'J. Mthembu',method:'Fingerprint',licence:'EC',expiry:'2028-03-15',phone:'0821110003',manager:'USR-0003',status:'Active'},
+      {id:'DRV-1004',name:'A. Mokoena',method:'AI Dashcam',licence:'EC',expiry:'2027-09-20',phone:'0821110004',manager:'USR-0003',status:'Active'},
+      {id:'DRV-1005',name:'M. Zwane',method:'Fingerprint',licence:'C',expiry:'2026-08-10',phone:'0821110005',manager:'USR-0002',status:'Active'},
+      {id:'DRV-1006',name:'P. Dlamini',method:'Manual Select',licence:'EC',expiry:'2027-11-05',phone:'0821110006',manager:'USR-0003',status:'Active'},
+      {id:'DRV-1007',name:'B. Khumalo',method:'Fingerprint',licence:'EC',expiry:'2028-01-22',phone:'0821110007',manager:'USR-0002',status:'Active'},
+      {id:'DRV-1008',name:'T. Nkosi',method:'Fingerprint',licence:'EC',expiry:'2027-04-18',phone:'0821110008',manager:'USR-0002',status:'Active'},
+      {id:'DRV-1009',name:'S. Mahlangu',method:'AI Dashcam',licence:'EC',expiry:'2028-07-30',phone:'0821110009',manager:'USR-0003',status:'Active'},
+      {id:'DRV-1010',name:'R. Sithole',method:'Fingerprint',licence:'EC',expiry:'2027-02-14',phone:'0821110010',manager:'USR-0002',status:'Active'},
+    ]);
+  }
+  if(!localStorage.getItem('af_users')){
+    save('users',[
+      {id:'USR-0001',name:'Almó Esterhuizen',role:'Admin',email:'axisfleetsa@gmail.com',phone:'0613603411',access:'Full',status:'Active'},
+      {id:'USR-0002',name:'K. Nkosi',role:'Operational Manager',email:'knkosi@fleet.co.za',phone:'0821234567',access:'Operational',status:'Active'},
+      {id:'USR-0003',name:'R. Botha',role:'Fleet Manager',email:'rbotha@fleet.co.za',phone:'0831239876',access:'Fleet',status:'Active'},
+    ]);
+  }
+}
+initData();
+
+// ── TABS ──
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    currentTab = btn.dataset.tab;
+  });
+});
+let currentTab = 'hardware';
+
+// ── RENDER TABLES ──
+function renderHW(){
+  const units = load('units',[]);
+  const trucks = load('trucks',[]);
+  const tbody = document.getElementById('hw-tbody');
+  tbody.innerHTML = units.map(u=>{
+    const truck = trucks.find(t=>t.unit===u.id);
+    const connectedTo = truck ? `<span style="color:var(--navy);font-weight:600;">${truck.id}</span>` : `<span style="color:var(--muted);">—</span>`;
+    const battColor = u.battery < 3.2 ? 'var(--red)' : u.battery < 3.6 ? 'var(--amber)' : 'var(--green)';
+    const statusBadge = u.status==='Connected'?'badge-green':u.status==='Low Battery'?'badge-amber':'badge-muted';
+    return `<tr>
+      <td class="clickable-id" onclick="editItem('unit','${u.id}')">${u.id}</td>
+      <td>${u.sensor}</td><td>${u.modules}</td><td style="font-family:monospace;font-size:0.8rem;">${u.sim}</td>
+      <td style="color:${battColor};font-weight:700;">${u.battery}V</td>
+      <td>${u.installed}</td><td>${connectedTo}
+        ${truck?`<span class="move-badge" onclick="openMove('${u.id}')">Move</span>`:`<span class="connect-badge" onclick="openConnect('${u.id}','unit')">Connect</span>`}
+      </td>
+      <td><span class="badge ${statusBadge}">${u.status}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick="editItem('unit','${u.id}')">Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderTrucks(){
+  const trucks = load('trucks',[]);
+  const tbody = document.getElementById('truck-tbody');
+  tbody.innerHTML = trucks.map(t=>{
+    const statusBadge = t.status==='Active'?'badge-green':t.status==='No Unit'?'badge-amber':'badge-muted';
+    const unitDisplay = t.unit ? `<span style="color:var(--blue);font-weight:700;">${t.unit}</span>` : `<span style="color:var(--muted);">None</span><span class="connect-badge" onclick="openConnect('${t.id}','truck')">Assign</span>`;
+    return `<tr>
+      <td class="clickable-id" onclick="editItem('truck','${t.id}')">${t.id}</td>
+      <td style="font-family:monospace;font-size:0.8rem;">${t.reg}</td>
+      <td>${t.make}</td><td>${t.type}</td><td>${t.trailer}</td>
+      <td>${(t.gcm/1000).toFixed(0)}t</td><td>${(t.permit/1000).toFixed(0)}t</td>
+      <td>${unitDisplay}</td>
+      <td><span class="badge ${statusBadge}">${t.status}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick="editItem('truck','${t.id}')">Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderDrivers(){
+  const drivers = load('drivers',[]);
+  const users = load('users',[]);
+  const tbody = document.getElementById('driver-tbody');
+  tbody.innerHTML = drivers.map(d=>{
+    const mgr = users.find(u=>u.id===d.manager);
+    const exDate = new Date(d.expiry);
+    const now = new Date();
+    const expColor = exDate < now ? 'var(--red)' : exDate < new Date(now.getTime()+90*86400000) ? 'var(--amber)' : 'var(--green)';
+    const statusBadge = d.status==='Active'?'badge-green':d.status==='Suspended'?'badge-red':'badge-muted';
+    return `<tr>
+      <td class="clickable-id" onclick="editItem('driver','${d.id}')">${d.id}</td>
+      <td><strong>${d.name}</strong></td>
+      <td><span class="badge badge-blue">${d.method}</span></td>
+      <td style="font-weight:700;">${d.licence}</td>
+      <td style="color:${expColor};font-weight:600;">${d.expiry}</td>
+      <td>${d.phone}</td>
+      <td>${mgr?mgr.name:'—'}</td>
+      <td><span class="badge ${statusBadge}">${d.status}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick="editItem('driver','${d.id}')">Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderUsers(){
+  const users = load('users',[]);
+  const tbody = document.getElementById('user-tbody');
+  // Sort: Admin first, then Managers, then others
+  const order = {Admin:0,'Operational Manager':1,'Fleet Manager':2,Viewer:3};
+  const sorted = [...users].sort((a,b)=>(order[a.role]||9)-(order[b.role]||9));
+  tbody.innerHTML = sorted.map(u=>{
+    const roleColor = u.role==='Admin'?'badge-red':u.role.includes('Manager')?'badge-blue':'badge-muted';
+    const statusBadge = u.status==='Active'?'badge-green':'badge-muted';
+    return `<tr>
+      <td class="clickable-id" onclick="editItem('user','${u.id}')">${u.id}</td>
+      <td><strong>${u.name}</strong></td>
+      <td><span class="badge ${roleColor}">${u.role}</span></td>
+      <td style="font-size:0.8rem;">${u.email}</td>
+      <td>${u.phone}</td>
+      <td>${u.access}</td>
+      <td><span class="badge ${statusBadge}">${u.status}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick="editItem('user','${u.id}')">Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAll(){renderHW();renderTrucks();renderDrivers();renderUsers();}
+renderAll();
+
+// ── MODALS ──
+function openModal(){document.getElementById('main-modal').classList.add('open');}
+function closeModal(id){document.getElementById(id||'main-modal').classList.remove('open');}
+document.getElementById('modal-close').addEventListener('click',()=>closeModal());
+document.getElementById('modal-cancel').addEventListener('click',()=>closeModal());
+
+// ── ADD NEW ──
+document.getElementById('add-btn').addEventListener('click',()=>{
+  const tab = currentTab;
+  if(tab==='hardware') openAddUnit();
+  else if(tab==='trucks') openAddTruck();
+  else if(tab==='drivers') openAddDriver(null);
+  else if(tab==='users') openAddUser(null);
+});
+
+function genNextId(type){
+  if(type==='unit'){
+    const units=load('units',[]);
+    const nums=units.map(u=>parseInt(u.id.replace('GW-',''))||0);
+    return 'GW-'+(Math.max(0,...nums)+1);
+  }
+  if(type==='truck'){
+    const trucks=load('trucks',[]);
+    const nums=trucks.filter(t=>t.id.startsWith('AF-')).map(t=>parseInt(t.id.replace('AF-',''))||0);
+    return 'AF-'+String(Math.max(0,...nums)+1).padStart(2,'0');
+  }
+  if(type==='driver'){
+    const drivers=load('drivers',[]);
+    const nums=drivers.map(d=>parseInt(d.id.replace('DRV-',''))||0);
+    return 'DRV-'+String(Math.max(0,...nums)+1).padStart(4,'0');
+  }
+  if(type==='user'){
+    const users=load('users',[]);
+    const nums=users.map(u=>parseInt(u.id.replace('USR-',''))||0);
+    return 'USR-'+String(Math.max(0,...nums)+1).padStart(4,'0');
+  }
+}
+
+function checkDup(type,id,name,excludeId){
+  if(type==='unit'){const items=load('units',[]);return items.some(i=>i.id===id&&i.id!==excludeId);}
+  if(type==='truck'){const items=load('trucks',[]);return items.some(i=>i.id===id&&i.id!==excludeId);}
+  if(type==='driver'){const items=load('drivers',[]);return items.some(i=>(i.id===id||i.name===name)&&i.id!==excludeId);}
+  if(type==='user'){const items=load('users',[]);return items.some(i=>(i.id===id||i.name===name)&&i.id!==excludeId);}
+  return false;
+}
+
+function openAddUnit(){
+  document.getElementById('modal-title').textContent='Register Hardware Unit';
+  const nextId=genNextId('unit');
+  document.getElementById('modal-body').innerHTML=`
+    <div class="form-section-title">Unit Identification</div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Gateway ID</label><input class="form-control" id="f-id" value="${nextId}"/><div class="dup-error" id="dup-id">ID already exists</div></div>
+      <div class="form-group"><label class="form-label">Sensor Type</label><select class="form-control" id="f-sensor"><option>Load Cell</option><option>Air Suspension Transducer</option></select></div>
+    </div>
+    <div class="form-grid-3">
+      <div class="form-group"><label class="form-label">Module Count</label><input class="form-control" id="f-modules" type="number" value="8"/></div>
+      <div class="form-group"><label class="form-label">SIM Number</label><input class="form-control" id="f-sim" placeholder="082..."/></div>
+      <div class="form-group"><label class="form-label">Install Date</label><input class="form-control" id="f-installed" type="date" value="${new Date().toISOString().split('T')[0]}"/></div>
+    </div>
+  `;
+  document.getElementById('modal-save').onclick=()=>{
+    const id=document.getElementById('f-id').value.trim();
+    if(checkDup('unit',id,'')){document.getElementById('dup-id').style.display='block';return;}
+    const units=load('units',[]);
+    units.push({id,sensor:document.getElementById('f-sensor').value,modules:parseInt(document.getElementById('f-modules').value)||8,sim:document.getElementById('f-sim').value,battery:4.2,installed:document.getElementById('f-installed').value,truck:null,status:'Unassigned'});
+    save('units',units);renderAll();closeModal();
+  };
+  openModal();
+}
+
+function openAddTruck(){
+  document.getElementById('modal-title').textContent='Register Fleet Truck';
+  const nextId=genNextId('truck');
+  document.getElementById('modal-body').innerHTML=`
+    <div class="form-section-title">Vehicle Details</div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Fleet Code</label><input class="form-control" id="f-id" value="${nextId}"/><div class="dup-error" id="dup-id">Code already exists</div></div>
+      <div class="form-group"><label class="form-label">Registration</label><input class="form-control" id="f-reg" placeholder="ABC 123 GP"/></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Make / Model</label><input class="form-control" id="f-make" placeholder="Volvo FH16"/></div>
+      <div class="form-group"><label class="form-label">Vehicle Type</label><select class="form-control" id="f-type"><option>ROM Haul</option><option>Mine Haul — Permit</option><option>Bulk Logistics</option><option>Tipper</option></select></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Trailer Configuration</label><select class="form-control" id="f-trailer"><option>4-Trailer Interlink</option><option>Single Trailer</option><option>Side Tipper</option><option>Flatbed</option></select></div>
+      <div class="form-group"><label class="form-label">Depot / Base</label><input class="form-control" id="f-depot" placeholder="Main Depot"/></div>
+    </div>
+    <div class="form-section-title">Weight Limits</div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Legal GCM — Road (kg)</label><input class="form-control" id="f-gcm" type="number" value="56000"/></div>
+      <div class="form-group"><label class="form-label">Mine Permit GCM (kg)</label><input class="form-control" id="f-permit" type="number" value="168000"/></div>
+    </div>
+  `;
+  document.getElementById('modal-save').onclick=()=>{
+    const id=document.getElementById('f-id').value.trim();
+    if(checkDup('truck',id,'')){document.getElementById('dup-id').style.display='block';return;}
+    const trucks=load('trucks',[]);
+    trucks.push({id,reg:document.getElementById('f-reg').value,make:document.getElementById('f-make').value,type:document.getElementById('f-type').value,trailer:document.getElementById('f-trailer').value,gcm:parseInt(document.getElementById('f-gcm').value),permit:parseInt(document.getElementById('f-permit').value),unit:null,status:'No Unit'});
+    save('trucks',trucks);renderAll();closeModal();
+  };
+  openModal();
+}
+
+function openAddDriver(existingId){
+  const drivers=load('drivers',[]);
+  const users=load('users',[]);
+  const existing=existingId?drivers.find(d=>d.id===existingId):null;
+  const nextId=existing?existing.id:genNextId('driver');
+  document.getElementById('modal-title').textContent=existing?`Edit Driver — ${existing.id}`:'Add Driver';
+  const mgrOptions=users.map(u=>`<option value="${u.id}" ${existing&&existing.manager===u.id?'selected':''}>${u.name} — ${u.role}</option>`).join('');
+  document.getElementById('modal-body').innerHTML=`
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Driver ID</label><input class="form-control" id="f-id" value="${nextId}" ${existing?'readonly':''}/><div class="dup-error" id="dup-id">ID already exists</div></div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-control" id="f-name" value="${existing?existing.name:''}"/><div class="dup-error" id="dup-name">Name already exists</div></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Employee / ID Number</label><input class="form-control" id="f-empno" value="${existing?existing.empno||'':''}"/></div>
+      <div class="form-group"><label class="form-label">Contact Number</label><input class="form-control" id="f-phone" value="${existing?existing.phone:''}"/></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Login Method</label><select class="form-control" id="f-method"><option ${existing&&existing.method==='Fingerprint'?'selected':''}>Fingerprint</option><option ${existing&&existing.method==='Manual Select'?'selected':''}>Manual Select</option><option ${existing&&existing.method==='AI Dashcam'?'selected':''}>AI Dashcam</option></select></div>
+      <div class="form-group"><label class="form-label">Licence Code</label><select class="form-control" id="f-licence"><option ${existing&&existing.licence==='EC'?'selected':''}>EC</option><option ${existing&&existing.licence==='C'?'selected':''}>C</option><option ${existing&&existing.licence==='EB'?'selected':''}>EB</option></select></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Licence Expiry</label><input class="form-control" type="date" id="f-expiry" value="${existing?existing.expiry:''}"/></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-control" id="f-status"><option ${!existing||existing.status==='Active'?'selected':''}>Active</option><option ${existing&&existing.status==='Suspended'?'selected':''}>Suspended</option><option ${existing&&existing.status==='Off Shift'?'selected':''}>Off Shift</option></select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Escalation Manager</label><select class="form-control" id="f-manager"><option value="">— Select manager —</option>${mgrOptions}</select></div>
+  `;
+  document.getElementById('modal-save').onclick=()=>{
+    const id=document.getElementById('f-id').value.trim();
+    const name=document.getElementById('f-name').value.trim();
+    if(!existing&&checkDup('driver',id,name)){
+      if(drivers.some(d=>d.id===id&&d.id!==existingId))document.getElementById('dup-id').style.display='block';
+      if(drivers.some(d=>d.name===name&&d.id!==existingId))document.getElementById('dup-name').style.display='block';
+      return;
+    }
+    const obj={id,name,empno:document.getElementById('f-empno').value,phone:document.getElementById('f-phone').value,method:document.getElementById('f-method').value,licence:document.getElementById('f-licence').value,expiry:document.getElementById('f-expiry').value,status:document.getElementById('f-status').value,manager:document.getElementById('f-manager').value};
+    if(existing){const idx=drivers.findIndex(d=>d.id===existingId);drivers[idx]=obj;}else{drivers.push(obj);}
+    save('drivers',drivers);renderAll();closeModal();
+  };
+  openModal();
+}
+
+function openAddUser(existingId){
+  const users=load('users',[]);
+  const existing=existingId?users.find(u=>u.id===existingId):null;
+  const nextId=existing?existing.id:genNextId('user');
+  document.getElementById('modal-title').textContent=existing?`Edit User — ${existing.id}`:'Add User / Manager';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">User ID</label><input class="form-control" id="f-id" value="${nextId}" ${existing?'readonly':''}/><div class="dup-error" id="dup-id">ID already exists</div></div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-control" id="f-name" value="${existing?existing.name:''}"/></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Role</label><select class="form-control" id="f-role"><option ${!existing||existing.role==='Admin'?'selected':''}>Admin</option><option ${existing&&existing.role==='Operational Manager'?'selected':''}>Operational Manager</option><option ${existing&&existing.role==='Fleet Manager'?'selected':''}>Fleet Manager</option><option ${existing&&existing.role==='Viewer'?'selected':''}>Viewer</option></select></div>
+      <div class="form-group"><label class="form-label">Access Level</label><select class="form-control" id="f-access"><option ${!existing||existing.access==='Full'?'selected':''}>Full</option><option ${existing&&existing.access==='Operational'?'selected':''}>Operational</option><option ${existing&&existing.access==='Fleet'?'selected':''}>Fleet</option><option ${existing&&existing.access==='Read Only'?'selected':''}>Read Only</option></select></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" id="f-email" value="${existing?existing.email:''}"/></div>
+      <div class="form-group"><label class="form-label">Contact Number</label><input class="form-control" id="f-phone" value="${existing?existing.phone:''}"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Status</label><select class="form-control" id="f-status" style="width:50%;"><option ${!existing||existing.status==='Active'?'selected':''}>Active</option><option ${existing&&existing.status==='Inactive'?'selected':''}>Inactive</option></select></div>
+  `;
+  document.getElementById('modal-save').onclick=()=>{
+    const id=document.getElementById('f-id').value.trim();
+    const obj={id,name:document.getElementById('f-name').value.trim(),role:document.getElementById('f-role').value,access:document.getElementById('f-access').value,email:document.getElementById('f-email').value,phone:document.getElementById('f-phone').value,status:document.getElementById('f-status').value};
+    if(existing){const idx=users.findIndex(u=>u.id===existingId);users[idx]=obj;}else{if(users.some(u=>u.id===id)){document.getElementById('dup-id').style.display='block';return;}users.push(obj);}
+    save('users',users);renderAll();closeModal();
+  };
+  openModal();
+}
+
+function editItem(type,id){
+  if(type==='driver')openAddDriver(id);
+  else if(type==='user')openAddUser(id);
+  else if(type==='unit')openEditUnit(id);
+  else if(type==='truck')openEditTruck(id);
+}
+
+function openEditUnit(id){
+  const units=load('units',[]);
+  const u=units.find(x=>x.id===id);
+  document.getElementById('modal-title').textContent=`Edit Unit — ${id}`;
+  document.getElementById('modal-body').innerHTML=`
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Gateway ID</label><input class="form-control" id="f-id" value="${u.id}" readonly/></div>
+      <div class="form-group"><label class="form-label">Sensor Type</label><select class="form-control" id="f-sensor"><option ${u.sensor==='Load Cell'?'selected':''}>Load Cell</option><option ${u.sensor==='Air Suspension Transducer'?'selected':''}>Air Suspension Transducer</option></select></div>
+    </div>
+    <div class="form-grid-3">
+      <div class="form-group"><label class="form-label">Modules</label><input class="form-control" id="f-modules" type="number" value="${u.modules}"/></div>
+      <div class="form-group"><label class="form-label">SIM</label><input class="form-control" id="f-sim" value="${u.sim}"/></div>
+      <div class="form-group"><label class="form-label">Install Date</label><input class="form-control" type="date" id="f-installed" value="${u.installed}"/></div>
+    </div>
+  `;
+  document.getElementById('modal-save').onclick=()=>{
+    const idx=units.findIndex(x=>x.id===id);
+    units[idx]={...u,sensor:document.getElementById('f-sensor').value,modules:parseInt(document.getElementById('f-modules').value),sim:document.getElementById('f-sim').value,installed:document.getElementById('f-installed').value};
+    save('units',units);renderAll();closeModal();
+  };
+  openModal();
+}
+
+function openEditTruck(id){
+  const trucks=load('trucks',[]);
+  const t=trucks.find(x=>x.id===id);
+  document.getElementById('modal-title').textContent=`Edit Truck — ${id}`;
+  document.getElementById('modal-body').innerHTML=`
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Fleet Code</label><input class="form-control" value="${t.id}" readonly/></div>
+      <div class="form-group"><label class="form-label">Registration</label><input class="form-control" id="f-reg" value="${t.reg}"/></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Make / Model</label><input class="form-control" id="f-make" value="${t.make}"/></div>
+      <div class="form-group"><label class="form-label">Type</label><select class="form-control" id="f-type"><option ${t.type==='ROM Haul'?'selected':''}>ROM Haul</option><option ${t.type==='Mine Haul — Permit'?'selected':''}>Mine Haul — Permit</option><option ${t.type==='Bulk Logistics'?'selected':''}>Bulk Logistics</option></select></div>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Legal GCM (kg)</label><input class="form-control" id="f-gcm" type="number" value="${t.gcm}"/></div>
+      <div class="form-group"><label class="form-label">Mine Permit GCM (kg)</label><input class="form-control" id="f-permit" type="number" value="${t.permit}"/></div>
+    </div>
+  `;
+  document.getElementById('modal-save').onclick=()=>{
+    const idx=trucks.findIndex(x=>x.id===id);
+    trucks[idx]={...t,reg:document.getElementById('f-reg').value,make:document.getElementById('f-make').value,type:document.getElementById('f-type').value,gcm:parseInt(document.getElementById('f-gcm').value),permit:parseInt(document.getElementById('f-permit').value)};
+    save('trucks',trucks);renderAll();closeModal();
+  };
+  openModal();
+}
+
+// ── CONNECT / MOVE ──
+let connectContext={};
+function openConnect(id,from){
+  connectContext={id,from};
+  const trucks=load('trucks',[]);
+  const units=load('units',[]);
+  document.getElementById('connect-title').textContent=from==='unit'?`Connect Unit ${id} to Truck`:`Assign Unit to ${id}`;
+  if(from==='unit'){
+    const availTrucks=trucks.filter(t=>!t.unit||t.id==='');
+    document.getElementById('connect-body').innerHTML=`<div class="form-group"><label class="form-label">Select Truck</label><select class="form-control" id="connect-select">${trucks.map(t=>`<option value="${t.id}">${t.id} — ${t.make} (${t.unit?'Has unit: '+t.unit:'No unit'})</option>`).join('')}</select></div>`;
+  } else {
+    const availUnits=units.filter(u=>!u.truck);
+    document.getElementById('connect-body').innerHTML=`<div class="form-group"><label class="form-label">Select Available Unit</label><select class="form-control" id="connect-select">${availUnits.length?availUnits.map(u=>`<option value="${u.id}">${u.id} — ${u.sensor}</option>`).join(''):'<option value="">No unassigned units available</option>'}</select></div>`;
+  }
+  document.getElementById('connect-save').onclick=doConnect;
+  document.getElementById('connect-modal').classList.add('open');
+}
+
+function openMove(unitId){
+  connectContext={id:unitId,from:'move'};
+  const trucks=load('trucks',[]);
+  document.getElementById('connect-title').textContent=`Move Unit ${unitId} to New Truck`;
+  document.getElementById('connect-body').innerHTML=`<div class="form-group"><label class="form-label">Select Destination Truck</label><select class="form-control" id="connect-select">${trucks.map(t=>`<option value="${t.id}">${t.id} — ${t.make} (${t.unit?'Current: '+t.unit:'Empty'})</option>`).join('')}</select></div><p style="font-size:0.78rem;color:var(--muted);margin-top:10px;">The unit will be removed from its current truck and connected to the selected one.</p>`;
+  document.getElementById('connect-save').onclick=doConnect;
+  document.getElementById('connect-modal').classList.add('open');
+}
+
+function doConnect(){
+  const sel=document.getElementById('connect-select').value;
+  if(!sel)return;
+  const trucks=load('trucks',[]);
+  const units=load('units',[]);
+  if(connectContext.from==='unit'||connectContext.from==='move'){
+    const unitId=connectContext.id;
+    // Remove from old truck
+    trucks.forEach(t=>{if(t.unit===unitId){t.unit=null;t.status='No Unit';}});
+    // Assign to new truck
+    const truck=trucks.find(t=>t.id===sel);
+    if(truck){truck.unit=unitId;truck.status='Active';}
+    const unit=units.find(u=>u.id===unitId);
+    if(unit){unit.truck=sel;unit.status='Connected';}
+  } else {
+    const truckId=connectContext.id;
+    const truck=trucks.find(t=>t.id===truckId);
+    // Remove unit from any truck that has it
+    trucks.forEach(t=>{if(t.unit===sel){t.unit=null;t.status='No Unit';}});
+    if(truck){truck.unit=sel;truck.status='Active';}
+    const unit=units.find(u=>u.id===sel);
+    if(unit){unit.truck=truckId;unit.status='Connected';}
+  }
+  save('trucks',trucks);save('units',units);
+  closeModal('connect-modal');renderAll();
+}
+</script>
+</body>
+</html>
