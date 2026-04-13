@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>AxisFleet — Field Ops</title>
+<link rel="icon" href="favicon.ico"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0D1B2A;--blue:#1E90FF;
+  --red:#EF4444;--amber:#F59E0B;--green:#22C55E;
+  --muted:#6B7C93;--sub:#94A3B8;
+  --bg:#F4F7FB;--white:#FFFFFF;
+  --border:#E2E8F0;--text:#0D1B2A;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);overflow:hidden;color:var(--text);}
+
+.shell{display:flex;flex-direction:column;height:100%;}
+
+/* TOP BAR */
+.topbar{height:52px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;justify-content:space-between;flex-shrink:0;}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-logo{height:22px;}
+.topbar-title{font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:0.04em;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.topbar-time{font-size:0.7rem;color:var(--sub);font-weight:600;}
+.topbar-back{background:none;border:1px solid var(--border);color:var(--sub);font-size:0.7rem;font-weight:700;font-family:'Barlow',sans-serif;padding:5px 10px;cursor:pointer;text-decoration:none;}
+
+/* ALERT BADGE */
+.nav-badge{min-width:16px;height:16px;background:var(--red);color:white;font-size:0.58rem;font-weight:800;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;position:absolute;top:4px;right:10px;}
+
+/* TABS */
+.tab-pane{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.tab-pane.active{display:block;}
+.tab-pane::-webkit-scrollbar{display:none;}
+.pane-inner{padding:14px 14px 24px;}
+
+/* BOTTOM NAV */
+.bottomnav{height:58px;background:var(--white);border-top:1px solid var(--border);display:flex;flex-shrink:0;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--sub);transition:color 0.12s;position:relative;min-height:48px;}
+.nav-btn.active{color:var(--navy);}
+.nav-btn svg{width:21px;height:21px;}
+.nav-label{font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;font-family:'Barlow',sans-serif;}
+
+/* SECTION HEADER */
+.section-hdr{font-size:0.65rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:0.1em;margin:16px 0 8px;display:flex;align-items:center;justify-content:space-between;}
+.hdr-count{font-size:0.62rem;font-weight:700;color:var(--sub);background:var(--border);padding:1px 7px;border-radius:10px;}
+.hdr-count.alert{background:#FEE2E2;color:var(--red);}
+
+/* STAT GRID */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.stat-card{background:var(--white);border:1px solid var(--border);padding:13px 10px;text-align:center;}
+.stat-card.span2{grid-column:span 2;}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:800;line-height:1;color:var(--navy);}
+.stat-num.alert-num{color:var(--red);}
+.stat-lbl{font-size:0.6rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
+
+/* HEALTH BAR */
+.health-card{background:var(--white);border:1px solid var(--border);padding:12px 14px;margin-bottom:14px;}
+.health-title{font-size:0.65rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.health-bar-row{display:flex;gap:2px;height:8px;border-radius:3px;overflow:hidden;margin-bottom:8px;}
+.health-seg{height:100%;}
+.health-legend{display:flex;gap:12px;flex-wrap:wrap;}
+.h-leg{display:flex;align-items:center;gap:4px;font-size:0.65rem;color:var(--sub);}
+.h-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* FLAGGED MINI CARDS */
+.flagged-mini{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--red);margin-bottom:8px;}
+.flagged-mini.warn{border-left-color:var(--amber);}
+.flagged-mini-header{display:flex;align-items:center;gap:10px;padding:11px 12px;}
+.fm-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.fm-truck{font-size:0.88rem;font-weight:800;color:var(--navy);}
+.fm-driver{font-size:0.7rem;color:var(--sub);margin-top:1px;}
+.fm-flag{font-size:0.62rem;font-weight:700;padding:2px 7px;text-transform:uppercase;letter-spacing:0.04em;margin-left:auto;flex-shrink:0;color:var(--sub);background:var(--bg);border:1px solid var(--border);}
+.fm-actions{display:flex;border-top:1px solid var(--border);}
+.fm-action-btn{flex:1;padding:9px;font-size:0.68rem;font-weight:700;font-family:'Barlow',sans-serif;border:none;background:none;cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;color:var(--sub);border-right:1px solid var(--border);min-height:40px;}
+.fm-action-btn:last-child{border-right:none;}
+.fm-action-btn:hover{background:var(--bg);}
+
+/* ALL CLEAR */
+.all-clear{text-align:center;padding:40px 20px;}
+.all-clear-icon{font-size:2.8rem;margin-bottom:10px;}
+.all-clear-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:0.04em;}
+.all-clear-sub{font-size:0.78rem;color:var(--sub);margin-top:5px;}
+
+/* FLEET */
+.search-bar{width:100%;background:var(--white);border:1px solid var(--border);padding:10px 12px;font-size:0.88rem;font-family:'Barlow',sans-serif;color:var(--navy);outline:none;margin-bottom:10px;}
+.search-bar:focus{border-color:var(--navy);}
+.fleet-card{background:var(--white);border:1px solid var(--border);margin-bottom:8px;border-left:3px solid transparent;}
+.fleet-card.has-flag{border-left-color:var(--red);}
+.fleet-card.has-warn{border-left-color:var(--amber);}
+.fleet-card-row{display:flex;align-items:center;gap:11px;padding:12px 12px;cursor:pointer;min-height:52px;}
+.fc-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.fc-dot.green{background:var(--green);}
+.fc-dot.red{background:var(--red);animation:pulse 1s infinite;}
+.fc-dot.amber{background:var(--amber);animation:pulse 1.5s infinite;}
+.fc-dot.muted{background:#CBD5E1;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+.fc-info{flex:1;min-width:0;}
+.fc-id{font-size:0.9rem;font-weight:800;color:var(--navy);}
+.fc-driver{font-size:0.7rem;color:var(--sub);margin-top:1px;}
+.fc-right{text-align:right;flex-shrink:0;}
+.fc-weight{font-size:0.8rem;font-weight:700;color:var(--navy);}
+.fc-speed{font-size:0.65rem;color:var(--sub);margin-top:2px;}
+.fc-chevron{font-size:0.8rem;color:var(--sub);margin-left:4px;transition:transform 0.2s;flex-shrink:0;}
+.fc-chevron.open{transform:rotate(180deg);}
+.fc-detail{display:none;padding:0 12px 12px;border-top:1px solid var(--border);}
+.fc-detail.open{display:block;}
+.fc-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.fc-det-label{font-size:0.6rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:0.07em;}
+.fc-det-val{font-size:0.84rem;font-weight:700;color:var(--navy);margin-top:2px;}
+.fc-det-val.red{color:var(--red);}
+.fc-det-val.amber{color:var(--amber);}
+
+/* Flag rows in detail */
+.fc-flags{margin-bottom:10px;}
+.fc-flag-row{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--red);margin-bottom:4px;}
+.fc-flag-row.warn{border-left-color:var(--amber);}
+.fc-flag-txt{font-size:0.75rem;font-weight:700;color:var(--navy);}
+.fc-flag-actions{display:flex;gap:6px;}
+.fc-flag-btn{font-size:0.62rem;font-weight:700;font-family:'Barlow',sans-serif;padding:4px 9px;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--navy);min-height:28px;}
+.fc-flag-btn:hover{background:var(--bg);}
+
+/* Note + log */
+.fc-note-wrap{margin-top:10px;}
+.fc-note-label{font-size:0.6rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;}
+.fc-note{width:100%;background:var(--white);border:1px solid var(--border);padding:8px 10px;font-size:0.82rem;font-family:'Barlow',sans-serif;color:var(--navy);resize:none;min-height:52px;outline:none;}
+.fc-note:focus{border-color:var(--navy);}
+.fc-note-save{background:var(--navy);color:white;border:none;padding:6px 12px;font-size:0.65rem;font-weight:700;font-family:'Barlow',sans-serif;cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;margin-top:5px;min-height:30px;}
+.fc-note-save.saved{background:var(--green);}
+.fc-log{margin-top:10px;}
+.fc-log-title{font-size:0.6rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:5px;}
+.fc-log-item{font-size:0.7rem;color:var(--sub);padding:4px 0;border-bottom:1px solid var(--border);line-height:1.4;}
+.fc-log-item:last-child{border-bottom:none;}
+.fc-log-ts{color:var(--navy);font-weight:600;}
+.fc-log-sys{color:var(--sub);}
+.fc-det-btns{display:flex;gap:6px;margin-top:10px;}
+.fc-det-btn{flex:1;padding:9px;font-size:0.7rem;font-weight:700;font-family:'Barlow',sans-serif;border:1px solid var(--border);background:var(--white);color:var(--navy);cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;min-height:40px;display:flex;align-items:center;justify-content:center;gap:4px;text-decoration:none;}
+.fc-det-btn:hover{background:var(--bg);}
+
+/* ALERTS */
+.alert-filter-row{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;}
+.alert-filter-row::-webkit-scrollbar{display:none;}
+.af-btn{padding:5px 12px;font-size:0.68rem;font-weight:700;font-family:'Barlow',sans-serif;border:1px solid var(--border);background:var(--white);color:var(--sub);cursor:pointer;white-space:nowrap;min-height:30px;}
+.af-btn.active{background:var(--navy);color:white;border-color:var(--navy);}
+.alert-card{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--red);margin-bottom:10px;}
+.alert-card.warn{border-left-color:var(--amber);}
+.alert-card.escalated{border-left-color:var(--navy);}
+.alert-card.cleared{border-left-color:var(--border);opacity:0.65;}
+.alert-header{padding:11px 12px 8px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.alert-truck{font-size:0.95rem;font-weight:800;color:var(--navy);}
+.alert-driver{font-size:0.7rem;color:var(--sub);margin-top:1px;}
+.alert-badge{font-size:0.62rem;font-weight:700;padding:2px 8px;text-transform:uppercase;letter-spacing:0.04em;flex-shrink:0;border:1px solid var(--border);color:var(--navy);background:var(--bg);}
+.alert-badge.is-alert{color:var(--red);background:#FEF2F2;border-color:#FECACA;}
+.alert-badge.is-warn{color:#D97706;background:#FFFBEB;border-color:#FDE68A;}
+.alert-badge.is-escalated{color:var(--navy);background:var(--bg);}
+.alert-badge.is-cleared{color:var(--sub);background:var(--bg);}
+.alert-details{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border);}
+.alert-det{padding:8px 10px;text-align:center;border-right:1px solid var(--border);}
+.alert-det:last-child{border-right:none;}
+.alert-det-val{font-size:0.88rem;font-weight:800;color:var(--navy);}
+.alert-det-val.over{color:var(--red);}
+.alert-det-lbl{font-size:0.58rem;color:var(--sub);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;}
+.alert-log-toggle{width:100%;padding:7px 12px;font-size:0.65rem;font-weight:700;font-family:'Barlow',sans-serif;background:var(--bg);border:none;border-top:1px solid var(--border);color:var(--sub);cursor:pointer;text-align:left;text-transform:uppercase;letter-spacing:0.06em;display:flex;align-items:center;justify-content:space-between;}
+.alert-log{display:none;padding:8px 12px;border-top:1px solid var(--border);}
+.alert-log.open{display:block;}
+.alert-log-item{font-size:0.68rem;color:var(--sub);padding:3px 0;border-bottom:1px solid var(--border);line-height:1.4;}
+.alert-log-item:last-child{border-bottom:none;}
+.al-ts{color:var(--navy);font-weight:600;}
+.al-sys{color:var(--sub);}
+.alert-actions{display:flex;border-top:1px solid var(--border);}
+.alert-action{flex:1;padding:10px 4px;font-size:0.65rem;font-weight:700;font-family:'Barlow',sans-serif;border:none;background:none;cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;color:var(--sub);border-right:1px solid var(--border);min-height:42px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;}
+.alert-action:last-child{border-right:none;}
+.alert-action:hover{background:var(--bg);}
+.alert-action-icon{font-size:0.9rem;}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-sheet{background:var(--white);border-top:1px solid var(--border);width:100%;max-width:480px;padding:20px 20px 32px;}
+.modal-handle{width:32px;height:3px;background:var(--border);margin:0 auto 16px;}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:14px;}
+.modal-select{width:100%;background:var(--bg);border:1px solid var(--border);padding:10px 12px;font-size:0.88rem;font-family:'Barlow',sans-serif;color:var(--navy);outline:none;margin-bottom:10px;}
+.modal-select:focus{border-color:var(--navy);}
+.modal-btns{display:flex;gap:8px;margin-top:4px;}
+.modal-cancel{flex:1;padding:12px;background:var(--bg);border:1px solid var(--border);font-size:0.8rem;font-weight:700;font-family:'Barlow',sans-serif;cursor:pointer;color:var(--sub);}
+.modal-confirm{flex:2;padding:12px;background:var(--navy);border:none;font-size:0.8rem;font-weight:700;font-family:'Barlow',sans-serif;cursor:pointer;color:white;text-transform:uppercase;letter-spacing:0.04em;}
+.modal-confirm.blue{background:var(--navy);}
+
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="logo_mark.svg" class="topbar-logo" alt="AxisFleet"/>
+      <span class="topbar-title">Field Ops</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-time" id="mob-clock">--:--</span>
+      <a href="hub.html" class="topbar-back">← Desktop</a>
+    </div>
+  </div>
+
+  <!-- OVERVIEW TAB -->
+  <div class="tab-pane active" id="pane-overview">
+    <div class="pane-inner">
+      <!-- Stats -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="ov-active">—</div>
+          <div class="stat-lbl">Active</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num alert-num" id="ov-alerts">—</div>
+          <div class="stat-lbl">Alerts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="ov-loaded">—</div>
+          <div class="stat-lbl">On Load</div>
+        </div>
+        <div class="stat-card span2">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div class="stat-num" id="ov-loads" style="font-size:1.6rem;">18</div>
+              <div class="stat-lbl">Loads Today</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="stat-num" id="ov-idle" style="font-size:1.6rem;">—</div>
+              <div class="stat-lbl">Idle</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="ov-overloads">3</div>
+          <div class="stat-lbl">Overloads</div>
+        </div>
+      </div>
+
+      <!-- Fleet health bar -->
+      <div class="health-card">
+        <div class="health-title">Fleet Health</div>
+        <div class="health-bar-row" id="health-bar"></div>
+        <div class="health-legend">
+          <div class="h-leg"><div class="h-dot" style="background:var(--green)"></div>On load</div>
+          <div class="h-leg"><div class="h-dot" style="background:var(--amber)"></div>Warning</div>
+          <div class="h-leg"><div class="h-dot" style="background:var(--red)"></div>Alert</div>
+          <div class="h-leg"><div class="h-dot" style="background:#CBD5E1"></div>Idle</div>
+        </div>
+      </div>
+
+      <!-- Flagged trucks -->
+      <div class="section-hdr">
+        Flagged Trucks
+        <span class="section-hdr-count" id="ov-flag-count">0</span>
+      </div>
+      <div id="ov-flagged-list"></div>
+    </div>
+  </div>
+
+  <!-- FLEET TAB -->
+  <div class="tab-pane" id="pane-fleet">
+    <div class="pane-inner">
+      <input type="search" class="search-bar" id="fleet-search" placeholder="Search truck or driver..." oninput="renderFleet()"/>
+      <div id="fleet-list"></div>
+    </div>
+  </div>
+
+  <!-- ALERTS TAB -->
+  <div class="tab-pane" id="pane-alerts">
+    <div class="pane-inner">
+      <div class="alert-filter-row">
+        <button class="af-btn active" data-af="all" onclick="filterAlerts('all',this)">All</button>
+        <button class="af-btn" data-af="alert" onclick="filterAlerts('alert',this)">Alerts</button>
+        <button class="af-btn" data-af="warning" onclick="filterAlerts('warning',this)">Warnings</button>
+        <button class="af-btn" data-af="escalated" onclick="filterAlerts('escalated',this)">Escalated</button>
+        <button class="af-btn" data-af="cleared" onclick="filterAlerts('cleared',this)">Cleared</button>
+      </div>
+      <div id="alerts-list"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottomnav">
+    <button class="nav-btn active" id="nav-overview" onclick="switchTab('overview')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="nav-label">Overview</span>
+    </button>
+    <button class="nav-btn" id="nav-fleet" onclick="switchTab('fleet')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span class="nav-label">Fleet</span>
+    </button>
+    <button class="nav-btn" id="nav-alerts" onclick="switchTab('alerts')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 22,21 2,21"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span class="nav-label">Alerts</span>
+      <span class="nav-badge" id="nav-alert-badge" style="display:none;">0</span>
+    </button>
+  </div>
+</div>
+
+<!-- RAISE FLAG MODAL -->
+<div class="modal-overlay" id="flag-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="flag-modal-title">Raise Flag</div>
+    <select class="modal-select" id="flag-modal-truck"></select>
+    <select class="modal-select" id="flag-modal-type">
+      <option value="OVERLOAD">Overload</option>
+      <option value="SPEEDING">Speeding</option>
+      <option value="HIGH REVVING">High Revving / Over-Revving</option>
+      <option value="HARD BRAKE">Hard Braking</option>
+      <option value="UNDERLOAD">Underload</option>
+      <option value="OFF-ROUTE">Off-Route</option>
+      <option value="EXCESSIVE IDLE">Excessive Idle</option>
+      <option value="MODULE FAULT">Module Fault</option>
+      <option value="OTHER">Other</option>
+    </select>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('flag-modal')">Cancel</button>
+      <button class="modal-confirm" onclick="confirmRaiseFlag()">Raise Flag</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLEAR CONFIRM MODAL -->
+<div class="modal-overlay" id="clear-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Confirm Clear</div>
+    <p style="font-size:0.85rem;color:var(--sub);margin-bottom:16px;" id="clear-modal-txt">Clear this flag and log it?</p>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('clear-modal')">Cancel</button>
+      <button class="modal-confirm blue" onclick="confirmClear()">Clear &amp; Log</button>
+    </div>
+  </div>
+</div>
+
+<script>
+if(!sessionStorage.getItem('af_auth')) window.location.href='index.html';
+
+// ── STORAGE ──
+function ls(k,d){try{return JSON.parse(localStorage.getItem('af_'+k))||d;}catch(e){return d;}}
+function ss(k,v){localStorage.setItem('af_'+k,JSON.stringify(v));}
+const user=sessionStorage.getItem('af_user')||'Manager';
+
+// ── BASE TRUCK DATA ──
+const BASE_TRUCKS=[
+  {id:'AF-01',driver:'D. Shabalala',phone:'0821110001',status:'alert',flags:['OVERLOAD'],lat:-25.7562,lng:29.4421,speed:68,gross:171200,load:true,route:'Mine → Mill'},
+  {id:'AF-02',driver:'F. Ngcobo',phone:'0821110002',status:'warning',flags:['HARD BRAKE'],lat:-25.8891,lng:29.3812,speed:52,gross:158400,load:true,route:'Mine → Mill'},
+  {id:'AF-03',driver:'J. Mthembu',phone:'0821110003',status:'ok',flags:[],lat:-25.6234,lng:29.5102,speed:44,gross:162100,load:true,route:'Mine → Mill'},
+  {id:'AF-04',driver:'A. Mokoena',phone:'0821110004',status:'warning',flags:['SPEEDING'],lat:-25.7123,lng:29.4650,speed:87,gross:155800,load:true,route:'Road'},
+  {id:'AF-05',driver:'M. Zwane',phone:'0821110005',status:'ok',flags:[],lat:-25.9102,lng:29.4890,speed:38,gross:159800,load:true,route:'Mine → Mill'},
+  {id:'AF-06',driver:'P. Dlamini',phone:'0821110006',status:'ok',flags:[],lat:-25.7890,lng:29.5340,speed:41,gross:161200,load:true,route:'Mine → Mill'},
+  {id:'AF-07',driver:'B. Khumalo',phone:'0821110007',status:'idle',flags:[],lat:-25.0000,lng:29.0000,speed:0,gross:0,load:false,route:'Depot'},
+  {id:'AF-08',driver:'T. Nkosi',phone:'0821110008',status:'ok',flags:[],lat:-25.8456,lng:29.5678,speed:35,gross:158900,load:true,route:'Mill → Mine'},
+  {id:'AF-09',driver:'S. Mahlangu',phone:'0821110009',status:'ok',flags:[],lat:-25.7234,lng:29.3890,speed:29,gross:160400,load:true,route:'Mine → Mill'},
+  {id:'AF-10',driver:'R. Sithole',phone:'0821110010',status:'idle',flags:[],lat:-25.0200,lng:29.0200,speed:0,gross:0,load:false,route:'Depot'},
+  {id:'UT-R01',driver:'D. Shabalala',phone:'0821110001',status:'alert',flags:['OVERLOAD'],lat:-25.7800,lng:29.4300,speed:22,gross:172400,load:true,route:'Mine → Mill'},
+];
+
+// Load trucks — merge with liveops localStorage if present
+let trucks=ls('trucks_live',BASE_TRUCKS);
+
+// ── ALERT FEED — builds from truck flags + persisted cleared/escalated state ──
+function getAlertFeed(){
+  const feed=ls('mob_alert_feed',[]);
+  // Add new flags not yet in feed
+  trucks.forEach(t=>{
+    (t.flags||[]).forEach(f=>{
+      const key=`${t.id}__${f}`;
+      if(!feed.find(a=>a.key===key)){
+        feed.unshift({
+          key,truckId:t.id,driver:t.driver,phone:t.phone,
+          flag:f,status:t.status,
+          gross:t.gross,speed:t.speed,route:t.route,
+          ts:new Date().toLocaleTimeString(),
+          state:'active', // active | escalated | cleared
+          log:[{ts:new Date().toLocaleTimeString(),txt:`Flag raised — ${f}`,sys:true}],
+        });
+      }
+    });
+  });
+  ss('mob_alert_feed',feed);
+  return feed;
+}
+
+let alertFilter='all';
+let pendingClear=null;
+
+// ── CLOCK ──
+function tick(){document.getElementById('mob-clock').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+setInterval(tick,1000);tick();
+
+// ── TABS ──
+function switchTab(tab){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pane-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+  if(tab==='overview')renderOverview();
+  if(tab==='fleet')renderFleet();
+  if(tab==='alerts')renderAlerts();
+}
+
+// ── OVERVIEW ──
+function renderOverview(){
+  const active=trucks.filter(t=>t.status!=='idle').length;
+  const alerts=trucks.filter(t=>t.status==='alert').length;
+  const warn=trucks.filter(t=>t.status==='warning').length;
+  const loaded=trucks.filter(t=>t.load).length;
+  const idle=trucks.filter(t=>t.status==='idle').length;
+  const flagged=trucks.filter(t=>t.flags&&t.flags.length);
+  const total=trucks.length;
+
+  document.getElementById('ov-active').textContent=active;
+  document.getElementById('ov-alerts').textContent=alerts+warn;
+  document.getElementById('ov-loaded').textContent=loaded;
+  document.getElementById('ov-idle').textContent=idle;
+
+  // Update nav badge
+  const badge=document.getElementById('nav-alert-badge');
+  const alertCount=alerts+warn;
+  badge.textContent=alertCount;
+  badge.style.display=alertCount>0?'flex':'none';
+
+  // Health bar
+  document.getElementById('health-bar').innerHTML=`
+    <div class="health-seg" style="flex:${loaded};background:var(--green);"></div>
+    <div class="health-seg" style="flex:${warn};background:var(--amber);"></div>
+    <div class="health-seg" style="flex:${alerts};background:var(--red);"></div>
+    <div class="health-seg" style="flex:${idle};background:#CBD5E1;"></div>
+  `;
+
+  document.getElementById('ov-flag-count').textContent=flagged.length;
+  document.getElementById('ov-flag-count').className='hdr-count'+(flagged.length>0?' alert':'');
+
+  const list=document.getElementById('ov-flagged-list');
+  if(!flagged.length){
+    list.innerHTML=`<div class="all-clear"><div class="all-clear-icon">✅</div><div class="all-clear-title">All Clear</div><div class="all-clear-sub">No active flags on any truck</div></div>`;
+    return;
+  }
+  const sorted=[...flagged].sort((a,b)=>{const o={alert:0,warning:1};return (o[a.status]||2)-(o[b.status]||2);});
+  list.innerHTML=sorted.map(t=>`
+    <div class="flagged-mini ${t.status==='warning'?'warn':''}">
+      <div class="flagged-mini-header">
+        <div class="fm-dot" style="background:${t.status==='alert'?'var(--red)':'var(--amber)'}"></div>
+        <div>
+          <div class="fm-truck">${t.id}</div>
+          <div class="fm-driver">${t.driver}</div>
+        </div>
+        <span class="fm-flag">${(t.flags||[]).join(', ')}</span>
+      </div>
+      <div class="fm-actions">
+        <button class="fm-action-btn" onclick="callDriver('${t.phone}','${t.driver}')">📞 Call</button>
+        <button class="fm-action-btn" onclick="quickEscalate('${t.id}','${(t.flags||[])[0]}')">↑ Escalate</button>
+        <button class="fm-action-btn" onclick="quickClear('${t.id}','${(t.flags||[])[0]}')">✓ Clear</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── FLEET ──
+function renderFleet(){
+  const q=document.getElementById('fleet-search').value.toLowerCase();
+  const sorted=[...trucks].sort((a,b)=>{const o={alert:0,warning:1,ok:2,idle:3};return o[a.status]-o[b.status];});
+  const filtered=sorted.filter(t=>!q||(t.id.toLowerCase().includes(q)||t.driver.toLowerCase().includes(q)));
+  const el=document.getElementById('fleet-list');
+  if(!filtered.length){el.innerHTML='<p style="color:var(--sub);text-align:center;padding:20px;font-size:0.85rem;">No trucks found.</p>';return;}
+  el.innerHTML=filtered.map(t=>{
+    const dotCls=t.status==='alert'?'red':t.status==='warning'?'amber':t.status==='idle'?'muted':'green';
+    const grossStr=t.gross>0?(t.gross/1000).toFixed(1)+'t':'Empty';
+    const hasFlag=t.flags&&t.flags.length;
+    return `<div class="fleet-card ${hasFlag?(t.status==='alert'?'has-flag':'has-warn'):''}">
+      <div class="fleet-card-row" onclick="toggleFleet('fc-${t.id}',this)">
+        <div class="fc-dot ${dotCls}"></div>
+        <div class="fc-info">
+          <div class="fc-id">${t.id}</div>
+          <div class="fc-driver">${t.driver}</div>
+        </div>
+        <div class="fc-right">
+          <div class="fc-weight">${grossStr}</div>
+          <div class="fc-speed">${t.speed>0?t.speed+' km/h':'Stopped'}</div>
+        </div>
+        <span class="fc-chevron" id="chev-${t.id}">▾</span>
+      </div>
+      <div class="fc-detail" id="fc-${t.id}">
+        ${renderTruckDetail(t)}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTruckDetail(t){
+  const grossColor=t.gross>168000?'red':t.gross>56000?'green':'';
+  const speedColor=t.speed>80?'red':t.speed>60?'amber':'';
+  const navUrl=`https://www.google.com/maps/dir/?api=1&destination=${t.lat},${t.lng}`;
+  const savedNote=ls('note_'+t.id,'');
+  const log=ls('activity_log_'+t.id,[]);
+  const defaultLog=[
+    {ts:'14:28:00',txt:'Driver login · '+t.driver,sys:true},
+    {ts:'14:28:10',txt:'Load event · '+(t.gross||0).toLocaleString()+' kg',sys:true},
+  ];
+  if(t.id==='AF-09') defaultLog.unshift({ts:'14:33:00',txt:'Maintenance ticket TKT-0001 created — M3-B offline',sys:true});
+  const allLog=[...log,...defaultLog].slice(0,6);
+
+  const flagsHtml=(t.flags&&t.flags.length)?`<div class="fc-flags">${t.flags.map(f=>`
+    <div class="fc-flag-row ${t.status==='warning'?'warn':''}">
+      <span class="fc-flag-txt">${f}</span>
+      <div class="fc-flag-actions">
+        <button class="fc-flag-btn" onclick="escalateFlag('${t.id}','${f}')">↑ Escalate</button>
+        <button class="fc-flag-btn" onclick="quickClear('${t.id}','${f}')">✓ Clear</button>
+      </div>
+    </div>`).join('')}</div>`:'<div style="font-size:0.75rem;color:var(--sub);margin-bottom:10px;padding:5px 0;">No active flags</div>';
+
+  return `
+    <div class="fc-detail-grid">
+      <div class="fc-det-item"><div class="fc-det-label">Gross Weight</div><div class="fc-det-val ${grossColor}">${t.gross>0?(t.gross/1000).toFixed(1)+'t':'—'}</div></div>
+      <div class="fc-det-item"><div class="fc-det-label">Speed</div><div class="fc-det-val ${speedColor}">${t.speed>0?t.speed+' km/h':'Stopped'}</div></div>
+      <div class="fc-det-item"><div class="fc-det-label">Route</div><div class="fc-det-val">${t.route}</div></div>
+      <div class="fc-det-item"><div class="fc-det-label">Status</div><div class="fc-det-val">${t.status.charAt(0).toUpperCase()+t.status.slice(1)}</div></div>
+    </div>
+    ${flagsHtml}
+    <div class="fc-det-btns">
+      <a href="tel:${t.phone}" class="fc-det-btn" onclick="return confirm('Call ${t.driver}?')">📞 Call</a>
+      <a href="${navUrl}" target="_blank" class="fc-det-btn">📍 Map</a>
+      <button class="fc-det-btn" onclick="raiseFlagFor('${t.id}')">⚑ Flag</button>
+    </div>
+    <div class="fc-note-wrap">
+      <div class="fc-note-label">Operations Note <button class="fc-note-save" id="note-btn-${t.id}" onclick="saveNote('${t.id}')">Save</button></div>
+      <textarea class="fc-note" id="note-${t.id}" placeholder="Add note...">${savedNote}</textarea>
+    </div>
+    <div class="fc-log">
+      <div class="fc-log-title">Activity Log</div>
+      ${allLog.map(l=>`<div class="fc-log-item ${l.sys?'':''}"><span class="fc-log-ts">${l.ts}</span> — <span class="${l.sys?'fc-log-sys':''}">${l.txt}</span></div>`).join('')}
+    </div>`;
+}
+
+function toggleFleet(id,row){
+  const detail=document.getElementById(id);
+  const chev=document.getElementById('chev-'+id.replace('fc-',''));
+  if(!detail)return;
+  const open=detail.classList.toggle('open');
+  if(chev)chev.classList.toggle('open',open);
+}
+
+// ── ALERTS ──
+function renderAlerts(){
+  const feed=getAlertFeed();
+  const filtered=feed.filter(a=>{
+    if(alertFilter==='all')return a.state!=='cleared';
+    return a.state===alertFilter;
+  });
+  const el=document.getElementById('alerts-list');
+  if(!filtered.length){
+    const msg=alertFilter==='cleared'?'No cleared alerts yet.':alertFilter==='escalated'?'No escalated alerts.':'No active alerts.';
+    el.innerHTML=`<div class="all-clear"><div class="all-clear-icon">${alertFilter==='cleared'?'📋':'✅'}</div><div class="all-clear-title">${alertFilter==='cleared'?'No History':alertFilter==='escalated'?'None Escalated':'All Clear'}</div><div class="all-clear-sub">${msg}</div></div>`;
+    return;
+  }
+  el.innerHTML=filtered.map((a,i)=>{
+    const cardCls=a.state==='escalated'?'escalated':a.state==='cleared'?'cleared':a.status==='warning'?'warn':'';
+    const badgeCls=a.state==='escalated'?'is-escalated':a.state==='cleared'?'is-cleared':a.status==='warning'?'is-warn':'is-alert';
+    const stateLabel=a.state==='escalated'?'Escalated':a.state==='cleared'?'Cleared':a.flag;
+    const grossStr=a.gross>0?(a.gross/1000).toFixed(1)+'t':'—';
+    const logHtml=a.log.slice(0,5).map(l=>`<div class="alert-log-item"><span class="al-ts">${l.ts}</span> — <span class="${l.sys?'al-sys':''}">${l.txt}</span></div>`).join('');
+    return `<div class="alert-card ${cardCls}">
+      <div class="alert-header">
+        <div>
+          <div class="alert-truck">${a.truckId} — ${a.driver}</div>
+          <div class="alert-driver">${a.route||''}${a.state!=='active'?` · <strong>${a.state.toUpperCase()}</strong>`:''}</div>
+        </div>
+        <span class="alert-badge ${badgeCls}">${stateLabel}</span>
+      </div>
+      <div class="alert-details">
+        <div class="alert-det">
+          <div class="alert-det-val ${a.gross>168000?'over':''}">${grossStr}</div>
+          <div class="alert-det-lbl">Gross</div>
+        </div>
+        <div class="alert-det">
+          <div class="alert-det-val">${a.speed>0?a.speed+' km/h':'Stopped'}</div>
+          <div class="alert-det-lbl">Speed</div>
+        </div>
+        <div class="alert-det">
+          <div class="alert-det-val" style="font-size:0.72rem;color:var(--sub);">${a.ts}</div>
+          <div class="alert-det-lbl">Flagged at</div>
+        </div>
+      </div>
+      <button class="alert-log-toggle" onclick="toggleLog('alog-${i}',this)">
+        <span>Activity Log (${a.log.length})</span><span>▾</span>
+      </button>
+      <div class="alert-log" id="alog-${i}">${logHtml}</div>
+      ${a.state!=='cleared'?`
+      <div class="alert-actions">
+        <button class="alert-action" onclick="callDriver('${a.phone}','${a.driver}')">
+          <span class="alert-action-icon">📞</span>Call
+        </button>
+        ${a.state!=='escalated'?`<button class="alert-action" onclick="escalateAlert('${a.key}')">
+          <span class="alert-action-icon">↑</span>Escalate
+        </button>`:`<button class="alert-action" style="pointer-events:none;opacity:0.5;">
+          <span class="alert-action-icon">✓</span>Escalated
+        </button>`}
+        <button class="alert-action" onclick="clearAlert('${a.key}')">
+          <span class="alert-action-icon">✓</span>Clear
+        </button>
+        <button class="alert-action" onclick="openFlagModal()">
+          <span class="alert-action-icon">⚑</span>Flag
+        </button>
+      </div>`:`<div style="padding:7px 12px;font-size:0.68rem;color:var(--sub);border-top:1px solid var(--border);">Cleared — no further action</div>`}
+    </div>`;
+  }).join('');
+}
+
+function filterAlerts(f,btn){
+  alertFilter=f;
+  document.querySelectorAll('.af-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAlerts();
+}
+
+function toggleLog(id,btn){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const open=el.classList.toggle('open');
+  btn.querySelector('span:last-child').textContent=open?'▴':'▾';
+}
+
+// ── ACTIONS ──
+function callDriver(phone,name){
+  if(confirm('Call '+name+'?')) window.location.href='tel:'+phone;
+}
+
+function quickClear(truckId,flag){
+  pendingClear={truckId,flag,source:'truck'};
+  document.getElementById('clear-modal-txt').textContent=`Clear "${flag}" on ${truckId} and log it?`;
+  document.getElementById('clear-modal').classList.add('open');
+}
+
+function clearAlert(key){
+  pendingClear={key,source:'alert'};
+  const feed=getAlertFeed();
+  const a=feed.find(x=>x.key===key);
+  if(a) document.getElementById('clear-modal-txt').textContent=`Clear "${a.flag}" on ${a.truckId} and log it?`;
+  document.getElementById('clear-modal').classList.add('open');
+}
+
+function confirmClear(){
+  closeModal('clear-modal');
+  const ts=new Date().toLocaleTimeString();
+  if(pendingClear.source==='alert'){
+    const feed=getAlertFeed();
+    const a=feed.find(x=>x.key===pendingClear.key);
+    if(a){
+      a.state='cleared';
+      a.log.unshift({ts,txt:`${user}: Flag cleared`,sys:false});
+      ss('mob_alert_feed',feed);
+    }
+    // Also clear from truck
+    const t=trucks.find(x=>x.id===(a&&a.truckId));
+    if(t&&a){t.flags=(t.flags||[]).filter(f=>f!==a.flag);if(!t.flags.length)t.status=t.load?'ok':'idle';}
+  } else {
+    const t=trucks.find(x=>x.id===pendingClear.truckId);
+    if(t){
+      t.flags=(t.flags||[]).filter(f=>f!==pendingClear.flag);
+      if(!t.flags.length) t.status=t.load?'ok':'idle';
+      const log=ls('activity_log_'+t.id,[]);
+      log.unshift({ts,txt:`${user}: Flag cleared — ${pendingClear.flag} [Mobile]`,sys:false});
+      ss('activity_log_'+t.id,log);
+    }
+  }
+  ss('trucks_live',trucks);
+  refreshAll();
+  pendingClear=null;
+}
+
+function quickEscalate(truckId,flag){
+  escalateFlagDo(truckId,flag);
+}
+
+function escalateFlag(truckId,flag){
+  escalateFlagDo(truckId,flag);
+}
+
+function escalateAlert(key){
+  const feed=getAlertFeed();
+  const a=feed.find(x=>x.key===key);
+  if(!a)return;
+  const ts=new Date().toLocaleTimeString();
+  a.state='escalated';
+  // Find manager for this truck from flagging rules
+  const rules=ls('flag_rules',{});
+  const truckRules=rules[a.truckId]||{};
+  const flagKey=a.flag.toLowerCase().replace(/[^a-z]/g,'_');
+  const notifyId=truckRules[flagKey]?.notify||'USR-0002';
+  const users=ls('users',[{id:'USR-0002',name:'K. Nkosi'},{id:'USR-0001',name:'Almó Esterhuizen'}]);
+  const mgr=users.find(u=>u.id===notifyId);
+  const mgrName=mgr?mgr.name:'K. Nkosi';
+  a.log.unshift({ts,txt:`${user}: Escalated to ${mgrName} — logged`,sys:false});
+  ss('mob_alert_feed',feed);
+  renderAlerts();
+  renderOverview();
+  alert(`Escalated to ${mgrName}\nLogged at ${ts}`);
+}
+
+function escalateFlagDo(truckId,flag){
+  const feed=getAlertFeed();
+  const key=`${truckId}__${flag}`;
+  let a=feed.find(x=>x.key===key);
+  if(!a){
+    const t=trucks.find(x=>x.id===truckId);
+    if(!t)return;
+    a={key,truckId,driver:t.driver,phone:t.phone,flag,status:t.status,gross:t.gross,speed:t.speed,route:t.route,ts:new Date().toLocaleTimeString(),state:'active',log:[]};
+    feed.unshift(a);
+  }
+  const ts=new Date().toLocaleTimeString();
+  const rules=ls('flag_rules',{});
+  const truckRules=rules[truckId]||{};
+  const users=ls('users',[{id:'USR-0002',name:'K. Nkosi'},{id:'USR-0001',name:'Almó Esterhuizen'}]);
+  const notifyId=truckRules['overload']?.notify||'USR-0002';
+  const mgr=users.find(u=>u.id===notifyId);
+  const mgrName=mgr?mgr.name:'K. Nkosi';
+  a.state='escalated';
+  a.log.unshift({ts,txt:`${user}: Escalated to ${mgrName} — logged`,sys:false});
+  ss('mob_alert_feed',feed);
+  refreshAll();
+  alert(`Escalated to ${mgrName}\nLogged at ${ts}`);
+}
+
+// ── RAISE FLAG ──
+let flagModalTruckId=null;
+function openFlagModal(truckId){
+  flagModalTruckId=truckId||null;
+  const sel=document.getElementById('flag-modal-truck');
+  sel.innerHTML=trucks.map(t=>`<option value="${t.id}" ${t.id===truckId?'selected':''}>${t.id} — ${t.driver}</option>`).join('');
+  document.getElementById('flag-modal').classList.add('open');
+}
+function raiseFlagFor(truckId){openFlagModal(truckId);}
+function confirmRaiseFlag(){
+  const truckId=document.getElementById('flag-modal-truck').value;
+  const flag=document.getElementById('flag-modal-type').value;
+  const t=trucks.find(x=>x.id===truckId);
+  if(!t){closeModal('flag-modal');return;}
+  if(!t.flags) t.flags=[];
+  if(!t.flags.includes(flag)) t.flags.push(flag);
+  t.status='alert';
+  const ts=new Date().toLocaleTimeString();
+  const log=ls('activity_log_'+t.id,[]);
+  log.unshift({ts,txt:`${user}: Flag raised manually — ${flag} [Mobile]`,sys:false});
+  ss('activity_log_'+t.id,log);
+  ss('trucks_live',trucks);
+  // Add to alert feed
+  const feed=getAlertFeed();
+  const key=`${t.id}__${flag}__${Date.now()}`;
+  feed.unshift({key,truckId:t.id,driver:t.driver,phone:t.phone,flag,status:'alert',gross:t.gross,speed:t.speed,route:t.route,ts,state:'active',log:[{ts,txt:`${user}: Flag raised manually`,sys:false}]});
+  ss('mob_alert_feed',feed);
+  closeModal('flag-modal');
+  refreshAll();
+}
+
+// ── SAVE NOTE ──
+function saveNote(id){
+  const ta=document.getElementById('note-'+id);
+  const btn=document.getElementById('note-btn-'+id);
+  if(!ta||!ta.value.trim())return;
+  ss('note_'+id,ta.value.trim());
+  const log=ls('activity_log_'+id,[]);
+  log.unshift({ts:new Date().toLocaleTimeString(),txt:`${user}: ${ta.value.trim()} [Mobile]`,sys:false});
+  ss('activity_log_'+id,log);
+  if(btn){btn.textContent='Saved ✓';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Save';btn.classList.remove('saved');},2000);}
+}
+
+// ── MODALS ──
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+// ── REFRESH ──
+function refreshAll(){
+  trucks=ls('trucks_live',BASE_TRUCKS);
+  const active=document.querySelector('.tab-pane.active');
+  if(!active)return;
+  const tab=active.id.replace('pane-','');
+  if(tab==='overview')renderOverview();
+  if(tab==='fleet')renderFleet();
+  if(tab==='alerts')renderAlerts();
+  // Update badge always
+  const alerts=trucks.filter(t=>t.status==='alert'||t.status==='warning').length;
+  const badge=document.getElementById('nav-alert-badge');
+  badge.textContent=alerts;
+  badge.style.display=alerts>0?'flex':'none';
+}
+
+// Auto-refresh every 10s
+setInterval(refreshAll,10000);
+
+// INIT
+renderOverview();
+</script>
+</body>
+</html>
