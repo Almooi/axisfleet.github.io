@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AxisFleet — OPS</title>
+<link rel="icon" href="favicon.ico"/>
+<link rel="stylesheet" href="af_style.css"/>
+<style>
+html,body{height:100%;background:#EAEEF4;overflow:hidden;display:flex;flex-direction:column;}
+.hub-body{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 28px;}
+.hub-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;width:100%;max-width:1280px;}
+.hub-card{
+  background:white;
+  border-top:4px solid var(--blue);
+  padding:40px 24px 36px;
+  cursor:pointer;
+  transition:all 0.18s;
+  text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+  text-decoration:none;
+}
+.hub-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(0,0,0,0.12);border-top-color:var(--orange);}
+.hub-card:hover .hub-icon{background:rgba(255,107,53,0.1);}
+.hub-card:hover .hub-arrow{opacity:1;transform:translateX(0);}
+.hub-icon{
+  width:60px;height:60px;
+  border-radius:50%;
+  background:rgba(30,144,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.18s;
+}
+.hub-icon svg{width:26px;height:26px;}
+.hub-num{font-size:0.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;}
+.hub-name{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:0.04em;line-height:1.2;}
+.hub-arrow{font-size:1.2rem;color:var(--orange);opacity:0;transform:translateX(-4px);transition:all 0.18s;}
+/* Color accents per card */
+.hub-card.c-orange{border-top-color:var(--orange);}
+.hub-card.c-blue{border-top-color:var(--blue);}
+.hub-card.c-red{border-top-color:var(--red);}
+.hub-card.c-navy{border-top-color:var(--navy);}
+.hub-card.c-teal{border-top-color:#14B8A6;}
+/* mobile card */
+.hub-card.c-mobile{border-top-color:var(--navy);}
+.hub-mobile-badge{font-size:0.58rem;font-weight:700;background:#F1F5F9;color:var(--muted);padding:2px 7px;border:1px solid #E2E8F0;text-transform:uppercase;letter-spacing:0.08em;}
+@media(max-width:1100px){.hub-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.hub-grid{grid-template-columns:1fr 1fr;}.hub-card:last-child{grid-column:span 2;}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a href="hub.html" class="nav-logo-link">
+    <img src="logo_mark.svg" class="nav-logo" alt="AxisFleet"/>
+    
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-links">
+    <a href="hub.html" class="nav-link active">Hub</a>
+    <a href="setup.html" class="nav-link">Setup</a>
+    <a href="rawdata.html" class="nav-link">Raw Data</a>
+    <a href="flagging.html" class="nav-link">Flagging</a>
+    <a href="liveops.html" class="nav-link">Live Operations</a>
+    <a href="reporting.html" class="nav-link">Reporting</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="nav-user">Admin</span>
+    <button class="nav-logout" id="nav-logout">Logout</button>
+  </div>
+</nav>
+
+<div class="hub-body">
+  <div class="hub-grid">
+    <a href="setup.html" class="hub-card c-orange">
+      <div class="hub-num">01</div>
+      <div class="hub-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M2 12h4M18 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <div class="hub-name">Hardware &amp;<br/>User Setup</div>
+      <div class="hub-arrow">→</div>
+    </a>
+    <a href="rawdata.html" class="hub-card c-blue">
+      <div class="hub-num">02</div>
+      <div class="hub-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1E90FF" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+      </div>
+      <div class="hub-name">Incoming<br/>Raw Data</div>
+      <div class="hub-arrow">→</div>
+    </a>
+    <a href="flagging.html" class="hub-card c-red">
+      <div class="hub-num">03</div>
+      <div class="hub-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"/></svg>
+      </div>
+      <div class="hub-name">Flagging<br/>Setup</div>
+      <div class="hub-arrow">→</div>
+    </a>
+    <a href="liveops.html" class="hub-card c-navy">
+      <div class="hub-num">04</div>
+      <div class="hub-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0D1B2A" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+      </div>
+      <div class="hub-name">Live<br/>Operations</div>
+      <div class="hub-arrow">→</div>
+    </a>
+    <a href="reporting.html" class="hub-card c-teal">
+      <div class="hub-num">05</div>
+      <div class="hub-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg>
+      </div>
+      <div class="hub-name">Reporting</div>
+      <div class="hub-arrow">→</div>
+    </a>
+    <a href="mobile.html" class="hub-card c-mobile">
+      <div class="hub-num">06</div>
+      <div class="hub-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0D1B2A" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/></svg>
+      </div>
+      <div class="hub-name">Mobile<br/>Field View</div>
+      <div class="hub-mobile-badge">Phone</div>
+    </a>
+  </div>
+</div>
+
+<script>
+if(!sessionStorage.getItem('af_auth')) window.location.href='index.html';
+document.getElementById('nav-user').textContent = sessionStorage.getItem('af_user') || 'Admin';
+document.getElementById('nav-logout').addEventListener('click',()=>{
+  if(confirm('Log out of AxisFleet?')){sessionStorage.clear();window.location.href='index.html';}
+});
+</script>
+</body>
+</html>
