@@ -1,112 +1,1064 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AxisFleet — OPS</title>
-<link rel="icon" href="favicon.ico"/>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AxisFleet — Powering the people that move the world.</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0D1B2A;--blue:#1E90FF;--orange:#FF6B35;--muted:#6B7C93;--red:#EF4444;}
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;font-family:'Barlow',sans-serif;background:var(--navy);color:white;overflow:hidden;}
-.login-wrap{height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
-.login-wrap::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(30,144,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(30,144,255,0.04) 1px,transparent 1px);background-size:60px 60px;}
-.login-wrap::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(30,144,255,0.07) 0%,transparent 70%);}
-.login-box{position:relative;z-index:2;width:100%;max-width:400px;padding:0 20px;animation:fadeIn 0.5s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.login-logo{text-align:center;margin-bottom:40px;}
-.login-logo img{height:56px;filter:drop-shadow(0 0 20px rgba(30,144,255,0.35));}
-.login-card{background:rgba(15,34,54,0.92);border:1px solid rgba(30,144,255,0.2);padding:36px 32px;backdrop-filter:blur(16px);box-shadow:0 24px 64px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04);}
-.login-heading{font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;}
-.login-sub{font-size:0.78rem;color:var(--muted);margin-bottom:28px;}
-.field-label{display:block;font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:7px;}
-.field-input{width:100%;background:rgba(6,14,23,0.7);border:1px solid rgba(30,144,255,0.18);padding:11px 14px;color:white;font-size:0.9rem;font-family:'Barlow',sans-serif;outline:none;transition:border-color 0.15s,box-shadow 0.15s;margin-bottom:18px;border-radius:2px;}
-.field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,144,255,0.1);}
-.field-input.shake{animation:shake 0.3s ease;border-color:var(--red);}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.login-error{font-size:0.78rem;color:var(--red);margin-top:-12px;margin-bottom:16px;display:none;padding:8px 12px;background:rgba(239,68,68,0.08);border-left:3px solid var(--red);}
-.login-btn{width:100%;background:var(--blue);color:white;border:none;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
-.login-btn:hover{background:#1a7de0;box-shadow:0 4px 20px rgba(30,144,255,0.35);}
-.login-btn:active{transform:scale(0.99);}
-.login-footer{text-align:center;margin-top:20px;}
-.reset-link{font-size:0.75rem;color:rgba(107,124,147,0.7);cursor:pointer;transition:color 0.15s;border:none;background:none;font-family:'Barlow',sans-serif;}
-.reset-link:hover{color:var(--blue);}
-.login-scripture{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:0.72rem;color:rgba(107,124,147,0.4);font-style:italic;white-space:nowrap;z-index:2;}
-.loading-bar{position:fixed;top:0;left:0;height:2px;background:var(--blue);width:0;transition:width 1s ease;z-index:9999;box-shadow:0 0 8px rgba(30,144,255,0.6);}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(6,14,23,0.8);z-index:10000;align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.open{display:flex;}
-.modal-box{background:#0F2236;border:1px solid rgba(30,144,255,0.25);width:100%;max-width:400px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:fadeIn 0.2s ease;}
-.modal-box h3{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;}
-.modal-box p{font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:16px;}
-.email-chip{background:rgba(30,144,255,0.08);border:1px solid rgba(30,144,255,0.2);padding:10px 14px;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;color:var(--blue);letter-spacing:0.03em;margin-bottom:20px;}
-.modal-btns{display:flex;gap:10px;}
-.btn-cancel{flex:1;background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);padding:10px;font-family:'Barlow',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.04em;}
-.btn-cancel:hover{border-color:white;color:white;}
-.btn-send{flex:2;background:var(--blue);border:none;color:white;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.06em;}
-.btn-send:hover{background:#1a7de0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#1C1A16;
+  color:#C8C4BC;
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-weight:400;
+  overflow-x:hidden;
+  cursor:none;
+}
+@media(hover:none){body{cursor:auto}#cur,#cur2{display:none}}
+
+/* CURSOR */
+#cur{position:fixed;width:12px;height:12px;border-radius:50%;background:#FF6B35;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s}
+#cur2{position:fixed;width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,107,53,.35);pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+
+/* LOADER */
+#ldr{
+  position:fixed;inset:0;z-index:9990;
+  background:#0D1B2A;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:32px;
+  transition:opacity 1s ease,visibility 1s ease;
+}
+#ldr.out{opacity:0;visibility:hidden;pointer-events:none}
+.ldr-mark{
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  opacity:0;animation:lfu .8s ease forwards .3s;
+}
+.ldr-logo{width:220px;height:auto}
+.ldr-bar-wrap{width:200px;height:1px;background:rgba(255,255,255,.08);overflow:hidden}
+.ldr-bar{height:100%;background:linear-gradient(90deg,#FF6B35,#C8922A,#1A8FD6);width:0;animation:lfill 1.2s ease-in-out forwards .2s}
+.ldr-txt{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.15);
+  opacity:0;animation:lfu .4s ease forwards .7s;
+}
+@keyframes lfill{to{width:100%}}
+@keyframes lfu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* BG CANVAS */
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:40px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5vw;
+  background:rgba(28,26,22,.55);
+  backdrop-filter:blur(10px);
+  box-shadow:0 1px 0 rgba(255,255,255,.03);
+  transition:background .4s,box-shadow .4s,height .4s;
+}
+nav.s{
+  background:rgba(28,26,22,.85);
+  height:36px;
+  box-shadow:0 1px 0 rgba(255,255,255,.05);
+}
+.nlogo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{height:28px;width:auto}
+.nav-tagline{font-size:.62rem;font-weight:500;color:rgba(200,196,188,.2);letter-spacing:.02em;border-left:1px solid rgba(255,255,255,.06);padding-left:10px;margin-left:0;line-height:1}
+.nmark svg{width:20px;height:20px}
+.nname{font-family:'Clash Display',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:-.01em;color:#F0EDE8}
+.nname b{color:#1A8FD6}
+.nsub{font-family:'JetBrains Mono',monospace;font-size:.38rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.15);display:block;margin-top:0}
+.nlinks{display:flex;align-items:center;gap:1.2rem}
+.nlinks a{font-size:.75rem;font-weight:500;color:rgba(200,196,188,.5);text-decoration:none;transition:color .2s}
+.nlinks a:hover{color:#F0EDE8}
+.nbtn{
+  background:rgba(240,237,232,.85) !important;color:#1A1A2E !important;
+  padding:.35rem .9rem;border-radius:100px;
+  font-size:.7rem !important;font-weight:600 !important;
+  transition:all .2s !important;
+}
+.nbtn:hover{background:#FF6B35 !important;color:#fff !important;transform:translateY(-1px)}
+.nbtn-gold{
+  background:linear-gradient(135deg,#C8922A,#E8B84B) !important;
+  color:#fff !important;
+  padding:.35rem .9rem;border-radius:100px;
+  font-size:.7rem !important;font-weight:600 !important;
+  transition:all .2s !important;border:none;cursor:none;
+}
+.nbtn-gold:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,146,42,.3) !important}
+
+/* HERO */
+.hero{
+  position:relative;min-height:90vh;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;padding:80px 5vw 24px;gap:4rem;
+  z-index:1;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 70% 40%,rgba(26,143,214,.06),transparent 60%),
+    radial-gradient(ellipse 50% 70% at 15% 70%,rgba(255,107,53,.04),transparent 60%);
+  pointer-events:none;
+}
+.hero-left{position:relative;z-index:2}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.25);
+  color:#FF6B35;padding:.3rem .85rem;border-radius:100px;
+  font-size:.68rem;font-weight:500;letter-spacing:.03em;
+  margin-bottom:1.5rem;
+  opacity:0;animation:lfu .6s ease forwards 1.5s;
+}
+.hero-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:#FF6B35;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-h1{
+  font-family:'Clash Display',sans-serif;font-weight:700;
+  font-size:clamp(2.8rem,5vw,4.8rem);line-height:1.0;letter-spacing:-.03em;
+  color:#F0EDE8;margin-bottom:1.2rem;
+  opacity:0;animation:lfu .8s ease forwards 1.7s;
+}
+.hero-h1 .acc{color:#FF6B35}
+.hero-h1 .blue{color:#1A8FD6}
+.hero-p{
+  font-size:.95rem;color:rgba(200,196,188,.7);line-height:1.75;
+  max-width:440px;margin-bottom:2rem;
+  opacity:0;animation:lfu .7s ease forwards 1.9s;
+}
+.hero-btns{
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  opacity:0;animation:lfu .7s ease forwards 2.1s;
+}
+.btn-light{
+  background:#F0EDE8;color:#1A1A2E;padding:.8rem 1.6rem;
+  border-radius:100px;font-size:.85rem;font-weight:600;
+  text-decoration:none;transition:background .2s,transform .15s,box-shadow .2s;
+}
+.btn-light:hover{background:#FF6B35;color:#fff;transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,53,.3)}
+.btn-gold{
+  background:linear-gradient(135deg,#C8922A,#E8B84B);
+  color:#fff;padding:.8rem 1.6rem;border-radius:100px;
+  font-size:.85rem;font-weight:600;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,146,42,.4)}
+.btn-ghost-dark{
+  color:rgba(200,196,188,.45);font-size:.85rem;font-weight:500;
+  text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s;
+}
+.btn-ghost-dark:hover{color:#1A8FD6}
+.btn-ghost-dark::after{content:'→';transition:transform .2s}
+.btn-ghost-dark:hover::after{transform:translateX(4px)}
+.hero-metrics{
+  display:flex;gap:1.8rem;margin-top:2.2rem;padding-top:1.8rem;
+  border-top:1px solid rgba(255,255,255,.08);
+  opacity:0;animation:lfu .7s ease forwards 2.3s;
+}
+.hm-num{font-family:'Clash Display',sans-serif;font-size:1.9rem;font-weight:700;color:#F0EDE8;line-height:1;letter-spacing:-.03em}
+.hm-num em{color:#FF6B35;font-style:normal;font-size:1rem}
+.hm-lbl{font-size:.72rem;color:rgba(200,196,188,.35);font-weight:500;margin-top:4px}
+.hm-div{width:1px;background:rgba(255,255,255,.08);align-self:stretch}
+
+/* HERO RIGHT */
+.hero-right{position:relative;z-index:2;opacity:0;animation:lfu 1s ease forwards 1.9s;display:flex;justify-content:center;align-items:center;margin-top:-110px}
+
+/* MARQUEE */
+.marquee{background:#0D1B2A;padding:.5rem 0;overflow:hidden;margin:0}
+.mtrack{display:flex;animation:mscroll 32s linear infinite;width:max-content}
+.mitem{
+  font-family:'Clash Display',sans-serif;font-weight:600;
+  font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.85);padding:0 1rem;white-space:nowrap;
+  display:flex;align-items:center;gap:.6rem;
+}
+.mitem .mx{color:#FF6B35;font-size:.45rem}
+@keyframes mscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTION BASE */
+.sec{padding:80px 5vw;position:relative;z-index:1}
+.si{max-width:1200px;margin:0 auto}
+.stag{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#FF6B35;margin-bottom:1.2rem}
+.stag::before{content:'';width:14px;height:2px;background:#FF6B35;border-radius:1px}
+.sh2{font-family:'Clash Display',sans-serif;font-weight:700;font-size:clamp(2rem,3.8vw,3.6rem);line-height:1.0;letter-spacing:-.025em;color:#F0EDE8;margin-bottom:1rem}
+.sh2 em{font-style:normal;color:#1A8FD6}
+.sh2 b{font-style:normal;color:#FF6B35;font-weight:700}
+.sp{font-size:1rem;color:rgba(200,196,188,.72);line-height:1.8;max-width:520px;margin-bottom:4rem}
+
+/* PLATFORM SECTION */
+.plat-sec{background:#141210;z-index:1;position:relative;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04)}
+.plat-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:72px;align-items:center}
+
+/* PHONE MOCKUP */
+.phone-wrap{position:relative}
+.phone-blob1{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(26,143,214,.1),transparent);top:-50px;left:-50px;z-index:0}
+.phone-blob2{position:absolute;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,.07),transparent);bottom:-30px;right:-20px;z-index:0}
+.phone{
+  width:272px;margin:0 auto;display:block;position:relative;z-index:1;
+  background:#0F1C28;border-radius:36px;overflow:hidden;
+  border:8px solid #1A2A38;
+  box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);
+}
+.pbar{height:26px;background:#0A151F;display:flex;align-items:center;justify-content:center}
+.ppill{width:70px;height:4px;background:rgba(255,255,255,.07);border-radius:2px}
+.pscr{padding:14px}
+.phdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.ptitle{font-family:'Clash Display',sans-serif;font-weight:700;font-size:.98rem;color:#fff;letter-spacing:-.01em}
+.plive{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.1em;color:#00D4A0;display:flex;align-items:center;gap:4px}
+.plive::before{content:'';width:5px;height:5px;border-radius:50%;background:#00D4A0;animation:pulse 1.5s infinite}
+.phlabel{display:flex;justify-content:space-between;margin-bottom:5px}
+.phll{font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.22)}
+.phlv{font-family:'Clash Display',sans-serif;font-size:.88rem;font-weight:700;color:#00D4A0}
+.phbar{height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.phfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#1A8FD6,#00D4A0);transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+.ppills{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:10px}
+.ppill2{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:7px;text-align:center}
+.ppn{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;line-height:1}
+.ppn.o{color:#FF6B35}.ppn.t{color:#00D4A0}
+.ppl{font-family:'JetBrains Mono',monospace;font-size:.4rem;letter-spacing:.08em;color:rgba(255,255,255,.18);text-transform:uppercase;margin-top:2px}
+.ptrucks{display:flex;flex-direction:column;gap:4px;margin-bottom:9px}
+.ptruck{display:grid;grid-template-columns:7px 1fr auto auto;align-items:center;gap:7px;padding:6px 9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:6px}
+.ptruck.w{border-color:rgba(255,107,53,.18);background:rgba(255,107,53,.04)}
+.pdot{width:6px;height:6px;border-radius:50%}
+.pdot.on{background:#00D4A0;box-shadow:0 0 5px rgba(0,212,160,.5)}
+.pdot.w{background:#FF6B35;box-shadow:0 0 5px rgba(255,107,53,.5)}
+.pdot.off{background:rgba(255,255,255,.18)}
+.pid{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.55)}
+.pwt{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:rgba(255,255,255,.3)}
+.pwt.ov{color:#FF6B35}
+.pzn{font-family:'JetBrains Mono',monospace;font-size:.46rem;color:rgba(255,255,255,.18);background:rgba(255,255,255,.04);padding:1px 5px;border-radius:3px}
+.plog{border-top:1px solid rgba(255,255,255,.04);padding-top:7px}
+.plr{display:flex;gap:5px;padding:2px 0;font-family:'JetBrains Mono',monospace;font-size:.5rem}
+.pts{color:rgba(255,255,255,.18);white-space:nowrap;min-width:34px}
+.pfl{color:#FF6B35}
+.pok{color:rgba(255,255,255,.28)}
+
+/* PLATFORM TABS */
+.ptabs{display:flex;gap:0;margin-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.ptb{font-size:.8rem;font-weight:600;letter-spacing:.04em;color:rgba(200,196,188,.3);padding:.7rem 1.4rem;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
+.ptb:hover{color:#F0EDE8}
+.ptb.on{color:#F0EDE8;border-bottom-color:#FF6B35}
+.tp{display:none}.tp.on{display:block}
+.tph{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.55rem;letter-spacing:-.02em;color:#F0EDE8;margin-bottom:.7rem}
+.tpp{font-size:.95rem;color:rgba(200,196,188,.72);line-height:1.8;margin-bottom:1.4rem}
+.tpfs{display:flex;flex-direction:column;gap:.55rem}
+.tpf{display:flex;align-items:flex-start;gap:10px;font-size:.9rem;color:rgba(200,196,188,.72)}
+.tpf::before{content:'✓';color:#FF6B35;font-weight:700;flex-shrink:0;font-size:.85rem}
+
+/* ALERTS TAB VISUAL */
+.alerts-vis{display:flex;flex-direction:column;gap:8px}
+.av-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.av-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.av-txt{font-size:.85rem;color:rgba(200,196,188,.6);flex:1}
+.av-time{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:rgba(200,196,188,.25)}
+.av-sms{font-size:.65rem;font-weight:600;color:#FF6B35;border:1px solid rgba(255,107,53,.3);padding:3px 9px;border-radius:100px;cursor:pointer;background:none;white-space:nowrap}
+
+/* REPORTING VISUAL */
+.rep-vis{display:flex;flex-direction:column;gap:10px}
+.rv-row{}
+.rv-labels{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:rgba(200,196,188,.35);margin-bottom:4px}
+.rv-track{height:7px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden}
+.rv-fill{height:100%;border-radius:4px}
+
+/* CAPABILITIES */
+.cap-sec{background:#1C1A16;z-index:1;position:relative}
+.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.cc{background:#242018;border-radius:16px;padding:2rem;border:1px solid rgba(255,255,255,.05);transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
+.cc:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(0,0,0,.4)}
+.cc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FF6B35,#1A8FD6);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.cc:hover::after{transform:scaleX(1)}
+.cc-ic{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem}
+.cc-n{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.14em;color:rgba(200,196,188,.18);margin-bottom:.5rem}
+.cc-t{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:-.01em;color:#F0EDE8;margin-bottom:.6rem;line-height:1.2}
+.cc-d{font-size:.85rem;color:rgba(200,196,188,.7);line-height:1.7}
+
+/* VERSE */
+.verse-sec{background:#FF6B35;padding:80px 5vw;text-align:center;position:relative;overflow:hidden;z-index:1}
+.verse-sec::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.verse-q{font-family:'Clash Display',sans-serif;font-weight:600;font-size:clamp(1.3rem,2.8vw,2.2rem);color:#fff;line-height:1.35;letter-spacing:-.02em;max-width:680px;margin:0 auto 1rem;font-style:italic;position:relative;z-index:1}
+.verse-ref{font-size:.8rem;color:rgba(255,255,255,.55);letter-spacing:.06em;position:relative;z-index:1}
+
+/* CTA */
+.cta-sec{background:#1C1A16;padding:130px 5vw;text-align:center;position:relative;overflow:hidden;z-index:1}
+.cta-sec::before{content:'';position:absolute;top:50%;left:50%;width:700px;height:400px;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(26,143,214,.05),transparent 65%);pointer-events:none}
+.ct-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,107,53,.55);margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:9px;position:relative;z-index:1}
+.ct-label::before{content:'';width:4px;height:4px;border-radius:50%;background:#FF6B35;animation:pulse 2s infinite;flex-shrink:0}
+.ct-h{font-family:'Clash Display',sans-serif;font-weight:700;font-size:clamp(2.4rem,5vw,4rem);line-height:1.08;letter-spacing:-.03em;color:#F0EDE8;margin-bottom:1.4rem;position:relative;z-index:1}
+.ct-h em{font-style:normal;color:#FF6B35}
+.ct-p{font-size:1.05rem;color:rgba(200,196,188,.45);line-height:1.7;margin:0 auto 3rem;max-width:400px;position:relative;z-index:1}
+.ct-btn{display:inline-block;background:linear-gradient(135deg,#7A5210 0%,#C8922A 30%,#F2C94C 52%,#C8922A 72%,#7A5210 100%);color:#0D1B2A;border:none;border-radius:100px;padding:1rem 2.4rem;font-family:'Cabinet Grotesk',sans-serif;font-size:.95rem;font-weight:800;cursor:none;transition:transform .2s,box-shadow .2s;text-decoration:none;letter-spacing:.02em;margin-bottom:3rem;position:relative;z-index:1}
+.ct-btn:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(200,146,42,.45)}
+.ct-icons{display:flex;align-items:center;justify-content:center;gap:.75rem;position:relative;z-index:1}
+.ct-ic{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(200,196,188,.3);text-decoration:none;transition:all .2s;cursor:none}
+.ct-ic:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#F0EDE8;transform:translateY(-2px)}
+
+/* FOOTER */
+footer{background:#0D1117;padding:5rem 5vw 2.5rem;position:relative;z-index:1}
+.ft-inner{max-width:1200px;margin:0 auto}
+.ft-main{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:5rem;padding-bottom:3.5rem;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:2rem}
+.ft-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.ft-name{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:-.01em;color:#F0EDE8}
+.ft-tagline{font-size:.8rem;color:rgba(200,196,188,.2);line-height:1.85;max-width:220px;margin-bottom:1.5rem;font-style:italic}
+.ft-social{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.08em;color:rgba(200,196,188,.2);text-decoration:none;transition:color .2s}
+.ft-social:hover{color:#FF6B35}
+.ft-col-label{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(200,196,188,.18);margin-bottom:1.2rem}
+.ft-links{display:flex;flex-direction:column}
+.ft-links a{font-size:.85rem;color:rgba(200,196,188,.32);text-decoration:none;padding:.28rem 0;transition:color .2s}
+.ft-links a:hover{color:#F0EDE8}
+.ft-verse-text{font-size:.78rem;color:rgba(200,196,188,.15);line-height:2;font-style:italic;margin-bottom:.7rem}
+.ft-verse-ref{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.08em;color:rgba(255,107,53,.25)}
+.ft-bottom{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.52rem;color:rgba(200,196,188,.1);letter-spacing:.04em}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.rv.up{opacity:1;transform:translateY(0)}
+.rv-l{opacity:0;transform:translateX(-26px);transition:opacity .8s ease,transform .8s ease}
+.rv-l.up{opacity:1;transform:translateX(0)}
+.rv-r{opacity:0;transform:translateX(26px);transition:opacity .8s ease,transform .8s ease}
+.rv-r.up{opacity:1;transform:translateX(0)}
+
+/* DEMO MODAL */
+#demo-modal{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s ease}
+#demo-modal.open{opacity:1;visibility:visible}
+#demo-modal::before{content:'';position:absolute;inset:0;background:rgba(10,20,35,.88);backdrop-filter:blur(10px)}
+.dm-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:20px;padding:2.8rem;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;position:relative;z-index:1;transform:translateY(28px) scale(.98);transition:transform .4s cubic-bezier(.34,1.4,.64,1);box-shadow:0 32px 80px rgba(0,0,0,.3),0 0 0 1px rgba(0,0,0,.04)}
+.dm-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FF6B35,#C8922A,#1A8FD6);border-radius:20px 20px 0 0;pointer-events:none}
+#demo-modal.open .dm-card{transform:translateY(0) scale(1)}
+.dm-close{position:absolute;top:1.4rem;right:1.4rem;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.08);color:rgba(0,0,0,.35);font-size:.85rem;display:flex;align-items:center;justify-content:center;cursor:none;transition:all .2s;line-height:1}
+.dm-close:hover{background:rgba(0,0,0,.09);color:#0D1B2A}
+.dm-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(255,107,53,.08);border:1px solid rgba(255,107,53,.2);padding:.28rem .85rem;border-radius:100px;font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:#FF6B35;margin-bottom:1.1rem}
+.dm-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:#FF6B35;animation:pulse 2s infinite;flex-shrink:0}
+.dm-title{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.7rem;letter-spacing:-.025em;color:#0D1B2A;line-height:1.1;margin-bottom:.6rem}
+.dm-sub{font-size:.95rem;color:#64748B;line-height:1.75;max-width:440px}
+.dm-divider{height:1px;background:rgba(0,0,0,.07);margin:1.8rem 0}
+.dm-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dm-field{display:flex;flex-direction:column;gap:5px}
+.dm-field.full{grid-column:1/-1}
+.dm-label{font-family:'JetBrains Mono',monospace;font-size:.67rem;letter-spacing:.07em;text-transform:uppercase;color:#64748B;font-weight:500}
+.dm-input{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:.85rem 1rem;font-family:'Cabinet Grotesk',sans-serif;font-size:1rem;color:#0D1B2A;outline:none;transition:border-color .2s,background .2s,box-shadow .2s;width:100%;-webkit-appearance:none;appearance:none}
+.dm-input:focus{border-color:#1A8FD6;background:#fff;box-shadow:0 0 0 3px rgba(26,143,214,.1)}
+.dm-input::placeholder{color:#CBD5E1}
+.dm-sel-wrap{position:relative}
+.dm-sel-wrap::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:.68rem;pointer-events:none}
+select.dm-input{cursor:none;padding-right:2.2rem}
+select.dm-input option{background:#fff;color:#0D1B2A}
+textarea.dm-input{resize:none;height:80px;line-height:1.65}
+.dm-submit{width:100%;background:linear-gradient(135deg,#7A5210 0%,#C8922A 30%,#F2C94C 52%,#C8922A 72%,#7A5210 100%);color:#0D1B2A;border:none;border-radius:100px;padding:1rem;font-family:'Cabinet Grotesk',sans-serif;font-size:1rem;font-weight:800;cursor:none;transition:transform .2s,box-shadow .2s,opacity .2s;margin-top:1.2rem;letter-spacing:.02em}
+.dm-submit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,146,42,.45)}
+.dm-submit:disabled{opacity:.45}
+.dm-note{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:#94A3B8;text-align:center;margin-top:.9rem;line-height:1.8}
+.dm-err{font-size:.8rem;color:#EF4444;text-align:center;margin-top:.8rem;display:none}
+.dm-success{text-align:center;padding:1.5rem 0 .5rem}
+.dm-success-icon{width:56px;height:56px;border-radius:50%;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.4rem}
+.dm-success-title{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:-.02em;color:#0D1B2A;margin-bottom:.7rem}
+.dm-success-msg{font-size:.92rem;color:#64748B;line-height:1.85;margin-bottom:1.5rem}
+.dm-success-ref{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:#1A8FD6}
+@media(max-width:580px){.dm-card{padding:2rem 1.5rem}.dm-grid{grid-template-columns:1fr}.dm-title{font-size:1.35rem}}
+
+/* CYCLE PREVIEW */
+:root{--t-size:1rem;--d-size:.6rem;}
+.wrap{
+  position:relative;width:420px;height:420px;
+  border-radius:16px;overflow:hidden;flex-shrink:0;
+  margin:0 auto;
+}
+#cw{position:absolute;inset:0;width:100%;height:100%;}
+#csw{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible;}
+.cb{
+  position:absolute;width:136px;
+  padding:.6rem .75rem;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:9px;
+  background:rgba(8,16,30,.93);
+  backdrop-filter:blur(8px);
+  z-index:3;
+  transition:border-color .5s ease,box-shadow .5s ease,background .5s ease;
+}
+.cb-n{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.13em;color:rgba(200,196,188,.2);transition:color .5s;margin-bottom:.15rem;}
+.cb-t{font-family:'Clash Display',sans-serif;font-weight:700;font-size:var(--t-size);color:rgba(200,196,188,.3);letter-spacing:-.01em;line-height:1.15;margin-bottom:.15rem;transition:color .5s;}
+.cb-d{font-family:'JetBrains Mono',monospace;font-size:var(--d-size);color:rgba(200,196,188,.16);letter-spacing:.02em;line-height:1.6;transition:color .5s;}
+.cp,.cs{position:absolute;z-index:4;}
+.cs{text-align:center;min-width:44px;}
+.cp{width:230px;}
+.cp-num{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.1rem;color:#FFFFFF;line-height:1;transition:color .4s ease;}
+.cp-lbl{font-family:'JetBrains Mono',monospace;font-size:.32rem;letter-spacing:.09em;text-transform:uppercase;color:rgba(200,196,188,.55);margin-top:2px;}
+.cp-bar-row{display:flex;align-items:center;justify-content:space-between;padding:0 5px;}
+.cp-bar{height:7px;border-radius:3.5px;overflow:hidden;background:rgba(255,255,255,.04);display:flex;gap:1px;flex:1;}
+.cbs{height:100%;border-radius:2px;flex-shrink:0;flex-basis:0;transition:flex-grow .7s cubic-bezier(.4,0,.2,1);}
+.cp-pct{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.4rem;color:#22C55E;line-height:1;letter-spacing:-.05em;transition:color .5s ease;margin-left:12px;flex-shrink:0;}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr;padding-top:88px;padding-bottom:48px}
+  .hero-right{margin-top:0;min-width:0;overflow:hidden}
+  .wrap{transform:scale(.95);transform-origin:top center;margin-bottom:-21px}
+  .plat-grid{grid-template-columns:1fr;gap:40px}
+  .cap-grid{grid-template-columns:1fr 1fr}
+  .ft-main{grid-template-columns:1fr;gap:2.5rem}
+  .ft-bottom{flex-direction:column;gap:.5rem;text-align:left}
+  .nlinks{display:none}
+  .contact-grid{grid-template-columns:1fr}
+  .sec{padding:60px 5vw}
+  .verse-sec{padding:60px 5vw}
+  .cta-sec{padding:90px 5vw}
+  footer{padding:3.5rem 5vw 2rem}
+  .sp{margin-bottom:2.5rem}
+}
+@media(max-width:600px){
+  .cap-grid{grid-template-columns:1fr}
+  .hero-metrics{gap:1.2rem}
+  .hm-div{display:none}
+  .sec{padding:48px 5vw}
+  .cta-sec{padding:64px 5vw}
+  .verse-sec{padding:48px 5vw}
+  .sp{margin-bottom:2rem}
+}
+@media(max-width:520px){
+  .wrap{transform:scale(.85);transform-origin:top center;margin-bottom:-63px}
+}
+@media(max-width:420px){
+  .wrap{transform:scale(.72);transform-origin:top center;margin-bottom:-118px}
+}
+@media(max-width:360px){
+  .wrap{transform:scale(.62);transform-origin:top center;margin-bottom:-160px}
+}
 </style>
 </head>
 <body>
-<div class="loading-bar" id="loading-bar"></div>
-<div class="login-wrap">
-  <div class="login-box">
-    <div class="login-logo"><img src="logo_full.png" alt="AxisFleet"/></div>
-    <div class="login-card">
-      <div class="login-heading">Platform Access</div>
-      <div class="login-sub">Authorised personnel only — secure session required</div>
-      <label class="field-label">Username</label>
-      <input type="text" class="field-input" id="username" placeholder="Enter username" autocomplete="username"/>
-      <label class="field-label">Password</label>
-      <input type="password" class="field-input" id="password" placeholder="Enter password" autocomplete="current-password"/>
-      <div class="login-error" id="login-error">Invalid credentials. Please try again.</div>
-      <button class="login-btn" id="login-btn">Access Platform →</button>
-      <div class="login-footer"><button class="reset-link" id="reset-link">Forgot password? Reset via admin email</button></div>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+<canvas id="bgc"></canvas>
+
+<!-- LOADER -->
+<div id="ldr">
+  <div class="ldr-mark">
+    <img src="assets/images/logo-full.png" alt="AxisFleet" class="ldr-logo">
+  </div>
+  <div class="ldr-bar-wrap"><div class="ldr-bar"></div></div>
+  <div class="ldr-txt">Initialising fleet intelligence</div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nlogo">
+    <img src="assets/icons/logo-mark.svg" alt="AxisFleet" class="nav-logo">
+    <span class="nav-tagline">Wireless Load Management</span>
+  </a>
+  <div class="nlinks">
+    <a href="#platform">Platform</a>
+    <a href="#capabilities">Capabilities</a>
+    <a href="#contact" class="nbtn-gold" id="nav-platform-btn">Get Started</a>
+    <a href="#contact" class="nbtn">Contact Us</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <h1 class="hero-h1">
+      Know Every<br>
+      <span class="acc">Load.</span><br>
+      Control Every<br>
+      <span class="blue">Move.</span>
+    </h1>
+    <p class="hero-p">AxisFleet brings real-time control to fleet operations. Our wireless system connects directly to your trucks, delivering live insights on load, performance, and fleet activity.</p>
+    <div class="hero-btns">
+      <a href="#platform-link" class="btn-gold" id="hero-platform-btn">View Platform</a>
+      <a href="#contact" class="btn-light">Contact Us</a>
+    </div>
+    <div class="hero-metrics">
+      <div>
+        <div class="hm-num">±1<em>%</em></div>
+        <div class="hm-lbl">Load accuracy</div>
+      </div>
+      <div class="hm-div"></div>
+      <div>
+        <div class="hm-num">IP<em>67</em></div>
+        <div class="hm-lbl">Mine-rated hardware</div>
+      </div>
+      <div class="hm-div"></div>
+      <div>
+        <div class="hm-num">18+<em>&nbsp;mod</em></div>
+        <div class="hm-lbl">Axle modules per truck</div>
+      </div>
     </div>
   </div>
-  <div class="login-scripture">"He will watch over your coming and going." — Psalm 121:8</div>
+  <div class="hero-right">
+    <div class="wrap" id="wrap">
+      <canvas id="cw"></canvas>
+      <svg id="csw" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <div class="cb" id="b1" style="left:18px;top:76px" data-color="orange">
+        <div class="cb-n">01</div><div class="cb-t">Hardware</div><div class="cb-d">Load Sensors · Active</div>
+      </div>
+      <div class="cb" id="b2" style="left:224px;top:87px" data-color="blue">
+        <div class="cb-n">02</div><div class="cb-t">Live Data</div><div class="cb-d">GSM · Real-time</div>
+      </div>
+      <div class="cb" id="b3" style="left:197px;top:189px" data-color="red">
+        <div class="cb-n">03</div><div class="cb-t">Flag Raised</div><div class="cb-d">Overload · Braking · Standing</div>
+      </div>
+      <div class="cb" id="b4" style="left:267px;top:324px" data-color="orange">
+        <div class="cb-n">04</div><div class="cb-t">Ops Alerted</div><div class="cb-d">SMS · Truck · Zone</div>
+      </div>
+      <div class="cb" id="b5" style="left:65px;top:306px" data-color="blue">
+        <div class="cb-n">05</div><div class="cb-t">Action Taken</div><div class="cb-d">Mobile · Call · Locate</div>
+      </div>
+      <div class="cb" id="b6" style="left:4px;top:186px" data-color="green">
+        <div class="cb-n">06</div><div class="cb-t">Fleet on Track</div><div class="cb-d">All clear · Stable</div>
+      </div>
+
+      <div class="cs" id="s-act" style="left:134px;top:6px">
+        <div class="cp-num" id="c-act">14</div><div class="cp-lbl">Active</div>
+      </div>
+      <div class="cs" id="s-lod" style="left:180px;top:6px">
+        <div class="cp-num" id="c-lod">12</div><div class="cp-lbl">On Load</div>
+      </div>
+      <div class="cs" id="s-flg" style="left:224px;top:6px">
+        <div class="cp-num" id="c-flg" style="color:#22C55E">0</div><div class="cp-lbl">Flags</div>
+      </div>
+
+      <div class="cp" id="cp" style="left:117px;top:28px">
+        <div class="cp-bar-row">
+          <div class="cp-bar">
+            <div class="cbs" id="bs-g" style="flex-grow:12;background:#22C55E"></div>
+            <div class="cbs" id="bs-a" style="flex-grow:.01;background:#F59E0B"></div>
+            <div class="cbs" id="bs-r" style="flex-grow:.01;background:#EF4444"></div>
+            <div class="cbs" id="bs-i" style="flex-grow:2;background:rgba(255,255,255,.1)"></div>
+          </div>
+          <div class="cp-pct" id="c-pct">92%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="mtrack">
+    <div class="mitem"><span class="mx">◆</span> Wireless Load Management</div>
+    <div class="mitem"><span class="mx">◆</span> Fleet Intelligence</div>
+    <div class="mitem"><span class="mx">◆</span> Hardware + Software</div>
+    <div class="mitem"><span class="mx">◆</span> Load Compliance</div>
+    <div class="mitem"><span class="mx">◆</span> Zone Monitoring</div>
+    <div class="mitem"><span class="mx">◆</span> Overload Prevention</div>
+    <div class="mitem"><span class="mx">◆</span> Real-Time Alerts</div>
+    <div class="mitem"><span class="mx">◆</span> Continuous Monitoring</div>
+    <div class="mitem"><span class="mx">◆</span> axisfleet.co.za</div>
+    <div class="mitem"><span class="mx">◆</span> Wireless Load Management</div>
+    <div class="mitem"><span class="mx">◆</span> Fleet Intelligence</div>
+    <div class="mitem"><span class="mx">◆</span> Hardware + Software</div>
+    <div class="mitem"><span class="mx">◆</span> Load Compliance</div>
+    <div class="mitem"><span class="mx">◆</span> Zone Monitoring</div>
+    <div class="mitem"><span class="mx">◆</span> Overload Prevention</div>
+    <div class="mitem"><span class="mx">◆</span> Real-Time Alerts</div>
+    <div class="mitem"><span class="mx">◆</span> Continuous Monitoring</div>
+    <div class="mitem"><span class="mx">◆</span> axisfleet.co.za</div>
+  </div>
 </div>
-<div class="modal-overlay" id="reset-modal">
-  <div class="modal-box">
-    <h3>Reset Password</h3>
-    <p>A password reset link will be sent to the registered AxisFleet administrator email address.</p>
-    <div class="email-chip">axisfleetsa@gmail.com</div>
-    <div class="modal-btns">
-      <button class="btn-cancel" id="reset-cancel">Cancel</button>
-      <button class="btn-send" id="reset-send">Send Reset Link</button>
+
+<!-- PLATFORM -->
+<section class="sec plat-sec" id="platform">
+  <div class="si">
+    <div class="plat-grid">
+      <div class="phone-wrap rv-l">
+        <div class="phone-blob1"></div>
+        <div class="phone-blob2"></div>
+        <div class="phone">
+          <div class="pbar"><div class="ppill"></div></div>
+          <div class="pscr">
+            <div class="phdr"><div class="ptitle">Operations</div><div class="plive">Live</div></div>
+            <div class="phlabel"><span class="phll">Fleet Health</span><span class="phlv">87%</span></div>
+            <div class="phbar"><div class="phfill" id="phf" style="width:0"></div></div>
+            <div class="ppills">
+              <div class="ppill2"><div class="ppn t">14</div><div class="ppl">Active</div></div>
+              <div class="ppill2"><div class="ppn o">3</div><div class="ppl">Alerts</div></div>
+              <div class="ppill2"><div class="ppn">92%</div><div class="ppl">Comply</div></div>
+            </div>
+            <div class="ptrucks">
+              <div class="ptruck"><div class="pdot on"></div><div class="pid">Truck1-318</div><div class="pwt">28.1t</div><div class="pzn">A</div></div>
+              <div class="ptruck w"><div class="pdot w"></div><div class="pid" style="color:rgba(255,107,53,.75)">Truck2-441</div><div class="pwt ov">32.4t▲</div><div class="pzn" style="color:rgba(255,107,53,.45)">C</div></div>
+              <div class="ptruck"><div class="pdot on"></div><div class="pid">Truck3-207</div><div class="pwt">27.8t</div><div class="pzn">B</div></div>
+              <div class="ptruck"><div class="pdot off"></div><div class="pid" style="opacity:.3">Truck4-512</div><div class="pwt" style="opacity:.3">—</div><div class="pzn">Yard</div></div>
+            </div>
+            <div class="plog">
+              <div class="plr"><span class="pts">07:42</span><span class="pfl">▲ OVERLOAD · NTU-441</span></div>
+              <div class="plr"><span class="pts">07:38</span><span class="pok">Dispatcher SMS sent</span></div>
+              <div class="plr"><span class="pts">06:55</span><span class="pok">NTU-318 · Zone A · 28.1t</span></div>
+              <div class="plr"><span class="pts">06:30</span><span class="pok">14 vehicles ready</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rv-r">
+        <div class="stag">The Platform</div>
+        <h2 class="sh2">Built for the people<br>running the <em>operation.</em></h2>
+        <div class="ptabs">
+          <button class="ptb on" onclick="ptab('overview',this)">Overview</button>
+          <button class="ptb" onclick="ptab('alerts',this)">Alerts</button>
+          <button class="ptb" onclick="ptab('reporting',this)">Reporting</button>
+        </div>
+        <div id="pt-overview" class="tp on">
+          <div class="tph">Operations Overview</div>
+          <div class="tpp">Your command centre. Fleet health, active vehicles, open alerts, and a live timestamped log — everything needed to run the day confidently from any device.</div>
+          <div class="tpfs">
+            <div class="tpf">Fleet health bar across all active vehicles</div>
+            <div class="tpf">Live ops log — timestamped, monospace, precise</div>
+            <div class="tpf">Active vs idle count at a glance</div>
+            <div class="tpf">Instant navigation to any flagged event</div>
+            <div class="tpf">Mobile-first — works on any device, any signal</div>
+          </div>
+        </div>
+        <div id="pt-alerts" class="tp">
+          <div class="tph">Intelligent Alerts</div>
+          <div class="tpp">Categorised, actionable, and direct. When something needs attention, AxisFleet tells you immediately with context to act — not just a notification to dismiss.</div>
+          <div style="margin-bottom:1.4rem" class="alerts-vis">
+            <div class="av-card"><div class="av-dot" style="background:#FF6B35;box-shadow:0 0 5px rgba(255,107,53,.4)"></div><div class="av-txt">OVERLOAD · NTU-441 · 32.4t · Zone C</div><div class="av-time">07:42</div><button class="av-sms">SMS Driver</button></div>
+            <div class="av-card"><div class="av-dot" style="background:#1A8FD6"></div><div class="av-txt">ZONE BREACH · NTU-207 · Restricted area</div><div class="av-time">06:18</div><button class="av-sms">SMS Driver</button></div>
+            <div class="av-card"><div class="av-dot" style="background:#c0392b"></div><div class="av-txt">COMPLIANCE FLAG · NTU-089 · Weight variance</div><div class="av-time">05:54</div><button class="av-sms">SMS Driver</button></div>
+          </div>
+          <div class="tpfs">
+            <div class="tpf">Categorised alerts — load, zone, compliance</div>
+            <div class="tpf">Full alert history with precise timestamps</div>
+            <div class="tpf">Direct SMS to driver from the alert screen</div>
+            <div class="tpf">Dispatcher acknowledgement logging</div>
+          </div>
+        </div>
+        <div id="pt-reporting" class="tp">
+          <div class="tph">Operational Reporting</div>
+          <div class="tpp">Every cycle, zone, and tonne — automatically captured. Your data becomes a compliance record, management tool, and client deliverable simultaneously.</div>
+          <div class="rep-vis" style="margin-bottom:1.4rem">
+            <div class="rv-row"><div class="rv-labels"><span>Zone A — Loading</span><span>3h 14m</span></div><div class="rv-track"><div class="rv-fill" style="width:78%;background:#1A8FD6"></div></div></div>
+            <div class="rv-row"><div class="rv-labels"><span>Zone B — Transit</span><span>1h 52m</span></div><div class="rv-track"><div class="rv-fill" style="width:45%;background:#00D4A0"></div></div></div>
+            <div class="rv-row"><div class="rv-labels"><span>Zone C — Offload</span><span>2h 08m</span></div><div class="rv-track"><div class="rv-fill" style="width:52%;background:#1A8FD6"></div></div></div>
+            <div class="rv-row"><div class="rv-labels"><span>Yard — Standby</span><span>0h 41m</span></div><div class="rv-track"><div class="rv-fill" style="width:16%;background:#FF6B35"></div></div></div>
+          </div>
+          <div class="tpfs">
+            <div class="tpf">Zone time analysis per vehicle per shift</div>
+            <div class="tpf">Load weight history across full cycle sequences</div>
+            <div class="tpf">Compliance summaries for management and clients</div>
+            <div class="tpf">Exportable data for client reporting</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="sec cap-sec" id="capabilities">
+  <div class="si">
+    <div class="stag rv">What Becomes Possible</div>
+    <h2 class="sh2 rv">Six reasons your fleet<br>needs <b>AxisFleet.</b></h2>
+    <p class="sp rv">Total visibility. Instant action. Automatic compliance. From hardware to insight — everything your operation needs in one system.</p>
+    <div class="cap-grid">
+      <div class="cc rv"><div class="cc-ic" style="background:rgba(255,107,53,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="cc-n">01</div><div class="cc-t">Live Load Weight</div><div class="cc-d">Know every tonne before departure. Wireless sensors transmit exact load data the moment a truck is loaded — overloading caught at source.</div></div>
+      <div class="cc rv"><div class="cc-ic" style="background:rgba(26,143,214,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A8FD6" stroke-width="2"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/><circle cx="12" cy="12" r="3"/></svg></div><div class="cc-n">02</div><div class="cc-t">Zone-by-Zone Visibility</div><div class="cc-d">Not just GPS. Zone intelligence places every vehicle precisely in the loading, transit, or offload phase — operational context that tracking alone never delivers.</div></div>
+      <div class="cc rv"><div class="cc-ic" style="background:rgba(0,212,160,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00D4A0" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="cc-n">03</div><div class="cc-t">Instant Alerts and SMS</div><div class="cc-d">Overload flagged. Driver SMS'd. Issue resolved — all within seconds from the platform. No phone chains, no delays.</div></div>
+      <div class="cc rv"><div class="cc-ic" style="background:rgba(255,107,53,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg></div><div class="cc-n">04</div><div class="cc-t">Auto Compliance Records</div><div class="cc-d">Every load, zone, and timestamp logged automatically. Dispute-proof compliance records with no manual effort required.</div></div>
+      <div class="cc rv"><div class="cc-ic" style="background:rgba(26,143,214,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A8FD6" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></div><div class="cc-n">05</div><div class="cc-t">Mobile-First Command</div><div class="cc-d">Full operational picture from your phone. HQ or on-site, the same real-time view always, on any device, anywhere.</div></div>
+      <div class="cc rv"><div class="cc-ic" style="background:rgba(0,212,160,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00D4A0" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="cc-n">06</div><div class="cc-t">Installed and Supported</div><div class="cc-d">We fit the hardware, configure the system, and monitor your operation continuously. You gain capability, not complexity.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VERSE -->
+<div class="verse-sec rv">
+  <div class="verse-q">"He will watch over your coming and going, both now and forevermore."</div>
+  <div class="verse-ref">Psalm 121:8 · The foundation on which AxisFleet is built</div>
+</div>
+
+<!-- CTA -->
+<section class="cta-sec" id="contact">
+  <div class="ct-label rv">Get in Touch</div>
+  <h2 class="ct-h rv">The hardware is proven.<br>The platform is <em>built.</em></h2>
+  <p class="ct-p rv">All that's left is to connect it to your fleet.</p>
+  <a href="#" class="ct-btn rv" onclick="event.preventDefault();openDemoModal()">Request a Walkthrough →</a>
+  <div class="ct-icons rv">
+    <a href="mailto:axisfleetsa@gmail.com" class="ct-ic" title="Email">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+    </a>
+    <a href="https://wa.me/27645476573" target="_blank" class="ct-ic" title="WhatsApp">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    </a>
+    <a href="https://instagram.com/axisfleetsa" target="_blank" class="ct-ic" title="Instagram">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-inner">
+    <div class="ft-main">
+      <div class="ft-brand">
+        <div class="ft-logo-row">
+          <svg width="20" height="20" viewBox="0 0 1024 1024"><circle cx="250" cy="512" r="70" fill="#FF6B35"/><rect x="400" y="477" width="400" height="70" rx="35" fill="#FF6B35"/></svg>
+          <span class="ft-name">AxisFleet</span>
+        </div>
+        <div class="ft-tagline">Powering the people<br>that move the world.</div>
+        <a href="https://instagram.com/axisfleetsa" target="_blank" class="ft-social">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          @axisfleetsa
+        </a>
+      </div>
+      <div>
+        <div class="ft-col-label">Navigate</div>
+        <div class="ft-links">
+          <a href="#platform">Platform</a>
+          <a href="#capabilities">Capabilities</a>
+          <a href="#how">How It Works</a>
+          <a href="#contact">Get in Touch</a>
+        </div>
+      </div>
+      <div>
+        <div class="ft-col-label">Foundation</div>
+        <div class="ft-verse-text">"He will watch over your coming and going, both now and forevermore."</div>
+        <div class="ft-verse-ref">Psalm 121:8</div>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <span>© 2026 AxisFleet (Pty) Ltd &nbsp;·&nbsp; Reg: 2026/249788/07</span>
+      <span>STEADFAST</span>
+    </div>
+  </div>
+</footer>
+
+<!-- DEMO REQUEST MODAL -->
+<div id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="dm-heading">
+  <div class="dm-card">
+    <button class="dm-close" onclick="closeDemoModal()" aria-label="Close">✕</button>
+    <div id="dm-body">
+      <div class="dm-tag">Platform Access</div>
+      <div class="dm-title" id="dm-heading">Request a Platform<br>Walkthrough</div>
+      <div class="dm-sub">Tell us about your operation. We'll arrange a live demonstration on your terms — no slides, no pressure, just the platform running on real data.</div>
+      <div class="dm-divider"></div>
+      <form id="demo-form" novalidate>
+        <div class="dm-grid">
+          <div class="dm-field">
+            <label class="dm-label" for="dm-name">Full Name</label>
+            <input class="dm-input" type="text" id="dm-name" name="full_name" placeholder="John Smith" required>
+          </div>
+          <div class="dm-field">
+            <label class="dm-label" for="dm-jobtitle">Job Title</label>
+            <input class="dm-input" type="text" id="dm-jobtitle" name="job_title" placeholder="Fleet Manager" required>
+          </div>
+          <div class="dm-field">
+            <label class="dm-label" for="dm-company">Company Name</label>
+            <input class="dm-input" type="text" id="dm-company" name="company_name" placeholder="Company (Pty) Ltd" required>
+          </div>
+          <div class="dm-field">
+            <label class="dm-label" for="dm-industry">Industry</label>
+            <div class="dm-sel-wrap">
+              <select class="dm-input" id="dm-industry" name="industry" required>
+                <option value="" disabled selected>Select industry</option>
+                <option>Mining</option>
+                <option>Agriculture</option>
+                <option>Construction</option>
+                <option>Bulk Logistics</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="dm-field">
+            <label class="dm-label" for="dm-fleet">Fleet Size</label>
+            <div class="dm-sel-wrap">
+              <select class="dm-input" id="dm-fleet" name="fleet_size" required>
+                <option value="" disabled selected>Number of trucks</option>
+                <option>1–10 trucks</option>
+                <option>11–50 trucks</option>
+                <option>51–200 trucks</option>
+                <option>200+ trucks</option>
+              </select>
+            </div>
+          </div>
+          <div class="dm-field">
+            <label class="dm-label" for="dm-phone">Phone Number</label>
+            <input class="dm-input" type="tel" id="dm-phone" name="phone" placeholder="+27 64 000 0000" required>
+          </div>
+          <div class="dm-field full">
+            <label class="dm-label" for="dm-email">Business Email</label>
+            <input class="dm-input" type="email" id="dm-email" name="email" placeholder="you@company.co.za" required>
+          </div>
+          <div class="dm-field full">
+            <label class="dm-label" for="dm-message">Anything we should know? <span style="opacity:.4;text-transform:none;letter-spacing:0;font-size:.7em">(optional)</span></label>
+            <textarea class="dm-input" id="dm-message" name="message" placeholder="Current setup, specific challenges, preferred timing for the walkthrough..."></textarea>
+          </div>
+        </div>
+        <div class="dm-err" id="dm-err">Something went wrong. Please try again or email us directly at axisfleetsa@gmail.com</div>
+        <button type="submit" class="dm-submit" id="dm-submit-btn">Request Platform Walkthrough →</button>
+        <div class="dm-note">Your details are used solely to arrange your demonstration.<br>No spam. No third parties. — axisfleetsa@gmail.com · 064 547 6573</div>
+      </form>
     </div>
   </div>
 </div>
+
+<!-- hidden anchor for platform link -->
+<span id="platform-link"></span>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-document.getElementById('login-btn').addEventListener('click',doLogin);
-document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('username').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('password').focus();});
-function doLogin(){
-  const u=document.getElementById('username').value.trim();
-  const p=document.getElementById('password').value;
-  const err=document.getElementById('login-error');
-  if(u==='AXISFLEET'&&p==='Admin@1'){
-    document.getElementById('login-btn').textContent='Authenticating...';
-    document.getElementById('loading-bar').style.width='100%';
-    sessionStorage.setItem('af_auth','1');
-    sessionStorage.setItem('af_user','Almó Esterhuizen');
-    setTimeout(()=>{window.location.href='hub.html';},1200);
-  } else {
-    err.style.display='block';
-    ['username','password'].forEach(id=>{
-      const el=document.getElementById(id);
-      el.classList.add('shake');
-      setTimeout(()=>el.classList.remove('shake'),400);
+/* DEMO MODAL */
+function openDemoModal(){document.getElementById('demo-modal').classList.add('open');document.body.style.overflow='hidden'}
+function closeDemoModal(){document.getElementById('demo-modal').classList.remove('open');document.body.style.overflow=''}
+document.getElementById('demo-modal').addEventListener('click',function(e){if(e.target===this)closeDemoModal()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDemoModal()});
+document.querySelectorAll('#nav-platform-btn,#hero-platform-btn').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault();openDemoModal()}));
+document.querySelectorAll('a[href="login.html"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();openDemoModal()}));
+
+document.getElementById('demo-form').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const btn=document.getElementById('dm-submit-btn'),err=document.getElementById('dm-err');
+  err.style.display='none';
+  if(!this.checkValidity()){this.reportValidity();return}
+  btn.disabled=true;btn.textContent='Submitting...';
+  const fd=new FormData(this);
+  const data={
+    full_name:fd.get('full_name'),job_title:fd.get('job_title'),
+    company_name:fd.get('company_name'),industry:fd.get('industry'),
+    fleet_size:fd.get('fleet_size'),phone:fd.get('phone'),
+    email:fd.get('email'),message:fd.get('message')||null
+  };
+  try{
+    const res=await fetch('https://upxccrfklbjpjsdmlehy.supabase.co/rest/v1/demo_requests',{
+      method:'POST',
+      headers:{
+        'apikey':'sb_publishable_M6yeB-KsVXYfodtWF_hjxQ_gcZ0vLKh',
+        'Authorization':'Bearer sb_publishable_M6yeB-KsVXYfodtWF_hjxQ_gcZ0vLKh',
+        'Content-Type':'application/json',
+        'Prefer':'return=minimal'
+      },
+      body:JSON.stringify(data)
     });
-    setTimeout(()=>err.style.display='none',3000);
+    if(!res.ok)throw new Error();
+    const first=data.full_name.split(' ')[0];
+    document.getElementById('dm-body').innerHTML=`
+      <div class="dm-success">
+        <div class="dm-success-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="dm-success-title">Request Received</div>
+        <div class="dm-success-msg">
+          Thank you, ${first}. We'll be in touch within one business day to arrange your walkthrough.<br><br>
+          Feel free to reach us directly in the meantime.
+        </div>
+        <div class="dm-success-ref">axisfleetsa@gmail.com &nbsp;·&nbsp; 064 547 6573</div>
+      </div>`;
+  }catch(_){
+    btn.disabled=false;btn.textContent='Request Platform Walkthrough →';
+    err.style.display='block';
   }
-}
-document.getElementById('reset-link').addEventListener('click',()=>document.getElementById('reset-modal').classList.add('open'));
-document.getElementById('reset-cancel').addEventListener('click',()=>document.getElementById('reset-modal').classList.remove('open'));
-document.getElementById('reset-send').addEventListener('click',()=>{
-  document.getElementById('reset-modal').classList.remove('open');
-  alert('Reset link sent to axisfleetsa@gmail.com\n\nCheck your inbox within a few minutes.');
 });
+
+/* LOADER */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('ldr').classList.add('out');
+    setTimeout(()=>{
+      const h=document.getElementById('phf');
+      if(h){h.style.transition='width 1.5s cubic-bezier(.4,0,.2,1)';h.style.width='87%'}
+    },300);
+  },1400);
+});
+
+/* CURSOR */
+const cu=document.getElementById('cur'),cu2=document.getElementById('cur2');
+let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cu.style.left=mx+'px';cu.style.top=my+'px'});
+(function lp(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cu2.style.left=rx+'px';cu2.style.top=ry+'px';requestAnimationFrame(lp)})();
+
+/* NAV */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('s',scrollY>40));
+
+/* TABS */
+function ptab(id,btn){
+  document.querySelectorAll('.tp').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ptb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pt-'+id).classList.add('on');btn.classList.add('on');
+}
+
+/* REVEAL */
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('up');io.unobserve(x.target)}})},{threshold:.1});
+document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>io.observe(el));
+
+/* PHONE HEALTH */
+const pio=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){const h=document.getElementById('phf');if(h){h.style.transition='width 1.5s cubic-bezier(.4,0,.2,1)';h.style.width='87%'}pio.unobserve(x.target)}})},{threshold:.3});
+const ph=document.querySelector('.phone');if(ph)pio.observe(ph);
+
+/* BG PARTICLE CANVAS */
+(function(){
+  const cv=document.getElementById('bgc');
+  const ctx=cv.getContext('2d');
+  let W,H,pts=[];
+  const resize=()=>{W=cv.width=window.innerWidth;H=cv.height=window.innerHeight};
+  resize();window.addEventListener('resize',resize);
+  class Pt{
+    constructor(){this.reset()}
+    reset(){
+      this.x=Math.random()*W;this.y=Math.random()*H;
+      this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;
+      this.r=Math.random()*.8+.2;this.a=Math.random()*.2+.05;
+      this.col=Math.random()>.6?'255,107,53':'26,143,214';
+    }
+    tick(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset()}
+    draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='rgba('+this.col+','+this.a+')';ctx.fill()}
+  }
+  for(let i=0;i<140;i++)pts.push(new Pt());
+  function lines(){for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='rgba(26,143,214,'+(1-d/110)*.05+')';ctx.lineWidth=.4;ctx.stroke()}}}
+  (function render(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.tick();p.draw()});lines();requestAnimationFrame(render)})();
+})();
+
+/* ── CYCLE ANIMATION ── */
+(function(){
+  /* WEBBING */
+  const c=document.getElementById('cw'),ctx=c.getContext('2d');
+  function sz(){
+    if(!c)return;
+    const wr=document.getElementById('wrap');
+    c.width=wr.clientWidth*devicePixelRatio;
+    c.height=wr.clientHeight*devicePixelRatio;
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+  sz();
+  const N_pts=46,pts=Array.from({length:N_pts},()=>({x:Math.random()*420,y:Math.random()*420,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28}));
+  function drawWeb(){
+    if(!c)return;
+    const wr=document.getElementById('wrap');
+    const W=wr.clientWidth,H=wr.clientHeight;
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;});
+    for(let i=0;i<N_pts;i++)for(let j=i+1;j<N_pts;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<105){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='rgba(26,143,214,'+(1-d/105)*.1+')';ctx.lineWidth=.5;ctx.stroke();}
+    }
+    requestAnimationFrame(drawWeb);
+  }
+  drawWeb();
+  window.addEventListener('resize',sz);
+
+  /* CYCLE */
+  const wrap=document.getElementById('wrap'),svg=document.getElementById('csw'),ns='http://www.w3.org/2000/svg';
+  const mk=(tag,a)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));return e};
+  const C={
+    orange:{b:'rgba(255,107,53,.52)',bg:'rgba(255,107,53,.07)',g:'rgba(255,107,53,.22)',t:'#FF6B35'},
+    blue:  {b:'rgba(26,143,214,.52)',bg:'rgba(26,143,214,.07)',g:'rgba(26,143,214,.18)',t:'#1A8FD6'},
+    red:   {b:'rgba(239,68,68,.52)', bg:'rgba(239,68,68,.07)', g:'rgba(239,68,68,.2)', t:'#EF4444'},
+    green: {b:'rgba(34,197,94,.52)', bg:'rgba(34,197,94,.07)', g:'rgba(34,197,94,.22)',t:'#22C55E'},
+  };
+  const STEPS=[
+    {id:'b1',col:'orange',act:14,lod:12,flg:0,g:12,  a:.01,r:.01,i:2, pct:92},
+    {id:'b2',col:'blue',  act:14,lod:12,flg:0,g:12,  a:.01,r:.01,i:2, pct:92},
+    {id:'b3',col:'red',   act:14,lod:10,flg:3,g:10,  a:1,  r:2,  i:1, pct:74},
+    {id:'b4',col:'orange',act:14,lod:9, flg:4,g:9,   a:1,  r:3,  i:1, pct:68},
+    {id:'b5',col:'blue',  act:14,lod:11,flg:1,g:11,  a:1,  r:1,  i:1, pct:86},
+    {id:'b6',col:'green', act:14,lod:13,flg:0,g:13,  a:.01,r:.01,i:1, pct:96},
+  ];
+  let lit={},lnEls=[],dotEl,haloEl,animId=0,animSeg=0,animProg=0,animPause=100,animMoving=false;
+
+  function litBlock(el,col,active){
+    const c=C[col];if(!c)return;
+    el.style.borderColor=c.b;el.style.background=c.bg;
+    el.style.boxShadow=active?'0 0 14px '+c.g+',0 0 28px '+c.g:'none';
+    const t=el.querySelector('.cb-t');if(t)t.style.color=c.t;
+    const n=el.querySelector('.cb-n');if(n)n.style.color='rgba(200,196,188,.4)';
+    const d=el.querySelector('.cb-d');if(d)d.style.color='rgba(200,196,188,.62)';
+  }
+  function dimBlock(el){
+    el.style.borderColor='rgba(255,255,255,.07)';el.style.background='rgba(8,16,30,.93)';el.style.boxShadow='none';
+    const t=el.querySelector('.cb-t');if(t)t.style.color='rgba(200,196,188,.3)';
+    const n=el.querySelector('.cb-n');if(n)n.style.color='rgba(200,196,188,.2)';
+    const d=el.querySelector('.cb-d');if(d)d.style.color='rgba(200,196,188,.16)';
+  }
+  function updatePanel(s){
+    const ca=document.getElementById('c-act'),cl=document.getElementById('c-lod'),cf=document.getElementById('c-flg'),cp=document.getElementById('c-pct');
+    if(ca)ca.textContent=s.act;
+    if(cl)cl.textContent=s.lod;
+    if(cf){cf.textContent=s.flg;cf.style.color=s.flg>0?'#EF4444':'#22C55E';}
+    if(cp){cp.textContent=s.pct+'%';cp.style.color=s.flg>0?'#EF4444':'#22C55E';}
+    const bg=document.getElementById('bs-g'),ba=document.getElementById('bs-a'),br=document.getElementById('bs-r'),bi=document.getElementById('bs-i');
+    if(bg)bg.style.flexGrow=s.g;
+    if(ba)ba.style.flexGrow=s.a;
+    if(br)br.style.flexGrow=s.r;
+    if(bi)bi.style.flexGrow=s.i;
+  }
+  function activateStep(idx){
+    Object.entries(lit).forEach(([id,col])=>{const e=document.getElementById(id);if(e)litBlock(e,col,false);});
+    const s=STEPS[idx],el=document.getElementById(s.id);
+    if(el){lit[s.id]=s.col;litBlock(el,s.col,true);}
+    updatePanel(s);
+  }
+  function resetAll(){
+    STEPS.forEach(s=>{const e=document.getElementById(s.id);if(e)dimBlock(e);});
+    Object.keys(lit).forEach(k=>delete lit[k]);
+    updatePanel({act:14,lod:12,flg:0,g:12,a:.01,r:.01,i:2, pct:92});
+  }
+  function getAnchors(){
+    if(!wrap)return STEPS.map(()=>({x:0,y:0}));
+    const wr=wrap.getBoundingClientRect();
+    return STEPS.map(s=>{
+      const e=document.getElementById(s.id);if(!e)return{x:0,y:0};
+      const r=e.getBoundingClientRect();
+      return{x:r.left-wr.left+r.width/2,y:r.top-wr.top+r.height/2};
+    });
+  }
+  function buildSVG(){
+    if(!svg)return;
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    const anch=getAnchors(),N=anch.length;
+    const defs=mk('defs',{}),pf=mk('filter',{id:'pg',x:'-150%',y:'-150%',width:'400%',height:'400%'});
+    pf.appendChild(mk('feGaussianBlur',{stdDeviation:'2.5',result:'b'}));
+    const pm=mk('feMerge',{});pm.appendChild(mk('feMergeNode',{in:'b'}));pm.appendChild(mk('feMergeNode',{in:'SourceGraphic'}));
+    pf.appendChild(pm);defs.appendChild(pf);svg.appendChild(defs);
+    lnEls=[];
+    for(let i=0;i<N;i++){
+      const a=anch[i],b=anch[(i+1)%N];
+      const ln=mk('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:'rgba(255,255,255,.06)','stroke-width':'1'});
+      svg.appendChild(ln);lnEls.push(ln);
+    }
+    haloEl=mk('circle',{cx:anch[0].x,cy:anch[0].y,r:'8',fill:'none',stroke:'rgba(255,107,53,.2)','stroke-width':'1.5'});
+    dotEl=mk('circle',{cx:anch[0].x,cy:anch[0].y,r:'4',fill:'#FF6B35',filter:'url(#pg)'});
+    svg.appendChild(haloEl);svg.appendChild(dotEl);
+  }
+  function startAnim(){
+    cancelAnimationFrame(animId);
+    animSeg=0;animProg=0;animPause=100;animMoving=false;
+    const anch=getAnchors(),N=anch.length;
+    activateStep(0);
+    function tick(){
+      animId=requestAnimationFrame(tick);
+      if(animPause>0){animPause--;return;}
+      const anch=getAnchors();
+      if(!animMoving){
+        if(animSeg>=N){
+          cancelAnimationFrame(animId);
+          setTimeout(()=>{resetAll();setTimeout(()=>{animSeg=0;animProg=0;animPause=100;animMoving=false;activateStep(0);animId=requestAnimationFrame(tick);},700);},2500);return;
+        }
+        animMoving=true;animProg=0;
+        lnEls.forEach((l,i)=>l.setAttribute('stroke',i===animSeg?'rgba(255,107,53,.18)':'rgba(255,255,255,.06)'));
+      }
+      animProg+=0.006;
+      if(animProg>=1){
+        animProg=1;animMoving=false;animSeg++;
+        const ns=animSeg%N;
+        dotEl.setAttribute('cx',anch[ns].x);dotEl.setAttribute('cy',anch[ns].y);
+        haloEl.setAttribute('cx',anch[ns].x);haloEl.setAttribute('cy',anch[ns].y);
+        if(animSeg<N)activateStep(animSeg);
+        animPause=100;
+        lnEls.forEach(l=>l.setAttribute('stroke','rgba(255,255,255,.06)'));return;
+      }
+      const a=anch[animSeg%N],b=anch[(animSeg+1)%N];
+      const cx=a.x+(b.x-a.x)*animProg,cy=a.y+(b.y-a.y)*animProg;
+      dotEl.setAttribute('cx',cx);dotEl.setAttribute('cy',cy);
+      haloEl.setAttribute('cx',cx);haloEl.setAttribute('cy',cy);
+    }
+    animId=requestAnimationFrame(tick);
+  }
+  const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){obs.disconnect();requestAnimationFrame(()=>{requestAnimationFrame(()=>{buildSVG();startAnim();});});}},{threshold:.1});
+  if(wrap)obs.observe(wrap);
+})();
 </script>
+
 </body>
 </html>
