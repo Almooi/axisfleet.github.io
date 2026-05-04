@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AxisFleet — Powering the people that move the world.</title>
+<title>AxisFleet | Powering the people that move the world.</title>
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -178,18 +178,18 @@ nav.s{
 @keyframes mscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* SECTION BASE */
-.sec{padding:80px 5vw;position:relative;z-index:1}
+.sec{padding:64px 5vw;position:relative;z-index:1}
 .si{max-width:1200px;margin:0 auto}
 .stag{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#FF6B35;margin-bottom:1.2rem}
 .stag::before{content:'';width:14px;height:2px;background:#FF6B35;border-radius:1px}
 .sh2{font-family:'Clash Display',sans-serif;font-weight:700;font-size:clamp(2rem,3.8vw,3.6rem);line-height:1.0;letter-spacing:-.025em;color:#F0EDE8;margin-bottom:1rem}
 .sh2 em{font-style:normal;color:#1A8FD6}
 .sh2 b{font-style:normal;color:#FF6B35;font-weight:700}
-.sp{font-size:1rem;color:rgba(200,196,188,.72);line-height:1.8;max-width:520px;margin-bottom:4rem}
+.sp{font-size:1rem;color:rgba(200,196,188,.72);line-height:1.8;max-width:520px;margin-bottom:2.5rem}
 
 /* PLATFORM SECTION */
 .plat-sec{background:#141210;z-index:1;position:relative;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04)}
-.plat-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:72px;align-items:center}
+.plat-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:center}
 
 /* PHONE MOCKUP */
 .phone-wrap{position:relative}
@@ -263,8 +263,16 @@ nav.s{
 .rv-fill{height:100%;border-radius:4px}
 
 /* CAPABILITIES */
-.cap-sec{background:#1C1A16;z-index:1;position:relative}
+.cap-sec{background:#07111C;z-index:1;position:relative}
 .cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.hw-sec{background:#0D1B2A;z-index:1;position:relative}
+.hw-top{max-width:560px;margin-bottom:2rem}
+.hw-sub{font-size:.95rem;color:rgba(200,196,188,.58);line-height:1.8;margin-top:1rem}
+.hw-specs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.07);border-left:1px solid rgba(255,255,255,.07)}
+.hw-spec{padding:1.8rem 1.6rem;border-right:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07)}
+.hw-sv{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.55rem;color:#F0EDE8;letter-spacing:-.02em;line-height:1;margin-bottom:.45rem}
+.hw-sl{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(200,196,188,.32);margin-bottom:.3rem}
+.hw-sd{font-size:.82rem;color:rgba(200,196,188,.48);line-height:1.6}
 .cc{background:#242018;border-radius:16px;padding:2rem;border:1px solid rgba(255,255,255,.05);transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
 .cc:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(0,0,0,.4)}
 .cc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FF6B35,#1A8FD6);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
@@ -275,13 +283,13 @@ nav.s{
 .cc-d{font-size:.85rem;color:rgba(200,196,188,.7);line-height:1.7}
 
 /* VERSE */
-.verse-sec{background:#FF6B35;padding:80px 5vw;text-align:center;position:relative;overflow:hidden;z-index:1}
-.verse-sec::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
-.verse-q{font-family:'Clash Display',sans-serif;font-weight:600;font-size:clamp(1.3rem,2.8vw,2.2rem);color:#fff;line-height:1.35;letter-spacing:-.02em;max-width:680px;margin:0 auto 1rem;font-style:italic;position:relative;z-index:1}
-.verse-ref{font-size:.8rem;color:rgba(255,255,255,.55);letter-spacing:.06em;position:relative;z-index:1}
+.verse-sec{background:#0D1B2A;padding:64px 5vw;text-align:center;position:relative;overflow:hidden;z-index:1;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}
+.verse-sec::before{content:'';position:absolute;top:50%;left:50%;width:600px;height:300px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(201,162,39,.05),transparent 70%);pointer-events:none}
+.verse-q{font-family:'Clash Display',sans-serif;font-weight:600;font-size:clamp(1.3rem,2.8vw,2.2rem);color:rgba(240,237,232,.75);line-height:1.45;letter-spacing:-.02em;max-width:680px;margin:0 auto 1rem;font-style:italic;position:relative;z-index:1}
+.verse-ref{font-size:.78rem;color:rgba(201,162,39,.45);letter-spacing:.1em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;position:relative;z-index:1}
 
 /* CTA */
-.cta-sec{background:#1C1A16;padding:130px 5vw;text-align:center;position:relative;overflow:hidden;z-index:1}
+.cta-sec{background:#1C1A16;padding:90px 5vw;text-align:center;position:relative;overflow:hidden;z-index:1}
 .cta-sec::before{content:'';position:absolute;top:50%;left:50%;width:700px;height:400px;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(26,143,214,.05),transparent 65%);pointer-events:none}
 .ct-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,107,53,.55);margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:9px;position:relative;z-index:1}
 .ct-label::before{content:'';width:4px;height:4px;border-radius:50%;background:#FF6B35;animation:pulse 2s infinite;flex-shrink:0}
@@ -391,29 +399,33 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
 
 /* RESPONSIVE */
 @media(max-width:960px){
-  .hero{grid-template-columns:1fr;padding-top:88px;padding-bottom:48px}
+  .hero{grid-template-columns:1fr;padding-top:88px;padding-bottom:40px}
   .hero-right{margin-top:0;min-width:0;overflow:hidden}
   .wrap{transform:scale(.95);transform-origin:top center;margin-bottom:-21px}
-  .plat-grid{grid-template-columns:1fr;gap:40px}
+  .plat-grid{grid-template-columns:1fr;gap:24px}
   .cap-grid{grid-template-columns:1fr 1fr}
+  .hw-specs{grid-template-columns:1fr 1fr}
   .ft-main{grid-template-columns:1fr;gap:2.5rem}
   .ft-bottom{flex-direction:column;gap:.5rem;text-align:left}
   .nlinks{display:none}
   .contact-grid{grid-template-columns:1fr}
-  .sec{padding:60px 5vw}
-  .verse-sec{padding:60px 5vw}
-  .cta-sec{padding:90px 5vw}
-  footer{padding:3.5rem 5vw 2rem}
-  .sp{margin-bottom:2.5rem}
+  .sec{padding:48px 5vw}
+  .verse-sec{padding:48px 5vw}
+  .cta-sec{padding:64px 5vw}
+  footer{padding:3rem 5vw 2rem}
+  .sp{margin-bottom:1.8rem}
+  .hw-top{margin-bottom:1.5rem}
 }
 @media(max-width:600px){
   .cap-grid{grid-template-columns:1fr}
+  .hw-specs{grid-template-columns:1fr 1fr}
   .hero-metrics{gap:1.2rem}
   .hm-div{display:none}
-  .sec{padding:48px 5vw}
-  .cta-sec{padding:64px 5vw}
-  .verse-sec{padding:48px 5vw}
-  .sp{margin-bottom:2rem}
+  .sec{padding:40px 5vw}
+  .cta-sec{padding:52px 5vw}
+  .verse-sec{padding:40px 5vw}
+  .sp{margin-bottom:1.5rem}
+  footer{padding:2.5rem 5vw 1.5rem}
 }
 @media(max-width:520px){
   .wrap{transform:scale(.85);transform-origin:top center;margin-bottom:-63px}
@@ -481,8 +493,8 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
       </div>
       <div class="hm-div"></div>
       <div>
-        <div class="hm-num">18+<em>&nbsp;mod</em></div>
-        <div class="hm-lbl">Axle modules per truck</div>
+        <div class="hm-num">18<em>&nbsp;mod</em></div>
+        <div class="hm-lbl">Up to 18 axle modules</div>
       </div>
     </div>
   </div>
@@ -491,23 +503,26 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
       <canvas id="cw"></canvas>
       <svg id="csw" xmlns="http://www.w3.org/2000/svg"></svg>
 
-      <div class="cb" id="b1" style="left:18px;top:76px" data-color="orange">
+      <div class="cb" id="b1" style="left:63px;top:49px" data-color="orange">
         <div class="cb-n">01</div><div class="cb-t">Hardware</div><div class="cb-d">Load Sensors · Active</div>
       </div>
-      <div class="cb" id="b2" style="left:224px;top:87px" data-color="blue">
+      <div class="cb" id="b2" style="left:235px;top:56px" data-color="blue">
         <div class="cb-n">02</div><div class="cb-t">Live Data</div><div class="cb-d">GSM · Real-time</div>
       </div>
-      <div class="cb" id="b3" style="left:197px;top:189px" data-color="red">
+      <div class="cb" id="b3" style="left:281px;top:136px" data-color="red">
         <div class="cb-n">03</div><div class="cb-t">Flag Raised</div><div class="cb-d">Overload · Braking · Standing</div>
       </div>
-      <div class="cb" id="b4" style="left:267px;top:324px" data-color="orange">
+      <div class="cb" id="b4" style="left:270px;top:237px" data-color="orange">
         <div class="cb-n">04</div><div class="cb-t">Ops Alerted</div><div class="cb-d">SMS · Truck · Zone</div>
       </div>
-      <div class="cb" id="b5" style="left:65px;top:306px" data-color="blue">
+      <div class="cb" id="b5" style="left:169px;top:323px" data-color="blue">
         <div class="cb-n">05</div><div class="cb-t">Action Taken</div><div class="cb-d">Mobile · Call · Locate</div>
       </div>
-      <div class="cb" id="b6" style="left:4px;top:186px" data-color="green">
+      <div class="cb" id="b6" style="left:17px;top:268px" data-color="green">
         <div class="cb-n">06</div><div class="cb-t">Fleet on Track</div><div class="cb-d">All clear · Stable</div>
+      </div>
+      <div class="cb" id="b7" style="left:83px;top:155px" data-color="blue">
+        <div class="cb-n">07</div><div class="cb-t">Reported</div><div class="cb-d">Shift · Compliance · Export</div>
       </div>
 
       <div class="cs" id="s-act" style="left:134px;top:6px">
@@ -538,24 +553,24 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
 <!-- MARQUEE -->
 <div class="marquee">
   <div class="mtrack">
-    <div class="mitem"><span class="mx">◆</span> Wireless Load Management</div>
-    <div class="mitem"><span class="mx">◆</span> Fleet Intelligence</div>
-    <div class="mitem"><span class="mx">◆</span> Hardware + Software</div>
-    <div class="mitem"><span class="mx">◆</span> Load Compliance</div>
-    <div class="mitem"><span class="mx">◆</span> Zone Monitoring</div>
-    <div class="mitem"><span class="mx">◆</span> Overload Prevention</div>
-    <div class="mitem"><span class="mx">◆</span> Real-Time Alerts</div>
-    <div class="mitem"><span class="mx">◆</span> Continuous Monitoring</div>
-    <div class="mitem"><span class="mx">◆</span> axisfleet.co.za</div>
-    <div class="mitem"><span class="mx">◆</span> Wireless Load Management</div>
-    <div class="mitem"><span class="mx">◆</span> Fleet Intelligence</div>
-    <div class="mitem"><span class="mx">◆</span> Hardware + Software</div>
-    <div class="mitem"><span class="mx">◆</span> Load Compliance</div>
-    <div class="mitem"><span class="mx">◆</span> Zone Monitoring</div>
-    <div class="mitem"><span class="mx">◆</span> Overload Prevention</div>
-    <div class="mitem"><span class="mx">◆</span> Real-Time Alerts</div>
-    <div class="mitem"><span class="mx">◆</span> Continuous Monitoring</div>
-    <div class="mitem"><span class="mx">◆</span> axisfleet.co.za</div>
+    <div class="mitem"><span class="mx">▲</span> OVERLOAD</div>
+    <div class="mitem"><span class="mx">▲</span> ZONE BREACH</div>
+    <div class="mitem"><span class="mx">▲</span> HARSH BRAKING</div>
+    <div class="mitem"><span class="mx">▲</span> AXLE OVERLOAD</div>
+    <div class="mitem"><span class="mx">▲</span> EXCESSIVE STANDING</div>
+    <div class="mitem"><span class="mx">▲</span> LOAD IMBALANCE</div>
+    <div class="mitem"><span class="mx">▲</span> STANDING TIME</div>
+    <div class="mitem"><span class="mx">▲</span> GEOFENCE BREACH</div>
+    <div class="mitem"><span class="mx">▲</span> COMPLIANCE MISS</div>
+    <div class="mitem"><span class="mx">▲</span> OVERLOAD</div>
+    <div class="mitem"><span class="mx">▲</span> ZONE BREACH</div>
+    <div class="mitem"><span class="mx">▲</span> HARSH BRAKING</div>
+    <div class="mitem"><span class="mx">▲</span> AXLE OVERLOAD</div>
+    <div class="mitem"><span class="mx">▲</span> EXCESSIVE STANDING</div>
+    <div class="mitem"><span class="mx">▲</span> LOAD IMBALANCE</div>
+    <div class="mitem"><span class="mx">▲</span> STANDING TIME</div>
+    <div class="mitem"><span class="mx">▲</span> GEOFENCE BREACH</div>
+    <div class="mitem"><span class="mx">▲</span> COMPLIANCE MISS</div>
   </div>
 </div>
 
@@ -568,7 +583,8 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
         <div class="phone-blob2"></div>
         <div class="phone">
           <div class="pbar"><div class="ppill"></div></div>
-          <div class="pscr">
+          <!-- OVERVIEW SCREEN -->
+          <div id="pscr-overview" class="pscr">
             <div class="phdr"><div class="ptitle">Operations</div><div class="plive">Live</div></div>
             <div class="phlabel"><span class="phll">Fleet Health</span><span class="phlv">87%</span></div>
             <div class="phbar"><div class="phfill" id="phf" style="width:0"></div></div>
@@ -581,7 +597,7 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
               <div class="ptruck"><div class="pdot on"></div><div class="pid">Truck1-318</div><div class="pwt">28.1t</div><div class="pzn">A</div></div>
               <div class="ptruck w"><div class="pdot w"></div><div class="pid" style="color:rgba(255,107,53,.75)">Truck2-441</div><div class="pwt ov">32.4t▲</div><div class="pzn" style="color:rgba(255,107,53,.45)">C</div></div>
               <div class="ptruck"><div class="pdot on"></div><div class="pid">Truck3-207</div><div class="pwt">27.8t</div><div class="pzn">B</div></div>
-              <div class="ptruck"><div class="pdot off"></div><div class="pid" style="opacity:.3">Truck4-512</div><div class="pwt" style="opacity:.3">—</div><div class="pzn">Yard</div></div>
+              <div class="ptruck"><div class="pdot off"></div><div class="pid" style="opacity:.3">Truck4-512</div><div class="pwt" style="opacity:.3">·</div><div class="pzn">Yard</div></div>
             </div>
             <div class="plog">
               <div class="plr"><span class="pts">07:42</span><span class="pfl">▲ OVERLOAD · NTU-441</span></div>
@@ -590,11 +606,77 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
               <div class="plr"><span class="pts">06:30</span><span class="pok">14 vehicles ready</span></div>
             </div>
           </div>
+          <!-- ALERTS SCREEN -->
+          <div id="pscr-alerts" class="pscr" style="display:none">
+            <div class="phdr"><div class="ptitle">Alerts</div><div class="plive" style="color:#FF6B35">3 Active</div></div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:6px;padding:7px 9px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:#EF4444;font-weight:700">OVERLOAD</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:.46rem;color:rgba(255,255,255,.25)">07:42</span>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:rgba(255,255,255,.5);margin-bottom:5px">NTU-441 · Zone C · 32.4t</div>
+                <div style="display:flex;gap:4px">
+                  <button style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:4px;color:rgba(255,255,255,.4);font-size:.46rem;padding:3px;font-family:'JetBrains Mono',monospace">Call</button>
+                  <button style="flex:1;background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.3);border-radius:4px;color:#FF6B35;font-size:.46rem;padding:3px;font-family:'JetBrains Mono',monospace">Clear</button>
+                </div>
+              </div>
+              <div style="background:rgba(26,143,214,.06);border:1px solid rgba(26,143,214,.15);border-radius:6px;padding:7px 9px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:#1A8FD6;font-weight:700">ZONE BREACH</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:.46rem;color:rgba(255,255,255,.25)">06:18</span>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:rgba(255,255,255,.5);margin-bottom:5px">NTU-207 · Restricted area</div>
+                <div style="display:flex;gap:4px">
+                  <button style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:4px;color:rgba(255,255,255,.4);font-size:.46rem;padding:3px;font-family:'JetBrains Mono',monospace">Call</button>
+                  <button style="flex:1;background:rgba(26,143,214,.15);border:1px solid rgba(26,143,214,.3);border-radius:4px;color:#1A8FD6;font-size:.46rem;padding:3px;font-family:'JetBrains Mono',monospace">Clear</button>
+                </div>
+              </div>
+              <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:6px;padding:7px 9px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:.56rem;color:#EF4444;font-weight:700">COMPLIANCE</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:.46rem;color:rgba(255,255,255,.25)">05:54</span>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:rgba(255,255,255,.5);margin-bottom:5px">NTU-089 · Weight variance</div>
+                <div style="display:flex;gap:4px">
+                  <button style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:4px;color:rgba(255,255,255,.4);font-size:.46rem;padding:3px;font-family:'JetBrains Mono',monospace">Call</button>
+                  <button style="flex:1;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;color:#EF4444;font-size:.46rem;padding:3px;font-family:'JetBrains Mono',monospace">Clear</button>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:8px">
+              <button style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.4);font-size:.42rem;padding:3px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em">All</button>
+              <button style="flex:1;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:4px;color:#EF4444;font-size:.42rem;padding:3px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Alerts</button>
+              <button style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:4px;color:rgba(255,255,255,.2);font-size:.42rem;padding:3px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Cleared</button>
+            </div>
+          </div>
+          <!-- REPORTING SCREEN -->
+          <div id="pscr-reporting" class="pscr" style="display:none">
+            <div class="phdr"><div class="ptitle">Reporting</div><div class="plive">Today</div></div>
+            <div style="background:rgba(0,212,160,.06);border:1px solid rgba(0,212,160,.15);border-radius:6px;padding:8px 10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.46rem;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Compliance</div>
+                <div style="font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.35rem;color:#00D4A0;line-height:1">94%</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:.46rem;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Loads Today</div>
+                <div style="font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.35rem;color:#fff;line-height:1">47</div>
+              </div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.46rem;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Zone Analysis</div>
+            <div class="rep-vis" style="margin-bottom:8px">
+              <div class="rv-row"><div class="rv-labels"><span>Zone A: Loading</span><span>3h 14m</span></div><div class="rv-track"><div class="rv-fill" style="width:78%;background:#1A8FD6"></div></div></div>
+              <div class="rv-row"><div class="rv-labels"><span>Zone B: Transit</span><span>1h 52m</span></div><div class="rv-track"><div class="rv-fill" style="width:45%;background:#00D4A0"></div></div></div>
+              <div class="rv-row"><div class="rv-labels"><span>Zone C: Offload</span><span>2h 08m</span></div><div class="rv-track"><div class="rv-fill" style="width:52%;background:#1A8FD6"></div></div></div>
+              <div class="rv-row"><div class="rv-labels"><span>Yard: Standby</span><span>0h 41m</span></div><div class="rv-track"><div class="rv-fill" style="width:16%;background:#FF6B35"></div></div></div>
+            </div>
+            <button style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:rgba(255,255,255,.35);font-size:.5rem;padding:7px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.08em">Export Shift Report</button>
+          </div>
         </div>
       </div>
       <div class="rv-r">
         <div class="stag">The Platform</div>
-        <h2 class="sh2">Built for the people<br>running the <em>operation.</em></h2>
+        <h2 class="sh2">Not just a reporting tool.<br>An <em>operational</em> control interface.</h2>
         <div class="ptabs">
           <button class="ptb on" onclick="ptab('overview',this)">Overview</button>
           <button class="ptb" onclick="ptab('alerts',this)">Alerts</button>
@@ -602,44 +684,32 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
         </div>
         <div id="pt-overview" class="tp on">
           <div class="tph">Operations Overview</div>
-          <div class="tpp">Your command centre. Fleet health, active vehicles, open alerts, and a live timestamped log — everything needed to run the day confidently from any device.</div>
+          <div class="tpp">Your command centre on any device. Fleet health, active vehicles, open alerts and a live timestamped log. Run the day from anywhere.</div>
           <div class="tpfs">
             <div class="tpf">Fleet health bar across all active vehicles</div>
-            <div class="tpf">Live ops log — timestamped, monospace, precise</div>
+            <div class="tpf">Live ops log, timestamped and precise</div>
             <div class="tpf">Active vs idle count at a glance</div>
-            <div class="tpf">Instant navigation to any flagged event</div>
-            <div class="tpf">Mobile-first — works on any device, any signal</div>
+            <div class="tpf">Instant action on any flagged event</div>
           </div>
         </div>
         <div id="pt-alerts" class="tp">
           <div class="tph">Intelligent Alerts</div>
-          <div class="tpp">Categorised, actionable, and direct. When something needs attention, AxisFleet tells you immediately with context to act — not just a notification to dismiss.</div>
-          <div style="margin-bottom:1.4rem" class="alerts-vis">
-            <div class="av-card"><div class="av-dot" style="background:#FF6B35;box-shadow:0 0 5px rgba(255,107,53,.4)"></div><div class="av-txt">OVERLOAD · NTU-441 · 32.4t · Zone C</div><div class="av-time">07:42</div><button class="av-sms">SMS Driver</button></div>
-            <div class="av-card"><div class="av-dot" style="background:#1A8FD6"></div><div class="av-txt">ZONE BREACH · NTU-207 · Restricted area</div><div class="av-time">06:18</div><button class="av-sms">SMS Driver</button></div>
-            <div class="av-card"><div class="av-dot" style="background:#c0392b"></div><div class="av-txt">COMPLIANCE FLAG · NTU-089 · Weight variance</div><div class="av-time">05:54</div><button class="av-sms">SMS Driver</button></div>
-          </div>
+          <div class="tpp">Categorised, actionable and direct. When something needs attention, AxisFleet tells you with context to act. Not just a notification to dismiss.</div>
           <div class="tpfs">
-            <div class="tpf">Categorised alerts — load, zone, compliance</div>
-            <div class="tpf">Full alert history with precise timestamps</div>
+            <div class="tpf">Overload, zone and compliance alerts</div>
+            <div class="tpf">Full history with precise timestamps</div>
             <div class="tpf">Direct SMS to driver from the alert screen</div>
-            <div class="tpf">Dispatcher acknowledgement logging</div>
+            <div class="tpf">One-tap escalation and clearance logging</div>
           </div>
         </div>
         <div id="pt-reporting" class="tp">
           <div class="tph">Operational Reporting</div>
-          <div class="tpp">Every cycle, zone, and tonne — automatically captured. Your data becomes a compliance record, management tool, and client deliverable simultaneously.</div>
-          <div class="rep-vis" style="margin-bottom:1.4rem">
-            <div class="rv-row"><div class="rv-labels"><span>Zone A — Loading</span><span>3h 14m</span></div><div class="rv-track"><div class="rv-fill" style="width:78%;background:#1A8FD6"></div></div></div>
-            <div class="rv-row"><div class="rv-labels"><span>Zone B — Transit</span><span>1h 52m</span></div><div class="rv-track"><div class="rv-fill" style="width:45%;background:#00D4A0"></div></div></div>
-            <div class="rv-row"><div class="rv-labels"><span>Zone C — Offload</span><span>2h 08m</span></div><div class="rv-track"><div class="rv-fill" style="width:52%;background:#1A8FD6"></div></div></div>
-            <div class="rv-row"><div class="rv-labels"><span>Yard — Standby</span><span>0h 41m</span></div><div class="rv-track"><div class="rv-fill" style="width:16%;background:#FF6B35"></div></div></div>
-          </div>
+          <div class="tpp">Every cycle, zone and tonne, automatically captured. A compliance record, management tool and RTMS-ready documentation with no extra effort.</div>
           <div class="tpfs">
             <div class="tpf">Zone time analysis per vehicle per shift</div>
             <div class="tpf">Load weight history across full cycle sequences</div>
-            <div class="tpf">Compliance summaries for management and clients</div>
-            <div class="tpf">Exportable data for client reporting</div>
+            <div class="tpf">RTMS-ready compliance summaries</div>
+            <div class="tpf">Exportable data for client and audit reporting</div>
           </div>
         </div>
       </div>
@@ -647,19 +717,45 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
   </div>
 </section>
 
-<!-- CAPABILITIES -->
-<section class="sec cap-sec" id="capabilities">
+<!-- HARDWARE -->
+<section class="sec hw-sec" id="capabilities">
   <div class="si">
-    <div class="stag rv">What Becomes Possible</div>
-    <h2 class="sh2 rv">Six reasons your fleet<br>needs <b>AxisFleet.</b></h2>
-    <p class="sp rv">Total visibility. Instant action. Automatic compliance. From hardware to insight — everything your operation needs in one system.</p>
-    <div class="cap-grid">
-      <div class="cc rv"><div class="cc-ic" style="background:rgba(255,107,53,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="cc-n">01</div><div class="cc-t">Live Load Weight</div><div class="cc-d">Know every tonne before departure. Wireless sensors transmit exact load data the moment a truck is loaded — overloading caught at source.</div></div>
-      <div class="cc rv"><div class="cc-ic" style="background:rgba(26,143,214,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A8FD6" stroke-width="2"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/><circle cx="12" cy="12" r="3"/></svg></div><div class="cc-n">02</div><div class="cc-t">Zone-by-Zone Visibility</div><div class="cc-d">Not just GPS. Zone intelligence places every vehicle precisely in the loading, transit, or offload phase — operational context that tracking alone never delivers.</div></div>
-      <div class="cc rv"><div class="cc-ic" style="background:rgba(0,212,160,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00D4A0" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="cc-n">03</div><div class="cc-t">Instant Alerts and SMS</div><div class="cc-d">Overload flagged. Driver SMS'd. Issue resolved — all within seconds from the platform. No phone chains, no delays.</div></div>
-      <div class="cc rv"><div class="cc-ic" style="background:rgba(255,107,53,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg></div><div class="cc-n">04</div><div class="cc-t">Auto Compliance Records</div><div class="cc-d">Every load, zone, and timestamp logged automatically. Dispute-proof compliance records with no manual effort required.</div></div>
-      <div class="cc rv"><div class="cc-ic" style="background:rgba(26,143,214,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A8FD6" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></div><div class="cc-n">05</div><div class="cc-t">Mobile-First Command</div><div class="cc-d">Full operational picture from your phone. HQ or on-site, the same real-time view always, on any device, anywhere.</div></div>
-      <div class="cc rv"><div class="cc-ic" style="background:rgba(0,212,160,.1)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00D4A0" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="cc-n">06</div><div class="cc-t">Installed and Supported</div><div class="cc-d">We fit the hardware, configure the system, and monitor your operation continuously. You gain capability, not complexity.</div></div>
+    <div class="hw-top rv">
+      <div class="stag">The Hardware</div>
+      <h2 class="sh2">Fits any truck.<br>No rip-and-replace.</h2>
+      <p class="hw-sub">The AxisFleet Load Module sits on any axle group. It works with your existing load cells or air suspension -- no new infrastructure, no downtime. Wireless between modules, GSM to the platform the moment a load is registered.</p>
+    </div>
+    <div class="hw-specs">
+      <div class="hw-spec rv">
+        <div class="hw-sl">Protection</div>
+        <div class="hw-sv">IP67</div>
+        <div class="hw-sd">Mine-rated enclosure. Dust-tight and waterproof.</div>
+      </div>
+      <div class="hw-spec rv">
+        <div class="hw-sl">Connectivity</div>
+        <div class="hw-sv">Wireless</div>
+        <div class="hw-sd">No cabling between axle modules. GSM to the platform in real time.</div>
+      </div>
+      <div class="hw-spec rv">
+        <div class="hw-sl">Compatibility</div>
+        <div class="hw-sv">Any Truck</div>
+        <div class="hw-sd">Works with existing load cells or air suspension. Single-tipper to road train.</div>
+      </div>
+      <div class="hw-spec rv">
+        <div class="hw-sl">Scale</div>
+        <div class="hw-sv">18 Modules</div>
+        <div class="hw-sd">Up to 18 axle modules per vehicle. Full road train coverage.</div>
+      </div>
+      <div class="hw-spec rv">
+        <div class="hw-sl">Accuracy</div>
+        <div class="hw-sv">Within 1%</div>
+        <div class="hw-sd">When properly calibrated. Reliable enough for compliance and dispute records.</div>
+      </div>
+      <div class="hw-spec rv">
+        <div class="hw-sl">Field proven</div>
+        <div class="hw-sv">Since 2017</div>
+        <div class="hw-sd">Hardware developed and field-tested over multiple seasons across bulk operations.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -709,7 +805,7 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
         <div class="ft-links">
           <a href="#platform">Platform</a>
           <a href="#capabilities">Capabilities</a>
-          <a href="#how">How It Works</a>
+          <a href="#capabilities">The Cost</a>
           <a href="#contact">Get in Touch</a>
         </div>
       </div>
@@ -733,7 +829,7 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
     <div id="dm-body">
       <div class="dm-tag">Platform Access</div>
       <div class="dm-title" id="dm-heading">Request a Platform<br>Walkthrough</div>
-      <div class="dm-sub">Tell us about your operation. We'll arrange a live demonstration on your terms — no slides, no pressure, just the platform running on real data.</div>
+      <div class="dm-sub">Tell us about your operation. We'll arrange a live demonstration on your terms: no slides, no pressure, just the platform running on real data.</div>
       <div class="dm-divider"></div>
       <form id="demo-form" novalidate>
         <div class="dm-grid">
@@ -789,7 +885,7 @@ textarea.dm-input{resize:none;height:80px;line-height:1.65}
         </div>
         <div class="dm-err" id="dm-err">Something went wrong. Please try again or email us directly at axisfleetsa@gmail.com</div>
         <button type="submit" class="dm-submit" id="dm-submit-btn">Request Platform Walkthrough →</button>
-        <div class="dm-note">Your details are used solely to arrange your demonstration.<br>No spam. No third parties. — axisfleetsa@gmail.com · 064 547 6573</div>
+        <div class="dm-note">Your details are used solely to arrange your demonstration.<br>No spam. No third parties. axisfleetsa@gmail.com · 064 547 6573</div>
       </form>
     </div>
   </div>
@@ -877,6 +973,10 @@ function ptab(id,btn){
   document.querySelectorAll('.tp').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ptb').forEach(b=>b.classList.remove('on'));
   document.getElementById('pt-'+id).classList.add('on');btn.classList.add('on');
+  ['overview','alerts','reporting'].forEach(s=>{
+    const el=document.getElementById('pscr-'+s);
+    if(el) el.style.display=s===id?'block':'none';
+  });
 }
 
 /* REVEAL */
@@ -954,6 +1054,7 @@ const ph=document.querySelector('.phone');if(ph)pio.observe(ph);
     {id:'b4',col:'orange',act:14,lod:9, flg:4,g:9,   a:1,  r:3,  i:1, pct:68},
     {id:'b5',col:'blue',  act:14,lod:11,flg:1,g:11,  a:1,  r:1,  i:1, pct:86},
     {id:'b6',col:'green', act:14,lod:13,flg:0,g:13,  a:.01,r:.01,i:1, pct:96},
+    {id:'b7',col:'blue',  act:14,lod:14,flg:0,g:14,  a:.01,r:.01,i:0, pct:100},
   ];
   let lit={},lnEls=[],dotEl,haloEl,animId=0,animSeg=0,animProg=0,animPause=100,animMoving=false;
 
@@ -1005,6 +1106,7 @@ const ph=document.querySelector('.phone');if(ph)pio.observe(ph);
   }
   function buildSVG(){
     if(!svg)return;
+    window.buildSVG=buildSVG;
     while(svg.firstChild)svg.removeChild(svg.firstChild);
     const anch=getAnchors(),N=anch.length;
     const defs=mk('defs',{}),pf=mk('filter',{id:'pg',x:'-150%',y:'-150%',width:'400%',height:'400%'});
@@ -1058,6 +1160,121 @@ const ph=document.querySelector('.phone');if(ph)pio.observe(ph);
   const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){obs.disconnect();requestAnimationFrame(()=>{requestAnimationFrame(()=>{buildSVG();startAnim();});});}},{threshold:.1});
   if(wrap)obs.observe(wrap);
 })();
+</script>
+
+<!-- POSITION EDITOR - remove before going live -->
+<div id="pos-editor" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:monospace;font-size:13px;display:flex;flex-direction:column;gap:6px;">
+  <button onclick="toggleEdit()" style="background:#1E90FF;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;">Edit Block Positions</button>
+  <button id="pos-copy-btn" onclick="copyPositions()" style="display:none;background:#FF6B35;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;">Copy Positions</button>
+  <div id="pos-copied" style="color:#22C55E;text-align:center;display:none;">Copied!</div>
+</div>
+<script>
+var editActive=false;
+function toggleEdit(){
+  editActive=!editActive;
+  document.querySelector('#pos-editor button').textContent=editActive?'Stop Editing':'Edit Block Positions';
+  document.getElementById('pos-copy-btn').style.display=editActive?'block':'none';
+  ['b1','b2','b3','b4','b5','b6','b7'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    if(editActive){
+      el.style.cursor='grab';el.style.outline='2px dashed #FF6B35';el.style.zIndex=9999;
+      el.onmousedown=startDrag;
+    } else {
+      el.style.cursor='';el.style.outline='';el.style.zIndex='';
+      el.onmousedown=null;
+    }
+  });
+}
+function startDrag(e){
+  var el=e.currentTarget;
+  var startX=e.clientX,startY=e.clientY;
+  var startL=parseInt(el.style.left),startT=parseInt(el.style.top);
+  el.style.cursor='grabbing';
+  function onMove(e){
+    el.style.left=(startL+(e.clientX-startX))+'px';
+    el.style.top=(startT+(e.clientY-startY))+'px';
+    if(typeof buildSVG==='function') buildSVG();
+  }
+  function onUp(){
+    el.style.cursor='grab';
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onUp);
+  }
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onUp);
+  e.preventDefault();
+}
+function copyPositions(){
+  var lines=['b1','b2','b3','b4','b5','b6','b7'].map(function(id){
+    var el=document.getElementById(id);
+    if(!el)return id+': not found';
+    return id+' left:'+el.style.left+' top:'+el.style.top;
+  });
+  navigator.clipboard.writeText(lines.join('\n')).then(function(){
+    var c=document.getElementById('pos-copied');
+    c.style.display='block';
+    setTimeout(function(){c.style.display='none';},2000);
+  });
+}
+</script>
+
+<!-- TEXT EDITOR - remove before going live -->
+<div id="txt-editor" style="position:fixed;bottom:20px;left:20px;z-index:99999;font-family:monospace;font-size:13px;display:flex;flex-direction:column;gap:6px;">
+  <button onclick="toggleTxtEdit()" style="background:#1E90FF;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;">Edit Text</button>
+  <button id="txt-copy-btn" onclick="copyTextChanges()" style="display:none;background:#FF6B35;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;">Copy Changes</button>
+  <div id="txt-copied" style="color:#22C55E;text-align:center;display:none;">Copied!</div>
+</div>
+<script>
+var txtActive=false,txtChanges={},txtIndex=0;
+var txtSkip=['SCRIPT','STYLE','svg','path','circle','line','polyline','polygon','rect'];
+function toggleTxtEdit(){
+  txtActive=!txtActive;
+  document.querySelector('#txt-editor button').textContent=txtActive?'Stop Editing':'Edit Text';
+  document.getElementById('txt-copy-btn').style.display=txtActive?'block':'none';
+  var els=getTextEls();
+  els.forEach(function(el){
+    if(txtActive){
+      if(!el.dataset.txtIdx){el.dataset.txtIdx=++txtIndex;el.dataset.txtOrig=el.innerText;}
+      el.contentEditable='true';
+      el.style.outline='1px dashed rgba(30,144,255,.5)';
+      el.addEventListener('input',onTxtInput);
+    } else {
+      el.contentEditable='false';
+      el.style.outline='';
+      el.removeEventListener('input',onTxtInput);
+    }
+  });
+}
+function getTextEls(){
+  var all=document.querySelectorAll('h1,h2,h3,h4,h5,p,span,a,li,div,button,label');
+  var out=[];
+  all.forEach(function(el){
+    if(txtSkip.indexOf(el.tagName)>-1)return;
+    if(el.id&&(el.id.startsWith('txt-')||el.id.startsWith('pos-')))return;
+    if(el.closest('#txt-editor')||el.closest('#pos-editor')||el.closest('#demo-modal'))return;
+    var direct='';
+    el.childNodes.forEach(function(n){if(n.nodeType===3)direct+=n.textContent;});
+    if(direct.trim().length>0)out.push(el);
+  });
+  return out;
+}
+function onTxtInput(){
+  var idx=this.dataset.txtIdx,orig=this.dataset.txtOrig,cur=this.innerText;
+  if(cur.trim()!==orig.trim()){txtChanges[idx]={orig:orig.trim(),cur:cur.trim()};}
+  else{delete txtChanges[idx];}
+}
+function copyTextChanges(){
+  var lines=Object.values(txtChanges).map(function(c){
+    return'ORIGINAL: '+c.orig+'\nNEW: '+c.cur;
+  });
+  if(!lines.length){alert('No changes yet.');return;}
+  navigator.clipboard.writeText(lines.join('\n---\n')).then(function(){
+    var c=document.getElementById('txt-copied');
+    c.style.display='block';
+    setTimeout(function(){c.style.display='none';},2000);
+  });
+}
 </script>
 
 </body>
